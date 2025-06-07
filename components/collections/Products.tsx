@@ -3,7 +3,7 @@ import React from "react";
 
 export default function Products() {
   return (
-    <div className="grid md:grid-cols-2 xl:grid-cols-4 gap-5">
+    <div className="grid grid-col-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
       {Array.from({ length: 10 }).map((_, index) => (
         <div key={index} className="grid gap-1.5">
           <div className="h-[15rem] bg-[#f3f2f3]">

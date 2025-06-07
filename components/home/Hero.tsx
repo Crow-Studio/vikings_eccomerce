@@ -8,15 +8,15 @@ import { Button } from "../ui/button";
 
 export default function Hero() {
   return (
-    <div className="grid grid-cols-2 gap-[6rem] p-10">
-      <div className="space-y-16">
-        <h2 className="text-5xl text-balance">
+    <div className="grid rid-cols-1 md:grid-cols-2 gap-[6rem] p-5 sm:p-10">
+      <div className="space-y-6 md:space-y-16">
+        <h2 className="text-4xl xl:text-5xl text-balance">
           Our newest arrivals are here to help you look your best.
         </h2>
-        <div className="grid gap-8">
-          <div className="flex items-center h-10 gap-x-4">
+        <div className="grid gap-4 sm:gap-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:h-10 gap-4">
             <div className="flex items-center gap-x-2">
-              <SolarTShirtOutline className="self-start size-5 mt-1 font-medium" />
+              <SolarTShirtOutline className="self-start size-5 mt-1 font-medium flex-shrink-0" />
               <div className="self-start">
                 <h3 className="uppercase font-semibold">Quality Materials</h3>
                 <p className="text-muted-foreground text-sm">
@@ -24,9 +24,9 @@ export default function Hero() {
                 </p>
               </div>
             </div>
-            <Separator orientation="vertical" className="h-full" />
+            <Separator orientation="vertical" className="h-full hidden sm:block" />
             <div className="flex items-center gap-x-4">
-              <StreamlinePayment10 className="self-start size-5 mt-1 font-medium" />
+              <StreamlinePayment10 className="self-start size-5 mt-1 font-medium flex-shrink-0" />
               <div className="self-start">
                 <h3 className="uppercase font-semibold">Secure Payment</h3>
                 <p className="text-muted-foreground text-sm">
