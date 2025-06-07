@@ -15,7 +15,7 @@ export default function Header() {
       </h2>
       <div className="flex items-center gap-1.5">
         <DeliriumSvgIcon className="w-7 h-auto" />
-        <h1 className="text-xl font-semibold text-[#353535]">Delirium</h1>
+        <h1 className="text-xl font-semibold text-[#353535] dark:text-white">Delirium</h1>
       </div>
       <div className="flex h-5 items-center space-x-2 md:space-x-3 text-sm">
         <Button

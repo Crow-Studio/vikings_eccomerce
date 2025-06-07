@@ -10,20 +10,20 @@ export default function OurCollections() {
   const [showFilters, setShowFilters] = useState(false);
 
   return (
-    <section className="min-h-screen bg-[#fcfcfc]">
+    <section className="min-h-screen bg-[#fcfcfc] dark:bg-[#1d1d1d]">
       <div className="container mx-auto p-4 sm:p-6 lg:p-10">
         <div className="mb-6 sm:mb-8">
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent dark:text-white">
             Our Collections
           </h3>
-          <p className="text-slate-600 mt-2 text-sm sm:text-base">Discover our curated selection</p>
+          <p className="text-slate-600 mt-2 text-sm sm:text-base dark:text-muted-foreground">Discover our curated selection</p>
         </div>
         
         {/* Mobile Filter Toggle */}
         <div className="lg:hidden mb-4">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+            className="flex items-center gap-2 px-4 py-2 bg-white rounded-lg shadow-sm border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors dark:bg-background"
           >
             <Filter size={18} />
             <span className="font-medium">Filters</span>
@@ -56,10 +56,10 @@ export default function OurCollections() {
           {/* Desktop Filters Sidebar */}
           <div className="hidden lg:block w-80 shrink-0">
             <div className="sticky top-6">
-              <div className="bg-white rounded-2xl shadow-lg border border-slate-200/60 overflow-hidden">
+              <div className="bg-white dark:bg-background rounded-2xl shadow-lg border border-slate-200/60 dark:border-zinc-700 overflow-hidden">
                 <div className="p-6 border-b border-slate-100">
-                  <h4 className="font-semibold text-slate-800 text-lg">Filters</h4>
-                  <p className="text-sm text-slate-500 mt-1">Refine your search</p>
+                  <h4 className="font-semibold text-slate-800 text-lg dark:text-primary">Filters</h4>
+                  <p className="text-sm text-slate-500 dark:text-muted-foreground mt-1">Refine your search</p>
                 </div>
                 
                 <ScrollArea className="h-[calc(100vh-320px)]">

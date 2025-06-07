@@ -4,7 +4,7 @@ import React from "react";
 import DeliriumSvgIcon from "../svgs/DeliriumSvgIcon";
 import SolarMailboxOutline from "../svgs/SolarMailboxOutline";
 import SolarPhoneOutline from "../svgs/SolarPhoneOutline";
-import ToggleTheme from "../global/ToggleTheme";
+import { ToggleTheme } from "../global/ToggleTheme";
 
 export default function Footer() {
   return (
@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="flex flex-col md:flex-row gap-4 items-center md:justify-between">
         <div className="flex items-center gap-1.5 self-center">
           <DeliriumSvgIcon className="w-9 h-auto" />
-          <h1 className="text-2xl font-semibold text-[#353535]">Delirium</h1>
+          <h1 className="text-2xl font-semibold text-[#353535] dark:text-white">Delirium</h1>
         </div>
         <div className="grid gap-1 md:self-start text-center md:text-start">
           <h4 className="text-lg text-semibold"> Contact Info </h4>

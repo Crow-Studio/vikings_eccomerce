@@ -6,7 +6,7 @@ export default function Products() {
     <div className="grid grid-col-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
       {Array.from({ length: 10 }).map((_, index) => (
         <div key={index} className="grid gap-1.5">
-          <div className="h-[15rem] bg-[#f3f2f3]">
+          <div className="h-[15rem] bg-[#f3f2f3] dark:bg-background">
             <Image
               src="https://images.unsplash.com/photo-1633966887768-64f9a867bdba?q=80&w=2003&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               width={1980}
