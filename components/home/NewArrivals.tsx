@@ -16,7 +16,7 @@ export default function NewArrivals() {
         </div>
         <div className="grid gap-y-1.5">
           <h4 className="text-sm font-medium">
-            Legendary Western Men's Long Sleeve
+            Legendary Western Men&lsquo;s Long Sleeve
           </h4>
           <p className="text-xs text-muted-foreground">
             $34.5
@@ -35,7 +35,7 @@ export default function NewArrivals() {
         </div>
         <div className="grid gap-y-1.5">
           <h4 className="text-sm font-medium">
-            Legendary Western Men's Long Sleeve
+            Legendary Western Men&lsquo;s Long Sleeve
           </h4>
           <p className="text-xs text-muted-foreground">
             $34.5
@@ -54,7 +54,7 @@ export default function NewArrivals() {
         </div>
         <div className="grid gap-y-1.5">
           <h4 className="text-sm font-medium">
-            Legendary Western Men's Long Sleeve
+            Legendary Western Men&lsquo;s Long Sleeve
           </h4>
           <p className="text-xs text-muted-foreground">
             $34.5

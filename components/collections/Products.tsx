@@ -17,7 +17,7 @@ export default function Products() {
           </div>
           <div className="grid gap-y-1.5">
             <h4 className="text-sm font-medium">
-              Legendary Western Men's Long Sleeve
+              Legendary Western Men&#39;s Long Sleeve
             </h4>
             <p className="text-xs text-muted-foreground">$34.5</p>
           </div>
