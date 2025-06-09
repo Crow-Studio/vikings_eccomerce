@@ -9,7 +9,7 @@ import SolarBagHeartOutline from "../svgs/SolarBagHeartOutline";
 
 export default function Header() {
   return (
-    <header className="px-2 md:px-5 xl:px-10 py-3 flex items-center justify-between">
+    <header className="px-2 sticky top-0 right-0 left-0 backdrop-blur z-30 md:px-5 xl:px-10 py-3 flex items-center justify-between">
       <h2 className="hidden md:block text-sm text-muted-foreground">
         Free shipping and 30 days return
       </h2>
@@ -40,7 +40,7 @@ export default function Header() {
           <SolarBagHeartOutline />
         </Button>
         <Separator orientation="vertical" />
-        <Link href="/signin">Sign in</Link>
+        <Link href="/auth/signin">Sign in</Link>
       </div>
     </header>
   );
