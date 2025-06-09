@@ -11,7 +11,7 @@ import { globalGETRateLimit } from "@/lib/server/request";
 import { v4 as uuidv4 } from "uuid";
 
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
-import { db, eq } from "@/database";
+import { db, eq, tables } from "@/database";
 
 export async function GET(request: Request): Promise<Response> {
   if (!(await globalGETRateLimit())) {
@@ -60,14 +60,18 @@ export async function GET(request: Request): Promise<Response> {
   const avatar = claimsParser.getString("picture");
   const email = claimsParser.getString("email");
 
-  // check if user exists
-  const existingUser = await db.query.user.findFirst({
-    where: (table) => eq(table.id, googleId),
+  // check if user existing oauth account exists
+
+  const existingOauthAccount = await db.query.oauth_account.findFirst({
+    where: (table) => eq(table.providerUserId, googleId),
   });
 
-  if (existingUser) {
+  if (existingOauthAccount) {
     const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, existingUser.id);
+    const session = await createSession(
+      sessionToken,
+      existingOauthAccount.userId
+    );
     await setSessionTokenCookie(sessionToken, session.expiresAt);
 
     return new Response(null, {
@@ -80,7 +84,20 @@ export async function GET(request: Request): Promise<Response> {
 
   const id = uuidv4();
   const role: "ADMIN" | "CUSTOMER" = "ADMIN";
+
+  // create new user
   const user = await createUser(id, email, username, avatar, role);
+
+  // create user oauth account
+  await db.insert(tables.oauth_account).values({
+    id: uuidv4(),
+    provider: "google",
+    providerUserId: googleId,
+    userId: user.id,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
   await setSessionTokenCookie(sessionToken, session.expiresAt);
