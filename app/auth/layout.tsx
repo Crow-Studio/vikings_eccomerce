@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import DeliriumSvgIcon from "@/components/svgs/DeliriumSvgIcon";
+import Link from "next/link";
 
 export default function AuthLayout({
   children,
@@ -20,12 +21,12 @@ export default function AuthLayout({
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black"></div>
       <div className="grid gap-3">
         <div className="backdrop-blur-xs grid place-content-center">
-          <div className="flex items-center gap-1.5">
+          <Link href="/" className="flex items-center gap-1.5">
             <DeliriumSvgIcon className="w-[2.5rem] h-auto" />
             <h1 className="text-4xl font-semibold text-[#353535] dark:text-white">
               Delirium
             </h1>
-          </div>
+          </Link>
         </div>
         {children}
       </div>
