@@ -1,7 +1,14 @@
-import React from "react";
 import { SignupForm } from "@/components/auth/SignupForm";
+import { getCurrentSession } from "@/lib/server/session";
+import { redirect } from "next/navigation";
 
-export default function SignupPage() {
+export default async function SignupPage() {
+  const { user } = await getCurrentSession();
+
+  if (user) {
+    return redirect("/account/dashboard");
+  }
+  
   return (
     <div className="flex flex-col gap-6">
       <SignupForm />

@@ -1,4 +1,3 @@
-import React from "react";
 import { cn } from "@/lib/utils";
 import DeliriumSvgIcon from "@/components/svgs/DeliriumSvgIcon";
 import Link from "next/link";
