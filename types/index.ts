@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export type ModalType = "signoutUser";
 
 export interface ModalData {}
@@ -9,3 +11,12 @@ export interface ModalStore {
   onOpen: (type: ModalType, data?: ModalData) => void;
   onClose: () => void;
 }
+
+export const formSchema = z.object({
+  email: z.string().email({
+    message: "Invalid email!",
+  }),
+  password: z.string().min(8, {
+    message: "Password too short! 8 characters minimum",
+  }),
+});

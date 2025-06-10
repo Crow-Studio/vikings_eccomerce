@@ -19,6 +19,7 @@ export async function validateSessionToken(
       username: tables.user.username,
       avatar: tables.user.avatar,
       role: tables.user.role,
+      emailVerified: tables.user.emailVerified,
     })
     .from(tables.session)
     .innerJoin(tables.user, eq(tables.session.userId, tables.user.id))
@@ -43,6 +44,7 @@ export async function validateSessionToken(
     username: row.username,
     avatar: row.avatar,
     role: row.role,
+    emailVerified: row.emailVerified,
   };
 
   // Check if session is expired

@@ -5,7 +5,8 @@ export async function createUser(
   email: string,
   username: string,
   avatar: string,
-  role: "ADMIN" | "CUSTOMER"
+  role: "ADMIN" | "CUSTOMER",
+  emailVerified: boolean
 ): Promise<User> {
   const [row] = await db
     .insert(tables.user)
@@ -15,6 +16,7 @@ export async function createUser(
       username,
       avatar,
       role,
+      emailVerified,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
@@ -30,6 +32,7 @@ export async function createUser(
     email: row.email,
     role: row.role,
     username: row.username,
+    emailVerified: row.emailVerified
   };
 
   return user;
@@ -41,4 +44,5 @@ export interface User {
   email: string;
   username: string;
   avatar: string;
+  emailVerified: boolean
 }

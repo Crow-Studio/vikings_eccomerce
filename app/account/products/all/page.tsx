@@ -13,6 +13,8 @@ export default async function AllProductsPage() {
   if (user === null) {
     return redirect("/auth/signin");
   }
-
+  if (!user.emailVerified) {
+    return redirect("/auth/verify-email");
+  }
   return <div>AllProductsPage</div>;
 }

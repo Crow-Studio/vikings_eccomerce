@@ -61,7 +61,6 @@ export async function GET(request: Request): Promise<Response> {
   const email = claimsParser.getString("email");
 
   // check if user existing oauth account exists
-
   const existingOauthAccount = await db.query.oauth_account.findFirst({
     where: (table) => eq(table.providerUserId, googleId),
   });
@@ -84,9 +83,17 @@ export async function GET(request: Request): Promise<Response> {
 
   const id = uuidv4();
   const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
+  const emailVerified = true;
 
   // create new user
-  const user = await createUser(id, email, username, avatar, role);
+  const user = await createUser(
+    id,
+    email,
+    username,
+    avatar,
+    role,
+    emailVerified
+  );
 
   // create user oauth account
   await db.insert(tables.oauth_account).values({

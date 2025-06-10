@@ -18,7 +18,7 @@ export default function AuthLayout({
         )}
       />
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black"></div>
-      <div className="grid gap-3">
+      <div className="grid gap-3 w-full max-w-2xl">
         <div className="backdrop-blur-xs grid place-content-center">
           <Link href="/" className="flex items-center gap-1.5">
             <DeliriumSvgIcon className="w-[2.5rem] h-auto" />
@@ -27,7 +27,7 @@ export default function AuthLayout({
             </h1>
           </Link>
         </div>
-        {children}
+        <div className="w-full">{children}</div>
       </div>
     </main>
   );
