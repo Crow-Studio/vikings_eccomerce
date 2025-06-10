@@ -48,7 +48,7 @@ export function SigninForm() {
                 <Input id="password" type="password" required />
               </div>
               <Button type="submit" className="w-full">
-                Login
+                Sign in
               </Button>
             </div>
             <div className="text-center text-sm">

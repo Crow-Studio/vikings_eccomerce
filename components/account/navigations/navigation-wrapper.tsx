@@ -15,7 +15,7 @@ export default async function NavigationWrapper({
   if (!user) {
     return redirect("/auth/signin");
   }
-  
+
   return (
     <SidebarProvider className="flex flex-col">
       <SiteHeader />

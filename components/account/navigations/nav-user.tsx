@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  ChevronsUpDown,
-  LogOut,
-} from "lucide-react";
+import { ChevronsUpDown, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -21,9 +18,11 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { User } from "@/lib/server/user";
+import { useModal } from "@/hooks/use-modal-store";
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
+  const { onOpen } = useModal();
 
   return (
     <SidebarMenu>
@@ -64,7 +63,10 @@ export function NavUser({ user }: { user: User }) {
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="focus:cursor-pointer">
+            <DropdownMenuItem
+              onClick={() => onOpen("signoutUser")}
+              className="focus:cursor-pointer"
+            >
               <LogOut />
               Sign out
             </DropdownMenuItem>
