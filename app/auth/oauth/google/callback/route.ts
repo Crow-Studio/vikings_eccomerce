@@ -83,7 +83,7 @@ export async function GET(request: Request): Promise<Response> {
   }
 
   const id = uuidv4();
-  const role: "ADMIN" | "CUSTOMER" = "ADMIN";
+  const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
 
   // create new user
   const user = await createUser(id, email, username, avatar, role);
