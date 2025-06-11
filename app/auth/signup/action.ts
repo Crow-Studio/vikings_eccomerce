@@ -1,10 +1,12 @@
+"use server"
+
 import {
   checkEmailAvailability,
   createEmailVerificationRequest,
-  sendVerificationEmail,
+  sendVerificationCodeRequest,
   verifyEmailInput,
 } from "@/lib/server/email";
-import { verifyPasswordStrength } from "@/lib/server/password";
+import { hashPassword, verifyPasswordStrength } from "@/lib/server/password";
 import { RefillingTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import {
@@ -27,97 +29,109 @@ export async function signupAction({
   email: string;
   password: string;
 }): Promise<ActionResult> {
-  if (!(await globalPOSTRateLimit())) {
+  try {
+    if (!(await globalPOSTRateLimit())) {
+      return {
+        errorMessage: "Too many requests!",
+        message: null,
+      };
+    }
+
+    const clientIP = (await headers()).get("X-Forwarded-For");
+    if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
+      return {
+        errorMessage: "Too many requests!",
+        message: null,
+      };
+    }
+
+    if (typeof email !== "string" || typeof password !== "string") {
+      return {
+        errorMessage: "Invalid or missing fields!",
+        message: null,
+      };
+    }
+    if (email === "" || password === "") {
+      return {
+        errorMessage: "Please enter your email and password!",
+        message: null,
+      };
+    }
+
+    if (!verifyEmailInput(email)) {
+      return {
+        errorMessage: "Invalid email!",
+        message: null,
+      };
+    }
+
+    const emailAvailable = await checkEmailAvailability(email);
+    if (emailAvailable) {
+      return {
+        errorMessage: "Email is already used!",
+        message: null,
+      };
+    }
+
+    const strongPassword = await verifyPasswordStrength(password);
+    if (!strongPassword) {
+      return {
+        errorMessage: "Weak password!",
+        message: null,
+      };
+    }
+
+    if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
+      return {
+        errorMessage: "Too many requests",
+        message: null,
+      };
+    }
+
+    const id = uuidv4();
+    const username = generateRandomUsername();
+    const avatar = `https://avatar.vercel.sh/vercel.svg?text=${capitalize(
+      username.split(" ")[0]
+    )}`;
+    const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
+    const emailVerified = false;
+    const passwordHash = await hashPassword(password);
+
+    const user = await createUser(
+      id,
+      email,
+      username,
+      avatar,
+      role,
+      emailVerified,
+      passwordHash
+    );
+
+    const emailVerificationRequest = await createEmailVerificationRequest(
+      user.id,
+      user.email
+    );
+
+    await sendVerificationCodeRequest({
+      code: emailVerificationRequest.code,
+      email: emailVerificationRequest.email,
+    });
+
+    const sessionToken = generateSessionToken();
+    const session = await createSession(sessionToken, user.id);
+    await setSessionTokenCookie(sessionToken, session.expiresAt);
+
     return {
-      errorMessage: "Too many requests!",
+      errorMessage: null,
+      message:
+        "You've successfully signed up! Check your email for the verification code.",
+    };
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  catch (error: any) {
+    return {
+      errorMessage: error.message,
       message: null,
     };
   }
-
-  const clientIP = (await headers()).get("X-Forwarded-For");
-  if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
-    return {
-      errorMessage: "Too many requests!",
-      message: null,
-    };
-  }
-
-  if (typeof email !== "string" || typeof password !== "string") {
-    return {
-      errorMessage: "Invalid or missing fields!",
-      message: null,
-    };
-  }
-  if (email === "" || password === "") {
-    return {
-      errorMessage: "Please enter your email and password!",
-      message: null,
-    };
-  }
-
-  if (!verifyEmailInput(email)) {
-    return {
-      errorMessage: "Invalid email!",
-      message: null,
-    };
-  }
-
-  const emailAvailable = await checkEmailAvailability(email);
-  if (!emailAvailable) {
-    return {
-      errorMessage: "Email is already used",
-      message: null,
-    };
-  }
-
-  const strongPassword = await verifyPasswordStrength(password);
-  if (!strongPassword) {
-    return {
-      errorMessage: "Weak password!",
-      message: null,
-    };
-  }
-
-  if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
-    return {
-      errorMessage: "Too many requests",
-      message: null,
-    };
-  }
-
-  const id = uuidv4();
-  const username = generateRandomUsername();
-  const avatar = `https://avatar.vercel.sh/vercel.svg?text=${capitalize(
-    username.split(" ")[0]
-  )}`;
-  const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
-  const emailVerified = false;
-
-  const user = await createUser(
-    id,
-    email,
-    username,
-    avatar,
-    role,
-    emailVerified
-  );
-
-  const emailVerificationRequest = await createEmailVerificationRequest(
-    user.id,
-    user.email
-  );
-  sendVerificationEmail(
-    emailVerificationRequest.email,
-    emailVerificationRequest.code
-  );
-
-  const sessionToken = generateSessionToken();
-  const session = await createSession(sessionToken, user.id);
-  await setSessionTokenCookie(sessionToken, session.expiresAt);
-
-  return {
-    errorMessage: null,
-    message:
-      "You've successfully signed up, Check your email for the verification code!",
-  };
 }

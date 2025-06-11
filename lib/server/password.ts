@@ -30,6 +30,7 @@ export async function verifyPasswordStrength(
     `https://api.pwnedpasswords.com/range/${hashPrefix}`
   );
   const data = await response.text();
+
   const items = data.split("\n");
   for (const item of items) {
     const hashSuffix = item.slice(0, 35).toLowerCase();

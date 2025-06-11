@@ -2,6 +2,28 @@ import { db, eq, tables } from "@/database";
 import { encodeBase32 } from "@oslojs/encoding";
 import { generateRandomOTP } from "./utils";
 import { v4 as uuidv4 } from "uuid";
+import { resend } from "./resend";
+import { VerificationCodeRequestMail } from "@/emails/VerificationCodeRequestMail";
+
+interface Props {
+  code: string;
+  email: string;
+}
+
+export async function sendVerificationCodeRequest({ code, email }: Props) {
+  try {
+    await resend.emails.send({
+      from: "Team delirium <noreply@thecodingmontana.com>",
+      to: [email],
+      subject: `Your unique derilium verification code is ${code}`,
+      react: await VerificationCodeRequestMail({ code }),
+    });
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  catch (error: any) {
+    throw new Error(error.message);
+  }
+}
 
 export function verifyEmailInput(email: string): boolean {
   return /^.+@.+\..+$/.test(email) && email.length < 256;
@@ -11,6 +33,8 @@ export async function checkEmailAvailability(email: string): Promise<boolean> {
   const user = await db.query.user.findFirst({
     where: (table) => eq(table.email, email),
   });
+
+  console.log(user, email);
 
   if (user) {
     return true;
@@ -56,10 +80,6 @@ export async function deleteUserEmailVerificationRequest(
   await db
     .delete(tables.email_verification_request_table)
     .where(eq(tables.email_verification_request_table.userId, userId));
-}
-
-export function sendVerificationEmail(email: string, code: string): void {
-	console.log(`To ${email}: Your verification code is ${code}`);
 }
 
 export interface EmailVerificationRequest {

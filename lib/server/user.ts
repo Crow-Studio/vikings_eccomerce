@@ -6,8 +6,10 @@ export async function createUser(
   username: string,
   avatar: string,
   role: "ADMIN" | "CUSTOMER",
-  emailVerified: boolean
+  emailVerified: boolean,
+  passwordHash?: string
 ): Promise<User> {
+  const password = passwordHash ? passwordHash : "";
   const [row] = await db
     .insert(tables.user)
     .values({
@@ -17,6 +19,7 @@ export async function createUser(
       avatar,
       role,
       emailVerified,
+      password,
       createdAt: new Date(),
       updatedAt: new Date(),
     })
