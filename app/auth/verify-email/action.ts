@@ -1,7 +1,12 @@
 "use server";
 
 import { db, eq } from "@/database";
-import { deleteUserEmailVerificationRequest } from "@/lib/server/email";
+import {
+  createEmailVerificationRequest,
+  deleteUserEmailVerificationRequest,
+  sendVerificationCodeRequest,
+  sendVerificationEmailBucket,
+} from "@/lib/server/email";
 import { ExpiringTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
@@ -100,4 +105,65 @@ export async function verifyEmailAction({
   }
 }
 
-// export async function resendEmailVerificationCodeAction(): Promise<ActionResult> {}
+export async function resendEmailVerificationCodeAction(): Promise<ActionResult> {
+  try {
+    if (!(await globalPOSTRateLimit())) {
+      return {
+        errorMessage: "Too many requests!",
+        message: null,
+      };
+    }
+
+    const { session, user } = await getCurrentSession();
+
+    if (!session) {
+      return {
+        errorMessage: "Not authenticated!",
+        message: null,
+      };
+    }
+
+    if (!sendVerificationEmailBucket.check(user.id, 1)) {
+      return {
+        errorMessage: "Too many requests!",
+        message: null,
+      };
+    }
+
+    if (user.emailVerified) {
+      return {
+        errorMessage: "Forbidden!",
+        message: null,
+      };
+    }
+
+    // Consume rate limit token before proceeding
+    if (!sendVerificationEmailBucket.consume(user.id, 1)) {
+      return {
+        errorMessage: "Too many requests!",
+        message: null,
+      };
+    }
+
+    // Create new verification request
+    const emailVerificationRequest = await createEmailVerificationRequest(
+      user.id,
+      user.email
+    );
+
+    await sendVerificationCodeRequest({
+      code: emailVerificationRequest.code,
+      email: emailVerificationRequest.email,
+    });
+
+    return {
+      errorMessage: null,
+      message: "A new verification code was sent to your mailbox.",
+    };
+  } catch (error: any) {
+    return {
+      errorMessage: error.message,
+      message: null,
+    };
+  }
+}

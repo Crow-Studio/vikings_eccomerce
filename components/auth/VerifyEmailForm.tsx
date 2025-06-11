@@ -25,8 +25,11 @@ import { User } from "@/lib/server/user";
 import { signoutAction } from "@/app/account/action";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
-import { Loader } from "lucide-react";
-import { verifyEmailAction } from "@/app/auth/verify-email/action";
+import { Loader, Loader2 } from "lucide-react";
+import {
+  resendEmailVerificationCodeAction,
+  verifyEmailAction,
+} from "@/app/auth/verify-email/action";
 import { redirect } from "next/navigation";
 
 export function VerifyEmailForm({ user }: { user: User }) {
@@ -68,9 +71,22 @@ export function VerifyEmailForm({ user }: { user: User }) {
   };
 
   const onResendCode = async () => {
+    setIsResendCode(true);
     try {
-      setIsResendCode(true);
+      const { message, errorMessage } =
+        await resendEmailVerificationCodeAction();
+
+      if (errorMessage) {
+        return toast.error(errorMessage, {
+          position: "top-center",
+        });
+      }
+
       startTimer();
+
+      return toast.success(message, {
+        position: "top-center",
+      });
     } finally {
       setIsResendCode(false);
     }
@@ -93,13 +109,13 @@ export function VerifyEmailForm({ user }: { user: User }) {
         position: "top-center",
       });
 
-      return redirect("/account/dashboar");
+      return redirect("/account/dashboard");
     } finally {
       setIsVerifyingCode(false);
     }
   }
 
-  const onSignoutUSer = async () => {
+  const onSignoutUser = async () => {
     setIsSignout(true);
     try {
       const { message } = await signoutAction();
@@ -153,13 +169,20 @@ export function VerifyEmailForm({ user }: { user: User }) {
                     <Button
                       type="submit"
                       disabled={isSignout || isResendCode || isVerifyingCode}
-                      className="w-full cursor-pointer"
+                      className="w-full cursor-pointer gap-1.5"
                     >
-                      Verify code
+                      {isVerifyingCode ? (
+                        <>
+                          <Loader2 className="w-5 animate-spin" />
+                          <span>Verifying code...</span>
+                        </>
+                      ) : (
+                        <span>Verify Code</span>
+                      )}
                     </Button>
                     <Button
                       type="button"
-                      className="w-full cursor-pointer"
+                      className="w-full cursor-pointer gap-1.5"
                       variant="outline"
                       disabled={
                         isSignout ||
@@ -170,7 +193,10 @@ export function VerifyEmailForm({ user }: { user: User }) {
                       onClick={() => onResendCode()}
                     >
                       {isResendCode ? (
-                        <Loader className="animate-spin size-5" />
+                        <>
+                          <Loader className="animate-spin size-5" />
+                          <span>Reseding code...</span>
+                        </>
                       ) : timeElapsed > 0 && isStopTimer ? (
                         <span>Resend verification code in {timeElapsed}s</span>
                       ) : (
@@ -185,7 +211,7 @@ export function VerifyEmailForm({ user }: { user: User }) {
         </CardContent>
       </Card>
       <Button
-        onClick={() => onSignoutUSer()}
+        onClick={() => onSignoutUser()}
         type="button"
         variant="link"
         className="cursor-pointer z-10 gap-1.5"

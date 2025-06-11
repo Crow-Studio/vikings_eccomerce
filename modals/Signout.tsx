@@ -1,7 +1,7 @@
 "use client";
 
 import { useModal } from "@/hooks/use-modal-store";
-import React from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -13,12 +13,15 @@ import { EmojiSadFace } from "@/components/svgs/EmojiSadFace";
 import { Button } from "@/components/ui/button";
 import { signoutAction } from "@/app/account/action";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 export default function Signout() {
   const { isOpen, onClose, type } = useModal();
+  const [isSigningOut, setIsSigningout] = useState(false);
   const isModalOpen = isOpen && type === "signoutUser";
 
-  const onSignoutUSer = async () => {
+  const onSignoutUser = async () => {
+    setIsSigningout(true);
     try {
       const { errorMessage } = await signoutAction();
 
@@ -29,11 +32,12 @@ export default function Signout() {
       }
     } finally {
       onClose();
+      setIsSigningout(false);
     }
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={onClose}>
+    <Dialog open={isModalOpen || isSigningOut} onOpenChange={onClose}>
       <DialogOverlay className="bg-background/60 dark:bg-background/20 backdrop-blur-xs" />
       <DialogContent>
         <DialogHeader className="items-center">
@@ -48,15 +52,24 @@ export default function Signout() {
             onClick={() => onClose()}
             className="w-full cursor-pointer"
             variant="outline"
+            disabled={isSigningOut}
           >
             Naah, just kidding!
           </Button>
           <Button
-            onClick={() => onSignoutUSer()}
-            className="w-full cursor-pointer"
+            onClick={() => onSignoutUser()}
+            className="w-full cursor-pointer gap-1.5"
             variant="destructive"
+            disabled={isSigningOut}
           >
-            Yes, sign in me out!
+            {isSigningOut ? (
+              <>
+                <Loader2 className="w-5 animate-spin" />
+                <span>Signing out...</span>
+              </>
+            ) : (
+              <span>Yes, sign in me out!</span>
+            )}
           </Button>
         </div>
       </DialogContent>
