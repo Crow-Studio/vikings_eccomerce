@@ -127,7 +127,6 @@ export async function signupAction({
         "You've successfully signed up! Check your email for the verification code.",
     };
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   catch (error: any) {
     return {
       errorMessage: error.message,
