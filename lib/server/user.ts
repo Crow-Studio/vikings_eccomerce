@@ -52,6 +52,18 @@ export async function getUserPasswordHash(userId: string): Promise<string> {
   return user.password!;
 }
 
+export async function updateUserEmailAndSetEmailAsVerified(
+  userId: string
+): Promise<void> {
+  await db
+    .update(tables.user)
+    .set({
+      emailVerified: true,
+      updatedAt: new Date(),
+    })
+    .where(eq(tables.user.id, userId));
+}
+
 export interface User {
   id: string;
   role: "ADMIN" | "CUSTOMER";

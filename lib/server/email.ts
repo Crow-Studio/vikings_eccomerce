@@ -4,6 +4,7 @@ import { generateRandomOTP } from "./utils";
 import { v4 as uuidv4 } from "uuid";
 import { resend } from "./resend";
 import { VerificationCodeRequestMail } from "@/emails/VerificationCodeRequestMail";
+import { ExpiringTokenBucket } from "./rate-limit";
 
 interface Props {
   code: string;
@@ -81,6 +82,8 @@ export async function deleteUserEmailVerificationRequest(
     .delete(tables.email_verification_request_table)
     .where(eq(tables.email_verification_request_table.userId, userId));
 }
+
+export const sendVerificationEmailBucket = new ExpiringTokenBucket<string>(3, 60 * 10);
 
 export interface EmailVerificationRequest {
   id: string;

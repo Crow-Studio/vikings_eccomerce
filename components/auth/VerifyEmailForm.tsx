@@ -20,25 +20,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { formSchema } from "@/types";
+import { emailVerificationSchema } from "@/types";
 import { User } from "@/lib/server/user";
 import { signoutAction } from "@/app/account/action";
 import { toast } from "sonner";
 import { useRef, useState } from "react";
 import { Loader } from "lucide-react";
+import { verifyEmailAction } from "@/app/auth/verify-email/action";
+import { redirect } from "next/navigation";
 
 export function VerifyEmailForm({ user }: { user: User }) {
   const [isSignout, setIsSignout] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState<number>(60);
   const [isResendCode, setIsResendCode] = useState<boolean>(false);
   const [isStopTimer, setIsStopTimer] = useState<boolean>(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof emailVerificationSchema>>({
+    resolver: zodResolver(emailVerificationSchema),
     defaultValues: {
-      email: "",
-      password: "",
+      code: "",
     },
   });
 
@@ -74,8 +76,27 @@ export function VerifyEmailForm({ user }: { user: User }) {
     }
   };
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof emailVerificationSchema>) {
+    setIsVerifyingCode(true);
+    try {
+      const { message, errorMessage } = await verifyEmailAction(values);
+
+      if (errorMessage) {
+        return toast.error(errorMessage, {
+          position: "top-center",
+        });
+      }
+
+      form.reset();
+
+      toast.success(message, {
+        position: "top-center",
+      });
+
+      return redirect("/account/dashboar");
+    } finally {
+      setIsVerifyingCode(false);
+    }
   }
 
   const onSignoutUSer = async () => {
@@ -111,7 +132,7 @@ export function VerifyEmailForm({ user }: { user: User }) {
                 <div className="grid gap-3.5">
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="code"
                     render={({ field }) => (
                       <FormItem className="">
                         <FormLabel>Verification code</FormLabel>
@@ -119,7 +140,9 @@ export function VerifyEmailForm({ user }: { user: User }) {
                           <Input
                             placeholder="e.g V3RIFY9"
                             {...field}
-                            disabled={isSignout || isResendCode}
+                            disabled={
+                              isSignout || isResendCode || isVerifyingCode
+                            }
                           />
                         </FormControl>
                         <FormMessage />
@@ -129,7 +152,7 @@ export function VerifyEmailForm({ user }: { user: User }) {
                   <div className="space-y-1.5">
                     <Button
                       type="submit"
-                      disabled={isSignout || isResendCode}
+                      disabled={isSignout || isResendCode || isVerifyingCode}
                       className="w-full cursor-pointer"
                     >
                       Verify code
@@ -141,7 +164,8 @@ export function VerifyEmailForm({ user }: { user: User }) {
                       disabled={
                         isSignout ||
                         isResendCode ||
-                        (timeElapsed > 0 && isStopTimer)
+                        (timeElapsed > 0 && isStopTimer) ||
+                        isVerifyingCode
                       }
                       onClick={() => onResendCode()}
                     >
@@ -165,7 +189,7 @@ export function VerifyEmailForm({ user }: { user: User }) {
         type="button"
         variant="link"
         className="cursor-pointer z-10 gap-1.5"
-        disabled={isSignout || isResendCode}
+        disabled={isSignout || isResendCode || isVerifyingCode}
       >
         {isSignout ? (
           <>
