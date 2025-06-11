@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import DeliriumSvgIcon from "@/components/svgs/DeliriumSvgIcon";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function AuthLayout({
   children,
@@ -29,6 +30,7 @@ export default function AuthLayout({
         </div>
         <div className="w-full">{children}</div>
       </div>
+      <Toaster richColors closeButton />
     </main>
   );
 }

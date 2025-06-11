@@ -6,25 +6,24 @@ import {
   getCurrentSession,
   invalidateSession,
 } from "@/lib/server/session";
+import { ActionResult } from "@/types";
 import { redirect } from "next/navigation";
 
 export async function signoutAction(): Promise<ActionResult> {
   if (!(await globalPOSTRateLimit())) {
     return {
-      message: "Too many requests",
+      errorMessage: "Too many requests",
+      message: null
     };
   }
   const { session } = await getCurrentSession();
   if (session === null) {
     return {
-      message: "Not authenticated",
+      errorMessage: "Not authenticated",
+      message: null
     };
   }
   await invalidateSession(session.id);
   await deleteSessionTokenCookie();
   return redirect("/auth/signin");
-}
-
-interface ActionResult {
-  message: string;
 }

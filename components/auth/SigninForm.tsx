@@ -18,8 +18,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { formSchema } from "@/types";
+import { signinAction } from "@/app/auth/signin/action";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export function SigninForm() {
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -28,8 +35,25 @@ export function SigninForm() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsAuthenticating(true);
+    try {
+      const { message, errorMessage } = await signinAction(values);
+
+      if (errorMessage) {
+        return toast.error(errorMessage, {
+          position: "top-center",
+        });
+      }
+
+      toast.success(message, {
+        position: "top-center",
+      });
+
+      return redirect("/account/dashboard");
+    } finally {
+      setIsAuthenticating(false);
+    }
   }
 
   return (
@@ -41,7 +65,10 @@ export function SigninForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="grid gap-3">
-              <GoogleOauthButton text="Signin with Google" />
+              <GoogleOauthButton
+                text="Signin with Google"
+                isAuthenticating={isAuthenticating}
+              />
               <div className="after:border-border relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:flex after:items-center after:border-t">
                 <span className="bg-card text-muted-foreground relative z-10 px-2">
                   Or continue with
@@ -59,6 +86,7 @@ export function SigninForm() {
                           type="email"
                           placeholder="m@example.com"
                           {...field}
+                          disabled={isAuthenticating}
                         />
                       </FormControl>
                       <FormMessage />
@@ -69,25 +97,36 @@ export function SigninForm() {
                   control={form.control}
                   name="password"
                   render={({ field }) => (
-                    <FormItem className="">
+                    <FormItem>
                       <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
-                        <a
-                          href="#"
+                        <Link
+                          href="/auth/forgot-password"
                           className="ml-auto text-sm underline-offset-4 hover:underline"
                         >
                           Forgot your password?
-                        </a>
+                        </Link>
                       </div>
                       <FormControl>
-                        <PasswordInput {...field} />
+                        <PasswordInput {...field} disabled={isAuthenticating} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full">
-                  Sign in
+                <Button
+                  disabled={isAuthenticating}
+                  type="submit"
+                  className="w-full gap-1.5"
+                >
+                  {isAuthenticating ? (
+                    <>
+                      <Loader2 className="animate-spin w-5" />
+                      <span>Authenticating...</span>
+                    </>
+                  ) : (
+                    <span>Sign in</span>
+                  )}
                 </Button>
               </div>
               <div className="text-center text-sm">

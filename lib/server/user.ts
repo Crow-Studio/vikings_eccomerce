@@ -1,4 +1,4 @@
-import { db, tables } from "@/database";
+import { db, eq, tables } from "@/database";
 
 export async function createUser(
   id: string,
@@ -32,10 +32,21 @@ export async function createUser(
     email: row.email,
     role: row.role,
     username: row.username,
-    emailVerified: row.emailVerified
+    emailVerified: row.emailVerified,
   };
 
   return user;
+}
+
+export async function getUserPasswordHash(userId: string): Promise<string> {
+  const user = await db.query.user.findFirst({
+    where: (table) => eq(table.id, userId),
+  });
+
+  if (!user) {
+    throw new Error("Invalid user ID");
+  }
+  return user.password!;
 }
 
 export interface User {
@@ -44,5 +55,5 @@ export interface User {
   email: string;
   username: string;
   avatar: string;
-  emailVerified: boolean
+  emailVerified: boolean;
 }

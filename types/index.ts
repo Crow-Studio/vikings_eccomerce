@@ -4,6 +4,11 @@ export type ModalType = "signoutUser";
 
 export interface ModalData {}
 
+export interface ActionResult {
+  message: string | null
+  errorMessage: string | null
+}
+
 export interface ModalStore {
   type: ModalType | null;
   isOpen: boolean;

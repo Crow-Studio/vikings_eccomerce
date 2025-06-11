@@ -20,10 +20,10 @@ export default function Signout() {
 
   const onSignoutUSer = async () => {
     try {
-      const { message } = await signoutAction();
+      const { errorMessage } = await signoutAction();
 
-      if (message) {
-        return toast.error(message, {
+      if (errorMessage) {
+        return toast.error(errorMessage, {
           position: "top-center",
         });
       }

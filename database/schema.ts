@@ -19,6 +19,7 @@ export const user = pgTable(
     username: varchar("username", { length: 255 }).notNull(),
     avatar: text("avatar").notNull(),
     role: userRoleEnum("role").default("CUSTOMER").notNull(),
+    password: text("password"),
     emailVerified: boolean("email_verified").notNull().default(false),
     createdAt: timestamp("createdAt", { mode: "date", precision: 3 })
       .notNull()
