@@ -52,7 +52,7 @@ export function SignupForm() {
         position: "top-center",
       });
 
-      return redirect("/auth/verify-password");
+      return redirect("/auth/verify-email");
     } finally {
       setIsCreatingAccount(false);
     }

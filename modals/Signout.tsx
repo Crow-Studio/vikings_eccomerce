@@ -37,7 +37,10 @@ export default function Signout() {
   };
 
   return (
-    <Dialog open={isModalOpen || isSigningOut} onOpenChange={onClose}>
+    <Dialog
+      open={isModalOpen || isSigningOut ? false : true}
+      onOpenChange={onClose}
+    >
       <DialogOverlay className="bg-background/60 dark:bg-background/20 backdrop-blur-xs" />
       <DialogContent>
         <DialogHeader className="items-center">

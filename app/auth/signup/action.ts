@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import {
   checkEmailAvailability,
@@ -15,7 +15,7 @@ import {
   setSessionTokenCookie,
 } from "@/lib/server/session";
 import { createUser } from "@/lib/server/user";
-import { capitalize, generateRandomUsername } from "@/lib/server/username";
+import { generateRandomUsername } from "@/lib/server/username";
 import { ActionResult } from "@/types";
 import { headers } from "next/headers";
 import { v4 as uuidv4 } from "uuid";
@@ -90,9 +90,10 @@ export async function signupAction({
 
     const id = uuidv4();
     const username = generateRandomUsername();
-    const avatar = `https://avatar.vercel.sh/vercel.svg?text=${capitalize(
-      username.split(" ")[0]
-    )}`;
+    const avatar = `https://avatar.vercel.sh/vercel.svg?text=${username
+      .split(" ")[0]
+      .charAt(0)
+      .toUpperCase()}`;
     const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
     const emailVerified = false;
     const passwordHash = await hashPassword(password);
@@ -126,8 +127,7 @@ export async function signupAction({
       message:
         "You've successfully signed up! Check your email for the verification code.",
     };
-  }
-  catch (error: any) {
+  } catch (error: any) {
     return {
       errorMessage: error.message,
       message: null,
