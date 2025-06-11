@@ -1,23 +1,26 @@
-"use server";
-
-import { db, eq } from "@/database";
-import { verifyEmailInput } from "@/lib/server/email";
-import { verifyPasswordHash } from "@/lib/server/password";
-import { RefillingTokenBucket, Throttler } from "@/lib/server/rate-limit";
+import {
+  checkEmailAvailability,
+  createEmailVerificationRequest,
+  sendVerificationEmail,
+  verifyEmailInput,
+} from "@/lib/server/email";
+import { verifyPasswordStrength } from "@/lib/server/password";
+import { RefillingTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import {
   createSession,
   generateSessionToken,
   setSessionTokenCookie,
 } from "@/lib/server/session";
-import { getUserPasswordHash } from "@/lib/server/user";
+import { createUser } from "@/lib/server/user";
+import { capitalize, generateRandomUsername } from "@/lib/server/username";
 import { ActionResult } from "@/types";
 import { headers } from "next/headers";
+import { v4 as uuidv4 } from "uuid";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
-const throttler = new Throttler<string>([1, 2, 4, 8, 16, 30, 60, 180, 300]);
 
-export async function signinAction({
+export async function signupAction({
   email,
   password,
 }: {
@@ -30,7 +33,7 @@ export async function signinAction({
       message: null,
     };
   }
-  
+
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return {
@@ -59,48 +62,54 @@ export async function signinAction({
     };
   }
 
-  const user = await db.query.user.findFirst({
-    where: (table) => eq(table.email, email),
-  });
-
-  if (!user) {
+  const emailAvailable = await checkEmailAvailability(email);
+  if (!emailAvailable) {
     return {
-      errorMessage: "Account does not exist!",
+      errorMessage: "Email is already used",
+      message: null,
+    };
+  }
+
+  const strongPassword = await verifyPasswordStrength(password);
+  if (!strongPassword) {
+    return {
+      errorMessage: "Weak password!",
       message: null,
     };
   }
 
   if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
     return {
-      errorMessage: "Too many requests!",
+      errorMessage: "Too many requests",
       message: null,
     };
   }
 
-  if (!throttler.consume(user.id)) {
-    return {
-      errorMessage: "Too many requests!",
-      message: null,
-    };
-  }
+  const id = uuidv4();
+  const username = generateRandomUsername();
+  const avatar = `https://avatar.vercel.sh/vercel.svg?text=${capitalize(
+    username.split(" ")[0]
+  )}`;
+  const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
+  const emailVerified = false;
 
-  if (!user.password) {
-    return {
-      errorMessage:
-        "Account exists but password wasn't set. Signin with Google and set you password in the settings!",
-      message: null,
-    };
-  }
+  const user = await createUser(
+    id,
+    email,
+    username,
+    avatar,
+    role,
+    emailVerified
+  );
 
-  const passwordHash = await getUserPasswordHash(user.id);
-  const validPassword = await verifyPasswordHash(passwordHash, password);
-  if (!validPassword) {
-    return {
-      errorMessage: "Invalid password!",
-      message: null,
-    };
-  }
-  throttler.reset(user.id);
+  const emailVerificationRequest = await createEmailVerificationRequest(
+    user.id,
+    user.email
+  );
+  sendVerificationEmail(
+    emailVerificationRequest.email,
+    emailVerificationRequest.code
+  );
 
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
@@ -108,6 +117,7 @@ export async function signinAction({
 
   return {
     errorMessage: null,
-    message: "You've successfully signed in!",
+    message:
+      "You've successfully signed up, Check your email for the verification code!",
   };
 }

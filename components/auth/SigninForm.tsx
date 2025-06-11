@@ -46,6 +46,8 @@ export function SigninForm() {
         });
       }
 
+      form.reset();
+
       toast.success(message, {
         position: "top-center",
       });
