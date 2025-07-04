@@ -25,7 +25,7 @@ export default function VikingsHero() {
             {/* Main Heading */}
             <div className="space-y-4">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-balance">
-                Kenya's trusted source for{" "}
+                Kenya&apos;s trusted source for{" "}
                 <span className="relative text-primary">
                   professional tools
                   <span className="absolute -bottom-2 left-0 w-full h-1 bg-primary/20 rounded-full"></span>

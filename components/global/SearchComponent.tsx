@@ -2,12 +2,26 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Search, X, Clock, TrendingUp, ArrowRight } from "lucide-react";
 
-const MegaSearch = ({ isOpen, onClose }) => {
+interface MegaSearchProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+interface Product {
+  id: string;
+  name: string;
+  category: string;
+  price: string;
+  image?: string;
+}
+
+
+const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [recentSearches] = useState([]);
-  const [trendingSearches] = useState([]);
-  const [searchResults, setSearchResults] = useState([]);
-  const searchInputRef = useRef(null);
+  const [recentSearches] = useState<string[]>([]);
+  const [trendingSearches] = useState<string[]>([]);
+  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Focus search input when opened
   useEffect(() => {
@@ -29,7 +43,11 @@ const MegaSearch = ({ isOpen, onClose }) => {
 
   // Handle escape key and body scroll
   useEffect(() => {
-    const handleEscape = (e) => {
+    interface KeyboardEvent {
+      key: string;
+    }
+
+    const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
       }
