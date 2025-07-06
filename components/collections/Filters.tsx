@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from "react";
-import GrainOverlay from '@/components/global/GrainOverlay';
 
 // Type definitions
 interface PriceRange {
@@ -62,9 +61,7 @@ export default function Filters({ onFilterChange }: FiltersProps) {
   };
 
   return (
-    <div className="space-y-6 relative">
-      <GrainOverlay />
-      
+    <div className="space-y-6">
       {/* Categories */}
       <div className="space-y-3">
         <h4 className="font-semibold text-slate-800 dark:text-white">Categories</h4>

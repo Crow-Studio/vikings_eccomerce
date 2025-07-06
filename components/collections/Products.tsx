@@ -3,8 +3,7 @@
 import React, { useState } from "react";
 import { Star, Heart, ShoppingCart } from "lucide-react";
 import ShoppingBagIcon from "../svgs/shoppingBag";
-import { mockProducts } from "../../data/products"; 
-import GrainOverlay from '@/components/global/GrainOverlay';
+import { mockProducts } from "../../data/products";
 import type { 
   Product, 
   ProductCardProps, 
@@ -25,7 +24,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
   if (viewMode === 'list') {
     return (
       <div className="bg-white dark:bg-background rounded-xl shadow-sm border border-slate-200 dark:border-zinc-700 p-6 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
-        <GrainOverlay/>
         <div className="flex gap-6">
           <div className="relative w-32 h-32 flex-shrink-0">
             <img
@@ -34,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
               className="w-full h-full object-cover rounded-lg"
             />
             {product.isNew && (
-              <span className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+              <span className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
                 New
               </span>
             )}
@@ -47,11 +45,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
               </h3>
               <button
                 onClick={() => setIsWishlisted(!isWishlisted)}
-                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+                className="p-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-full transition-colors"
               >
                 <Heart
                   size={20}
-                  className={isWishlisted ? "fill-red-500 text-red-500" : "text-slate-400"}
+                  className={isWishlisted ? "fill-primary text-primary" : "text-muted-foreground"}
                 />
               </button>
             </div>
@@ -60,7 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
             
             <div className="flex items-center gap-2 mb-3">
               <div className="flex items-center">
-                <Star size={16} className="fill-yellow-400 text-yellow-400" />
+                <Star size={16} className="fill-primary text-primary" />
                 <span className="text-sm text-slate-600 dark:text-slate-400 ml-1">
                   {product.rating} ({product.reviews} reviews)
                 </span>
@@ -84,12 +82,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
                 disabled={!product.inStock || isLoading}
                 className={`px-6 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 ${
                   product.inStock
-                    ? 'bg-slate-800 text-white hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 hover:shadow-md'
+                    ? 'bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-md'
                     : 'bg-slate-200 text-slate-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-600'
                 }`}
               >
                 {isLoading ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                 ) : (
                   <ShoppingCart size={16} />
                 )}
@@ -105,7 +103,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
   return (
     <div className="bg-white dark:bg-background rounded-xl shadow-sm border border-slate-200 dark:border-zinc-700 overflow-hidden hover:shadow-lg transition-all duration-300 group">
       <div className="relative overflow-hidden">
-        <GrainOverlay/>
         <div className="aspect-square bg-[#f3f2f3] dark:bg-slate-800">
           <img
             src={product.image}
@@ -115,7 +112,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
         </div>
         
         {product.isNew && (
-          <span className="absolute top-3 left-3 bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+          <span className="absolute top-3 left-3 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
             New
           </span>
         )}
@@ -126,7 +123,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
         >
           <Heart
             size={18}
-            className={isWishlisted ? "fill-red-500 text-red-500" : "text-slate-600 dark:text-slate-400"}
+            className={isWishlisted ? "fill-primary text-primary" : "text-slate-600 dark:text-slate-400"}
           />
         </button>
       </div>
@@ -140,7 +137,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
         </div>
         
         <div className="flex items-center gap-1 mb-3">
-          <Star size={14} className="fill-yellow-400 text-yellow-400" />
+          <Star size={14} className="fill-primary text-primary" />
           <span className="text-sm text-slate-600 dark:text-slate-400">
             {product.rating} ({product.reviews})
           </span>
@@ -162,12 +159,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
           disabled={!product.inStock || isLoading}
           className={`w-full py-3 rounded-lg font-medium transition-all duration-200 flex items-center justify-center gap-2 ${
             product.inStock
-              ? 'bg-slate-800 text-white hover:bg-slate-700 dark:bg-slate-700 dark:hover:bg-slate-600 hover:shadow-md'
+              ? 'bg-primary hover:bg-primary/90 text-primary-foreground hover:shadow-md'
               : 'bg-slate-200 text-slate-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-600'
           }`}
         >
           {isLoading ? (
-            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
           ) : (
             <ShoppingCart size={16} />
           )}

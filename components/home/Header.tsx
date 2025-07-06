@@ -18,7 +18,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "../ui/sheet";
-import { Menu, X } from "lucide-react";
+import { Menu } from "lucide-react";
 import Link from "next/link";
 import ShoppingBagIcon from "../svgs/shoppingBag";
 import WishListIcon from "../svgs/Wishlist";
@@ -30,10 +30,10 @@ export default function Header() {
 
   // Handle keyboard shortcut for search
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-        e.preventDefault();
-        setIsSearchOpen(true);
+      e.preventDefault();
+      setIsSearchOpen(true);
       }
     };
 
@@ -82,7 +82,12 @@ export default function Header() {
     }
   }, []);
 
-  const IconButton = ({ icon: Icon, tooltip, onClick, badge }) => (
+  const IconButton = ({ icon: Icon, tooltip, onClick, badge }: {
+    icon: React.ComponentType<{ className?: string }>;
+    tooltip: string;
+    onClick?: () => void;
+    badge?: string | number;
+  }) => (
     <Tooltip>
       <TooltipTrigger asChild>
         <Button

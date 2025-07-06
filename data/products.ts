@@ -14,11 +14,11 @@ export const mockProducts = [
   },
   {
     id: 2,
-    name: "Heavy Duty Hammer",
-    price: 2800,
-    image: "https://images.unsplash.com/photo-1609205807107-171989fa2fe6?w=400&h=400&fit=crop",
+    name: "Heavy Duty Hammmer",
+    price: 1200,
+    image: "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
     rating: 4.6,
-    reviews: 89,
+    reviews: 4,
     category: "Hand Tools",
     inStock: true,
     isNew: false
