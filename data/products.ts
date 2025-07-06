@@ -89,5 +89,16 @@ export const mockProducts = [
     category: "Power Tools",
     inStock: true,
     isNew: true
+  },
+  {
+    id: 9,
+    name: "Shamba Panga",
+    price: 3200,
+    image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=400&h=400&fit=crop",
+    rating: 4.6,
+    reviews: 112,
+    category: "Power Tools",
+    inStock: true,
+    isNew: false
   }
 ];
