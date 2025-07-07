@@ -1,6 +1,5 @@
 'use client'
 import React, { useState, useEffect } from "react";
-import DeliriumSvgIcon from "../svgs/DeliriumSvgIcon";
 import SolarMagniferOutline from "../svgs/SolarMagniferOutline";
 import SolarCartLarge2Outline from "../svgs/SolarCartLarge2Outline";
 import { Button } from "../ui/button";
@@ -23,6 +22,7 @@ import Link from "next/link";
 import ShoppingBagIcon from "../svgs/shoppingBag";
 import WishListIcon from "../svgs/Wishlist";
 import MegaSearch from '../global/SearchComponent';
+import VikingsSvgIcon from "../svgs/VikingsSvgIcon";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -123,8 +123,8 @@ export default function Header() {
 
           {/* Center Section - Logo */}
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <DeliriumSvgIcon className="w-6 h-auto sm:w-7 transition-transform hover:scale-105" />
-            <h1 className="text-lg sm:text-xl font-semibold text-[#353535] dark:text-white">
+            <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform hover:scale-105" />
+            <h1 className="text-xl sm:text-2xl font-semibold text-[#353535] dark:text-white">
               Vikings
             </h1>
           </div>
@@ -187,12 +187,14 @@ export default function Header() {
                 >
                   <SheetHeader>
                     <SheetTitle className="flex items-center gap-2">
-                      <DeliriumSvgIcon className="w-6 h-auto" />
-                      Vikings
+                      <VikingsSvgIcon className="w-12 h-auto" />
+                      <p className="text-xl font-semibold">
+                        Vikings
+                      </p>
                     </SheetTitle>
                   </SheetHeader>
                   
-                  <div className="mt-6 space-y-4">
+                  <div className="mt-6 space-y-4 p-2">
                     {/* Promo Text for Mobile */}
                     <div className="text-xs text-muted-foreground border-b pb-4">
                       Free shipping in Nairobi and 30 days return

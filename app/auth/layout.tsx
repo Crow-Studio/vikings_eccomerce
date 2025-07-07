@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
-import DeliriumSvgIcon from "@/components/svgs/DeliriumSvgIcon";
 import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
+import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon";
+import GrainOverlay from "@/components/global/GrainOverlay";
 
 export default function AuthLayout({
   children,
@@ -10,6 +11,7 @@ export default function AuthLayout({
 }>) {
   return (
     <main className="grid place-content-center min-h-screen">
+      <GrainOverlay />
       <div
         className={cn(
           "absolute inset-0",
@@ -20,11 +22,11 @@ export default function AuthLayout({
       />
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white [mask-image:radial-gradient(ellipse_at_center,transparent_20%,black)] dark:bg-black"></div>
       <div className="grid gap-3 w-full max-w-2xl">
-        <div className="backdrop-blur-xs grid place-content-center">
+        <div className="z-10 bg-transparent grid place-content-center">
           <Link href="/" className="flex items-center gap-1.5">
-            <DeliriumSvgIcon className="w-[2.5rem] h-auto" />
+            <VikingsSvgIcon className="w-[4.5rem] h-auto" />
             <h1 className="text-4xl font-semibold text-[#353535] dark:text-white">
-              Delirium
+              Vikings
             </h1>
           </Link>
         </div>
