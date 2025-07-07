@@ -9,6 +9,7 @@ import type {
   ProductCardProps, 
   ProductsProps, 
 } from '@/types/product';
+import Image from "next/image";
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
   const [isWishlisted, setIsWishlisted] = useState<boolean>(false);
@@ -26,10 +27,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
       <div className="bg-white dark:bg-background rounded-xl shadow-sm border border-slate-200 dark:border-zinc-700 p-6 hover:shadow-md transition-all duration-300 group relative overflow-hidden">
         <div className="flex gap-6">
           <div className="relative w-32 h-32 flex-shrink-0">
-            <img
+            <Image
               src={product.image}
               alt={product.name}
               className="w-full h-full object-cover rounded-lg"
+              fill
             />
             {product.isNew && (
               <span className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full">
@@ -104,10 +106,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, viewMode }) => {
     <div className="bg-white dark:bg-background rounded-xl shadow-sm border border-slate-200 dark:border-zinc-700 overflow-hidden hover:shadow-lg transition-all duration-300 group">
       <div className="relative overflow-hidden">
         <div className="aspect-square bg-[#f3f2f3] dark:bg-slate-800">
-          <img
+          <Image
             src={product.image}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            fill
           />
         </div>
         
