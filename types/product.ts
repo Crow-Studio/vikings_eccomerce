@@ -1,4 +1,3 @@
-// Shared type definitions for the collections feature
 export interface Product {
   id: string
   name: string
