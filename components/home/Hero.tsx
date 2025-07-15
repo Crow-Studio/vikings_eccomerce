@@ -1,5 +1,6 @@
 import React from "react";
 import { ArrowRight, Shield, Truck } from "lucide-react";
+import Link from "next/link";
 import FeaturedProducts from "@/components/home/FeaturedProduct";
 import GrainOverlay from "@/components/global/GrainOverlay";
 
@@ -72,10 +73,12 @@ export default function VikingsHero() {
 
             {/* CTA Button */}
             <div className="pt-2">
-              <Button className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
-                <span className="relative z-10">Shop All Products</span>
-                <ArrowRight className="w-5 h-5 transform group-hover:translate-x-0.5 transition-transform" />
-              </Button>
+              <Link href="/products">
+                <Button className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
+                  <span className="relative z-10 cursor-pointer">Shop All Products</span>
+                  <ArrowRight className="w-5 h-5 transform group-hover:translate-x-0.5 transition-transform" />
+                </Button>
+              </Link>
             </div>
 
             {/* Trust Indicators - Enhanced Layout */}
@@ -113,10 +116,12 @@ export default function VikingsHero() {
           <div className="space-y-6 lg:space-y-8">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Featured Products</h2>
-              <button className=" bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg  shadow-lg hover:shadow-xl px-4 py-1  font-medium text-base flex items-center gap-1 group transition-colors">
-                View All
-                <ArrowRight className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" />
-              </button>
+              <Link href="/products">
+                <button className=" bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg cursor-pointer shadow-lg hover:shadow-xl px-4 py-1  font-medium text-base flex items-center gap-1 group transition-colors">
+                  View All
+                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </Link>
             </div>
             
             <FeaturedProducts />
