@@ -52,7 +52,7 @@ export default function NotFoundPage() {
             {/* Action button */}
             <div className="mb-10">
               <Link href="/" className="inline-block">
-                <Button className="bg-primary hover:bg-primary/90 text-black cursor-pointer font-medium py-3 px-8 rounded-lg transition-all duration-300 hover:shadow-lg">
+                <Button className="bg-white hover:bg-gray-200 text-black cursor-pointer font-medium py-3 px-8 rounded-lg transition-all duration-300 hover:shadow-lg">
                   <Home className="w-4 h-4 mr-2" />
                   Go to Homepage
                 </Button>
