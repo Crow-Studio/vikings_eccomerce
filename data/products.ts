@@ -47,7 +47,7 @@ export const mockProducts: Product[] = [
   },
   {
     id: "2",
-    name: "Cordless Angle Grinder 18V",
+    name: "Cordless Angle Grinder 18V00",
     price: 12000,
     originalPrice: 14500,
     isNew: false,
@@ -57,8 +57,9 @@ export const mockProducts: Product[] = [
     sku: "VKG-GRN-002",
     category: "Power Tools",
     images: [
-      "https://images.unsplash.com/photo-1609205807107-e9c8d1a7e3a8?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop"
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "18V Li-ion battery for cordless operation",
@@ -85,9 +86,9 @@ export const mockProducts: Product[] = [
     sku: "VKG-WLD-003",
     category: "Welding Equipment",
     images: [
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1609205807107-e9c8d1a7e3a8?w=400&h=400&fit=crop"
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "200A output for heavy-duty welding",
@@ -113,9 +114,10 @@ export const mockProducts: Product[] = [
     reviews: 95,
     sku: "VKG-CHN-004",
     category: "Garden Tools",
-    images: [
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop"
+     images: [
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "Powerful 2200W motor",
@@ -141,10 +143,10 @@ export const mockProducts: Product[] = [
     reviews: 78,
     sku: "VKG-SAW-005",
     category: "Power Tools",
-    images: [
-      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop",
+     images: [
       "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop"
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "1600W high-performance motor",
@@ -171,9 +173,10 @@ export const mockProducts: Product[] = [
     reviews: 92,
     sku: "VKG-CMP-006",
     category: "Pneumatic Tools",
-    images: [
-      "https://images.unsplash.com/photo-1609205807107-e9c8d1a7e3a8?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=400&fit=crop"
+     images: [
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "50L steel tank for extended use",
@@ -200,10 +203,10 @@ export const mockProducts: Product[] = [
     reviews: 156,
     sku: "VKG-SND-007",
     category: "Power Tools",
-    images: [
+     images: [
       "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
       "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop"
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "300W motor for smooth operation",
@@ -230,9 +233,10 @@ export const mockProducts: Product[] = [
     reviews: 103,
     sku: "VKG-HAM-008",
     category: "Power Tools",
-    images: [
-      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1609205807107-e9c8d1a7e3a8?w=400&h=400&fit=crop"
+     images: [
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "850W motor with SDS-plus chuck",
@@ -260,9 +264,9 @@ export const mockProducts: Product[] = [
     sku: "VKG-NAL-009",
     category: "Pneumatic Tools",
     images: [
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=400&fit=crop",
       "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop"
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "Accepts 15-50mm nails",
@@ -289,9 +293,10 @@ export const mockProducts: Product[] = [
     reviews: 134,
     sku: "VKG-BNG-010",
     category: "Workshop Equipment",
-    images: [
-      "https://images.unsplash.com/photo-1609205807107-e9c8d1a7e3a8?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop"
+     images: [
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "375W motor with dual grinding wheels",
@@ -318,10 +323,10 @@ export const mockProducts: Product[] = [
     reviews: 76,
     sku: "VKG-JAK-011",
     category: "Automotive Tools",
-    images: [
-      "https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?w=400&h=400&fit=crop",
+     images: [
       "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop"
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "3-ton lifting capacity",
@@ -339,7 +344,7 @@ export const mockProducts: Product[] = [
   },
   {
     id: "12",
-    name: "Digital Multimeter Professional",
+    name: "Digital Multimeter ",
     price: 3200,
     originalPrice: 3800,
     isNew: false,
@@ -349,8 +354,9 @@ export const mockProducts: Product[] = [
     sku: "VKG-DMM-012",
     category: "Electrical Tools",
     images: [
-      "https://images.unsplash.com/photo-1609205807107-e9c8d1a7e3a8?w=400&h=400&fit=crop",
-      "https://images.unsplash.com/photo-1581092160562-40aa08e78837?w=400&h=400&fit=crop"
+      "https://images.unsplash.com/photo-1572981779307-38b8cabb2407?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1504148455328-c376907d081c?w=400&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop",
     ],
     features: [
       "Auto-ranging for easy measurements",
