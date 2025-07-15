@@ -47,7 +47,7 @@ export const mockProducts: Product[] = [
   },
   {
     id: "2",
-    name: "Cordless Angle Grinder 18V00",
+    name: "Cordless Angle Grinder Tool 18V00",
     price: 12000,
     originalPrice: 14500,
     isNew: false,
