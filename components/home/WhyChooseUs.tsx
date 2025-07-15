@@ -1,51 +1,9 @@
 import React from 'react';
-import { Shield, Truck, Wrench, Award, Clock, Users, CheckCircle, Phone } from 'lucide-react';
+import { Phone } from 'lucide-react';
 import GrainOverlay from '@/components/global/GrainOverlay';
+import { mainFeatures, additionalBenefits, stats, contactInfo } from '@/data/WhyChooseUs';
 
 const WhyChooseUs = () => {
-  const mainFeatures = [
-    {
-      icon: Shield,
-      title: "Quality Guaranteed",
-      description: "All our tools come with manufacturer warranties and our quality assurance guarantee.",
-      highlight: "2+ Years Warranty"
-    },
-    {
-      icon: Truck,
-      title: "Fast Delivery",
-      description: "Quick delivery across Nairobi and nationwide shipping to all counties in Kenya.",
-      highlight: "Same Day Delivery*"
-    },
-    {
-      icon: Wrench,
-      title: "Expert Support",
-      description: "Professional consultation and technical support from our experienced team.",
-      highlight: "24/7 Support"
-    },
-    {
-      icon: Award,
-      title: "Trusted Since 2005",
-      description: "Nearly 20 years of experience serving professionals across Kenya.",
-      highlight: "5000+ Happy Customers"
-    }
-  ];
-
-  const additionalBenefits = [
-    { icon: CheckCircle, text: "Authorized dealer for major brands" },
-    { icon: CheckCircle, text: "Competitive pricing with bulk discounts" },
-    { icon: CheckCircle, text: "Professional tool repair services" },
-    { icon: CheckCircle, text: "Equipment training and consultation" },
-    { icon: CheckCircle, text: "Flexible payment options available" },
-    { icon: CheckCircle, text: "30-day return policy" }
-  ];
-
-  const stats = [
-    { number: "5000+", label: "Happy Customers", icon: Users },
-    { number: "18+", label: "Years Experience", icon: Clock },
-    { number: "4.8★", label: "Customer Rating", icon: Award },
-    { number: "24/7", label: "Support Available", icon: Phone }
-  ];
-
   return (
     <section className="relative py-16 lg:py-24 overflow-hidden">
       <GrainOverlay />
@@ -59,9 +17,9 @@ const WhyChooseUs = () => {
               <span className="absolute -bottom-2 left-0 w-full h-1 bg-primary/30 rounded-full"></span>
             </span>
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-            Your trusted partner for professional tools and equipment. We've been serving Kenya's professionals since 2005 with quality, reliability, and exceptional service.
-          </p>
+            <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+            Your trusted partner for professional tools and equipment. We&apos;ve been serving Kenya&apos;s professionals since 2005 with quality, reliability, and exceptional service.
+            </p>
         </div>
 
         {/* Main Features Grid */}
@@ -155,15 +113,15 @@ const WhyChooseUs = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Call us:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">+254 700 000 000</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{contactInfo.phone}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Email:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">info@vikings.co.ke</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{contactInfo.email}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Hours:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">Mon-Sat 8AM-6PM</span>
+                    <span className="font-semibold text-gray-900 dark:text-white">{contactInfo.hours}</span>
                   </div>
                 </div>
               </div>

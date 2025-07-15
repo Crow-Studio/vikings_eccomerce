@@ -4,8 +4,8 @@ import { MessageCircle, ArrowRight, CheckCircle, Gift, Zap, Bell, X } from 'luci
 import GrainOverlay from "@/components/global/GrainOverlay"
 
 const Newsletter = () => {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [isJoined, setIsJoined] = useState(false);
+  const [, setPhoneNumber] = useState('');
+  const [, setIsJoined] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 

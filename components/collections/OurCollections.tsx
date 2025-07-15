@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Filter, X, Search, Grid, List, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
 import Filters from "./Filters";
 import Products from "./Products";
 import GrainOverlay from '@/components/global/GrainOverlay';
@@ -14,14 +15,18 @@ export default function OurCollections() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({ categories: [], priceRange: null });
 
+  const pathname = usePathname();
+  const isProductsPage = pathname === '/products';
+  const title = isProductsPage ? 'Our Products' : 'Our Collections';
+
   return (
-    <section className="min-h-screen bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden">
+    <section className="min-h-screen relative bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
       <GrainOverlay/>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent dark:text-white">
-            Our Collections
+            {title}
           </h1>
           <p className="text-slate-600 dark:text-muted-foreground mt-2">
             Discover quality tools and equipment from Vikings Kenya Power Traders
