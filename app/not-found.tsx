@@ -1,4 +1,4 @@
-import { Home, ArrowLeft, Wrench, Package } from "lucide-react"
+import { Home,} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import Image from "next/image"
@@ -37,7 +37,7 @@ export default function NotFoundPage() {
               Oops! Page not found
             </h1>
             <p className="text-base sm:text-lg text-gray-700 leading-relaxed font-medium">
-              The page you're looking for doesn't exist or has been moved.
+              The page you&apos;re looking for doesn&apos;t exist or has been moved.
             </p>
           </div>
         </div>
@@ -46,7 +46,7 @@ export default function NotFoundPage() {
         <div className="flex-1 bg-black flex flex-col justify-center p-6 sm:p-8 lg:p-12 text-white">
           <div className="max-w-md mx-auto lg:mx-0 w-full">
             <p className="text-sm sm:text-base text-gray-300 mb-8 leading-relaxed text-center lg:text-left">
-              Don't worry! You can easily find what you're looking for by visiting our homepage or exploring our shop.
+              Don&apos;t worry! You can easily find what you&apos;re looking for by visiting our homepage or exploring our shop.
             </p>
             
             {/* Action button */}
