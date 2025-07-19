@@ -1,0 +1,25 @@
+name: Keep Neon DB Alive
+
+on:
+  schedule:
+    - cron: "*/20 * * * *" # every 20 minutes
+  workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install PostgreSQL client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Keep Neon DB alive
+        env:
+          DATABASE_URL: ${{ secrets.NEON_DATABASE_URL }}
+        run: |
+          if [ -z "$DATABASE_URL" ]; then
+            echo "DATABASE_URL is not set!"
+            exit 1
+          fi
+          PGPASSWORD=$(echo $DATABASE_URL | sed -E 's|.*://([^:]+):([^@]+)@.*|\2|') \
+          psql "$DATABASE_URL" -c 'SELECT 1;'

@@ -8,10 +8,10 @@ import { cookies } from "next/headers";
 import { createUser } from "@/lib/server/user";
 import { ObjectParser } from "@pilcrowjs/object-parser";
 import { globalGETRateLimit } from "@/lib/server/request";
-import { v4 as uuidv4 } from "uuid";
 
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
 import { db, eq, tables } from "@/database";
+import { generateNanoId, UserRole } from "@/database/schema";
 
 export async function GET(request: Request): Promise<Response> {
   if (!(await globalGETRateLimit())) {
@@ -81,8 +81,8 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
-  const id = uuidv4();
-  const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
+  const id = generateNanoId();
+  const role: UserRole = UserRole.CUSTOMER;
   const email_verified = true;
 
   // create new user
@@ -97,7 +97,7 @@ export async function GET(request: Request): Promise<Response> {
 
   // create user oauth account
   await db.insert(tables.oauth_account).values({
-    id: uuidv4(),
+    id: generateNanoId(),
     provider: "google",
     provider_user_id: googleId,
     user_id: user.id

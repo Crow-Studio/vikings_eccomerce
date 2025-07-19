@@ -1,10 +1,10 @@
 import { db, eq, tables } from "@/database";
 import { encodeBase32 } from "@oslojs/encoding";
 import { generateRandomOTP } from "./utils";
-import { v4 as uuidv4 } from "uuid";
 import { resend } from "./resend";
 import { VerificationCodeRequestMail } from "@/emails/VerificationCodeRequestMail";
 import { ExpiringTokenBucket } from "./rate-limit";
+import { generateNanoId } from "@/database/schema";
 
 interface Props {
   code: string;
@@ -55,13 +55,11 @@ export async function createEmailVerificationRequest(
   const expires_at = new Date(Date.now() + 1000 * 60 * 10);
 
   await db.insert(tables.email_verification_request_table).values({
-    id: uuidv4(),
+    id: generateNanoId(),
     code,
     email,
     user_id,
     expires_at,
-    createdAt: new Date(),
-    updatedAt: new Date(),
   });
 
   const request: EmailVerificationRequest = {

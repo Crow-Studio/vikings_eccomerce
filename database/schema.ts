@@ -7,7 +7,8 @@ import {
   text,
   timestamp,
   varchar,
-  decimal
+  decimal,
+  jsonb
 } from "drizzle-orm/pg-core";
 import { customAlphabet } from 'nanoid';
 
@@ -63,7 +64,7 @@ export const category = pgTable('category', {
     .defaultNow(),
 })
 
-export const product = pgTable('product', {
+export const product = pgTable('products', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   name: varchar('name', { length: 60 }).notNull(),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
@@ -80,6 +81,30 @@ export const product = pgTable('product', {
     mode: 'date',
     precision: 3,
   }).$onUpdate(() => new Date())
+})
+
+export const image = pgTable('images', {
+  id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
+  product_id: text("product_id")
+    .notNull()
+    .references(() => product.id),
+  url: text('url').notNull(),
+  created_at: timestamp('created_at', { mode: 'date', precision: 3 })
+    .notNull()
+    .defaultNow(),
+  updated_at: timestamp('updated_at', {
+    mode: 'date',
+    precision: 3,
+  }).$onUpdate(() => new Date())
+})
+
+export const variants = pgTable('variants', {
+  id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
+  product_id: text("product_id")
+    .notNull()
+    .references(() => product.id),
+  title: varchar('title', { length: 50 }).notNull(),
+  values: jsonb('values').notNull(),
 })
 
 export const oauth_account = pgTable("oauth_account", {
