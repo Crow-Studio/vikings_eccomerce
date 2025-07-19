@@ -1,4 +1,4 @@
-import AddNewProductForm from "@/components/account/products/AddNewProductForm";
+import AddNewProductForm from "@/components/account/products/add/AddNewProductForm";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { redirect } from "next/navigation";
