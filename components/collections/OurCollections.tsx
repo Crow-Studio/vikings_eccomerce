@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import Filters from "./Filters";
 import Products from "./Products";
 import GrainOverlay from '@/components/global/GrainOverlay';
-import type { FilterState, ViewMode, SortBy } from '@/types/product';
+import { FilterState, SortBy, ViewMode } from "@/types/products";
 
 export default function OurCollections() {
   const [showFilters, setShowFilters] = useState(false);
