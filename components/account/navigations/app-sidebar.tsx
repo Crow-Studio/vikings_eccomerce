@@ -21,9 +21,9 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import DeliriumSvgIcon from "@/components/svgs/DeliriumSvgIcon";
 import Link from "next/link";
 import { User } from "@/lib/server/user";
+import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon";
 
 // Extend the Sidebar props to include user
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -95,10 +95,10 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <DeliriumSvgIcon className="size-4" />
+                  <VikingsSvgIcon className="w-7 h-auto" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Derilium</span>
+                  <span className="truncate font-medium">Vikings</span>
                   <span className="truncate text-xs">{user.role}</span>
                 </div>
               </Link>

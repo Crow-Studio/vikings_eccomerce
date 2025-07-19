@@ -1,3 +1,4 @@
+import AddNewProductForm from "@/components/account/products/AddNewProductForm";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { redirect } from "next/navigation";
@@ -14,5 +15,8 @@ export default async function AddProductsPage() {
   if (!user.emailVerified) {
     return redirect("/auth/verify-email");
   }
-  return <div>AddProductsPage</div>;
+  
+  return (
+    <AddNewProductForm />
+  );
 }
