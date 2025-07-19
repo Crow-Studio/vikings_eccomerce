@@ -28,39 +28,41 @@ export default function ProductSettings({ form }: ProductSettingsProps) {
           name="visibility"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Visibility Status *</FormLabel>
-              <FormControl>
-                <div>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select visibility status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="active">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                          Active
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="inactive">
-                        <div className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-                          Inactive
-                        </div>
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <div className="mt-1 text-xs text-muted-foreground">
-                    <p>
-                      Active products are visible to customers. Inactive
-                      products are hidden.
-                    </p>
+              <div className="grid grid-cols-2">
+                <FormLabel>Visibility Status *</FormLabel>
+                <FormControl>
+                  <div>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select visibility status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="active">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            Active
+                          </div>
+                        </SelectItem>
+                        <SelectItem value="inactive">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
+                            Inactive
+                          </div>
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
-                </div>
-              </FormControl>
+                </FormControl>
+              </div>
+              <div className="mt-1 text-xs text-muted-foreground">
+                <p>
+                  Active products are visible to customers. Inactive products
+                  are hidden.
+                </p>
+              </div>
               <FormMessage />
             </FormItem>
           )}

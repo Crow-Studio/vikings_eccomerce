@@ -167,7 +167,7 @@ export default function ImageUpload({
               {images.map((image, index) => (
                 <div
                   key={image.id}
-                  className="bg-accent relative aspect-square rounded-md"
+                  className="bg-accent relative size-[8rem] rounded-md"
                 >
                   {index === 0 && (
                     <div className="absolute top-1 left-1 z-10">

@@ -85,9 +85,12 @@ export default function AddNewProductForm() {
             Save Product
           </Button>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 lg:gap-5 2xl:gap-10">
-          <div className="grid gap-y-3 self-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-5 gap-3 lg:gap-5">
+          <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-2">
             <GeneralInformation form={form} />
+            <ProductSettings form={form} />
+          </div>
+          <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-3">
             <VariantsConfigurations
               form={form}
               hasVariants={hasVariants}
@@ -96,9 +99,6 @@ export default function AddNewProductForm() {
               variantCombinations={variantCombinations}
               remove={remove}
             />
-          </div>
-          <div className="grid gap-y-3 self-start">
-            <ProductSettings form={form} />
             <ProductImages form={form} />
           </div>
         </div>

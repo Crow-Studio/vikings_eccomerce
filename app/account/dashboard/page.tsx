@@ -13,7 +13,7 @@ export default async function DashboardPage() {
     return redirect("/auth/signin");
   }
 
-  if (!user.emailVerified) {
+  if (!user.email_verified) {
     return redirect("/auth/verify-email");
   }
 

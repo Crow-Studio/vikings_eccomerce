@@ -35,7 +35,7 @@ export default function ProductImages({ form }: ProductImagesProps) {
                       image will be used as the main image.
                     </p>
                     <p>
-                      Supported formats: SVG, PNG, JPG, GIF (max 5MB each, up to
+                      Supported formats: PNG, JPG, JPEG (max 5MB each, up to
                       6 images)
                     </p>
                   </div>

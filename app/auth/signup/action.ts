@@ -95,7 +95,7 @@ export async function signupAction({
       .charAt(0)
       .toUpperCase()}`;
     const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
-    const emailVerified = false;
+    const email_verified = false;
     const passwordHash = await hashPassword(password);
 
     const user = await createUser(
@@ -104,7 +104,7 @@ export async function signupAction({
       username,
       avatar,
       role,
-      emailVerified,
+      email_verified,
       passwordHash
     );
 
@@ -120,7 +120,7 @@ export async function signupAction({
 
     const sessionToken = generateSessionToken();
     const session = await createSession(sessionToken, user.id);
-    await setSessionTokenCookie(sessionToken, session.expiresAt);
+    await setSessionTokenCookie(sessionToken, session.expires_at);
 
     return {
       errorMessage: null,

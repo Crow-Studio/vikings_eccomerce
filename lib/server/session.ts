@@ -12,17 +12,17 @@ export async function validateSessionToken(
   const result = await db
     .select({
       sessionId: tables.session.id,
-      userId: tables.session.userId,
-      expiresAt: tables.session.expiresAt,
+      user_id: tables.session.user_id,
+      expires_at: tables.session.expires_at,
       userTableId: tables.user.id,
       email: tables.user.email,
       username: tables.user.username,
       avatar: tables.user.avatar,
       role: tables.user.role,
-      emailVerified: tables.user.emailVerified,
+      email_verified: tables.user.email_verified,
     })
     .from(tables.session)
-    .innerJoin(tables.user, eq(tables.session.userId, tables.user.id))
+    .innerJoin(tables.user, eq(tables.session.user_id, tables.user.id))
     .where(eq(tables.session.id, sessionId));
 
   // Check if no session found
@@ -34,30 +34,30 @@ export async function validateSessionToken(
 
   const session: Session = {
     id: row.sessionId,
-    userId: row.userId,
-    expiresAt: new Date(Number(row.expiresAt) * 1000),
+    user_id: row.user_id,
+    expires_at: new Date(Number(row.expires_at) * 1000),
   };
 
   const user: User = {
-    id: row.userId,
+    id: row.user_id,
     email: row.email,
     username: row.username,
     avatar: row.avatar,
     role: row.role,
-    emailVerified: row.emailVerified,
+    email_verified: row.email_verified,
   };
 
   // Check if session is expired
   const now = Date.now();
 
-  if (now >= session.expiresAt.getTime()) {
+  if (now >= session.expires_at.getTime()) {
     // Delete expired session
     await db
       .delete(tables.session)
       .where(
         and(
           eq(tables.session.id, row.sessionId),
-          eq(tables.session.userId, row.userId)
+          eq(tables.session.user_id, row.user_id)
         )
       );
     return { session: null, user: null };
@@ -67,18 +67,18 @@ export async function validateSessionToken(
   const fifteenDaysInMs = 1000 * 60 * 60 * 24 * 15;
   const thirtyDaysInMs = 1000 * 60 * 60 * 24 * 30;
 
-  if (now >= session.expiresAt.getTime() - fifteenDaysInMs) {
+  if (now >= session.expires_at.getTime() - fifteenDaysInMs) {
     const newExpiresAt = new Date(now + thirtyDaysInMs);
 
     await db
       .update(tables.session)
       .set({
-        expiresAt: newExpiresAt,
+        expires_at: newExpiresAt,
       })
       .where(eq(tables.session.id, row.sessionId));
 
     // Update the session object with new expiry time
-    session.expiresAt = newExpiresAt;
+    session.expires_at = newExpiresAt;
   }
 
   return { session, user };
@@ -100,13 +100,13 @@ export async function invalidateSession(sessionId: string): Promise<void> {
   await db.delete(tables.session).where(eq(tables.session.id, sessionId));
 }
 
-export async function invalidateUserSessions(userId: string): Promise<void> {
-  await db.delete(tables.session).where(eq(tables.session.userId, userId));
+export async function invalidateUserSessions(user_id: string): Promise<void> {
+  await db.delete(tables.session).where(eq(tables.session.user_id, user_id));
 }
 
 export async function setSessionTokenCookie(
   token: string,
-  expiresAt: Date
+  expires_at: Date
 ): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set("session", token, {
@@ -114,7 +114,7 @@ export async function setSessionTokenCookie(
     path: "/",
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    expires: expiresAt,
+    expires: expires_at,
   });
 }
 
@@ -138,27 +138,27 @@ export function generateSessionToken(): string {
 
 export async function createSession(
   token: string,
-  userId: string
+  user_id: string
 ): Promise<Session> {
   const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
   const session: Session = {
     id: sessionId,
-    userId,
-    expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+    user_id,
+    expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   };
 
   await db.insert(tables.session).values({
     id: sessionId,
-    expiresAt: session.expiresAt,
-    userId,
+    expires_at: session.expires_at,
+    user_id,
   });
   return session;
 }
 
 export interface Session {
   id: string;
-  expiresAt: Date;
-  userId: string;
+  expires_at: Date;
+  user_id: string;
 }
 
 type SessionValidationResult =

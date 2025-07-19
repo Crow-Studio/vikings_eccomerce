@@ -104,7 +104,7 @@ export async function signinAction({
 
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
-  await setSessionTokenCookie(sessionToken, session.expiresAt);
+  await setSessionTokenCookie(sessionToken, session.expires_at);
 
   return {
     errorMessage: null,

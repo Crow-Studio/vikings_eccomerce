@@ -62,16 +62,16 @@ export async function GET(request: Request): Promise<Response> {
 
   // check if user existing oauth account exists
   const existingOauthAccount = await db.query.oauth_account.findFirst({
-    where: (table) => eq(table.providerUserId, googleId),
+    where: (table) => eq(table.provider_user_id, googleId),
   });
 
   if (existingOauthAccount) {
     const sessionToken = generateSessionToken();
     const session = await createSession(
       sessionToken,
-      existingOauthAccount.userId
+      existingOauthAccount.user_id
     );
-    await setSessionTokenCookie(sessionToken, session.expiresAt);
+    await setSessionTokenCookie(sessionToken, session.expires_at);
 
     return new Response(null, {
       status: 302,
@@ -83,7 +83,7 @@ export async function GET(request: Request): Promise<Response> {
 
   const id = uuidv4();
   const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
-  const emailVerified = true;
+  const email_verified = true;
 
   // create new user
   const user = await createUser(
@@ -92,22 +92,20 @@ export async function GET(request: Request): Promise<Response> {
     username,
     avatar,
     role,
-    emailVerified
+    email_verified
   );
 
   // create user oauth account
   await db.insert(tables.oauth_account).values({
     id: uuidv4(),
     provider: "google",
-    providerUserId: googleId,
-    userId: user.id,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    provider_user_id: googleId,
+    user_id: user.id
   });
 
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
-  await setSessionTokenCookie(sessionToken, session.expiresAt);
+  await setSessionTokenCookie(sessionToken, session.expires_at);
   return new Response(null, {
     status: 302,
     headers: {

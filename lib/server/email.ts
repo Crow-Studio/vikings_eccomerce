@@ -43,51 +43,51 @@ export async function checkEmailAvailability(email: string): Promise<boolean> {
 }
 
 export async function createEmailVerificationRequest(
-  userId: string,
+  user_id: string,
   email: string
 ): Promise<EmailVerificationRequest> {
-  await deleteUserEmailVerificationRequest(userId);
+  await deleteUserEmailVerificationRequest(user_id);
   const idBytes = new Uint8Array(20);
   crypto.getRandomValues(idBytes);
   const id = encodeBase32(idBytes).toLowerCase();
 
   const code = generateRandomOTP();
-  const expiresAt = new Date(Date.now() + 1000 * 60 * 10);
+  const expires_at = new Date(Date.now() + 1000 * 60 * 10);
 
   await db.insert(tables.email_verification_request_table).values({
     id: uuidv4(),
     code,
     email,
-    userId,
-    expiresAt,
+    user_id,
+    expires_at,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
 
   const request: EmailVerificationRequest = {
     id,
-    userId,
+    user_id,
     code,
     email,
-    expiresAt,
+    expires_at,
   };
   return request;
 }
 
 export async function deleteUserEmailVerificationRequest(
-  userId: string
+  user_id: string
 ): Promise<void> {
   await db
     .delete(tables.email_verification_request_table)
-    .where(eq(tables.email_verification_request_table.userId, userId));
+    .where(eq(tables.email_verification_request_table.user_id, user_id));
 }
 
 export const sendVerificationEmailBucket = new ExpiringTokenBucket<string>(3, 60 * 10);
 
 export interface EmailVerificationRequest {
   id: string;
-  userId: string;
+  user_id: string;
   code: string;
   email: string;
-  expiresAt: Date;
+  expires_at: Date;
 }

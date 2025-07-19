@@ -14,7 +14,7 @@ export default async function EditProductsPage() {
     return redirect("/auth/signin");
   }
 
-  if (!user.emailVerified) {
+  if (!user.email_verified) {
     return redirect("/auth/verify-email");
   }
 

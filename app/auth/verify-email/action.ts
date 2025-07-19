@@ -45,7 +45,7 @@ export async function verifyEmailAction({
 
     const verificationRequest =
       await db.query.email_verification_request_table.findFirst({
-        where: (table) => eq(table.userId, user.id),
+        where: (table) => eq(table.user_id, user.id),
       });
 
     if (!verificationRequest) {
@@ -76,7 +76,7 @@ export async function verifyEmailAction({
       };
     }
 
-    if (Date.now() >= verificationRequest.expiresAt.getTime()) {
+    if (Date.now() >= verificationRequest.expires_at.getTime()) {
       return {
         errorMessage: "Verification code has expired!",
         message: null,
@@ -130,7 +130,7 @@ export async function resendEmailVerificationCodeAction(): Promise<ActionResult>
       };
     }
 
-    if (user.emailVerified) {
+    if (user.email_verified) {
       return {
         errorMessage: "Forbidden!",
         message: null,

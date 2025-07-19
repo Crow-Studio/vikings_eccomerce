@@ -1,12 +1,13 @@
 import { db, eq, tables } from "@/database";
+import { UserRole } from "@/database/schema";
 
 export async function createUser(
   id: string,
   email: string,
   username: string,
   avatar: string,
-  role: "ADMIN" | "CUSTOMER",
-  emailVerified: boolean,
+  role: UserRole,
+  email_verified: boolean,
   passwordHash?: string
 ): Promise<User> {
   const password = passwordHash ? passwordHash : "";
@@ -18,10 +19,8 @@ export async function createUser(
       username,
       avatar,
       role,
-      emailVerified,
+      email_verified,
       password,
-      createdAt: new Date(),
-      updatedAt: new Date(),
     })
     .returning();
 
@@ -35,15 +34,15 @@ export async function createUser(
     email: row.email,
     role: row.role,
     username: row.username,
-    emailVerified: row.emailVerified,
+    email_verified: row.email_verified,
   };
 
   return user;
 }
 
-export async function getUserPasswordHash(userId: string): Promise<string> {
+export async function getUserPasswordHash(user_id: string): Promise<string> {
   const user = await db.query.user.findFirst({
-    where: (table) => eq(table.id, userId),
+    where: (table) => eq(table.id, user_id),
   });
 
   if (!user) {
@@ -53,22 +52,22 @@ export async function getUserPasswordHash(userId: string): Promise<string> {
 }
 
 export async function updateUserEmailAndSetEmailAsVerified(
-  userId: string
+  user_id: string
 ): Promise<void> {
   await db
     .update(tables.user)
     .set({
-      emailVerified: true,
-      updatedAt: new Date(),
+      email_verified: true,
+      updated_at: new Date(),
     })
-    .where(eq(tables.user.id, userId));
+    .where(eq(tables.user.id, user_id));
 }
 
 export interface User {
   id: string;
-  role: "ADMIN" | "CUSTOMER";
+  role: UserRole;
   email: string;
   username: string;
   avatar: string;
-  emailVerified: boolean;
+  email_verified: boolean;
 }

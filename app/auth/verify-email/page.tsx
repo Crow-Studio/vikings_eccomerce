@@ -15,7 +15,7 @@ export default async function VerifyEmailPage() {
     return redirect("/auth/signin");
   }
 
-  if (user.emailVerified) {
+  if (user.email_verified) {
     return redirect("/account/dashboard");
   }
   return <VerifyEmailForm user={user} />;

@@ -12,7 +12,7 @@ export default async function AddProductsPage() {
   if (user === null) {
     return redirect("/auth/signin");
   }
-  if (!user.emailVerified) {
+  if (!user.email_verified) {
     return redirect("/auth/verify-email");
   }
   
