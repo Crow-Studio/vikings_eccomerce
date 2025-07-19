@@ -4,7 +4,6 @@ import { generateRandomOTP } from "./utils";
 import { resend } from "./resend";
 import { VerificationCodeRequestMail } from "@/emails/VerificationCodeRequestMail";
 import { ExpiringTokenBucket } from "./rate-limit";
-import { generateNanoId } from "@/database/schema";
 
 interface Props {
   code: string;
@@ -55,7 +54,6 @@ export async function createEmailVerificationRequest(
   const expires_at = new Date(Date.now() + 1000 * 60 * 10);
 
   await db.insert(tables.email_verification_request_table).values({
-    id: generateNanoId(),
     code,
     email,
     user_id,

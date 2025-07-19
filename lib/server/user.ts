@@ -2,7 +2,6 @@ import { db, eq, tables } from "@/database";
 import { UserRole } from "@/database/schema";
 
 export async function createUser(
-  id: string,
   email: string,
   username: string,
   avatar: string,
@@ -14,7 +13,6 @@ export async function createUser(
   const [row] = await db
     .insert(tables.user)
     .values({
-      id,
       email,
       username,
       avatar,

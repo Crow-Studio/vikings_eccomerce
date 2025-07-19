@@ -11,7 +11,7 @@ import { globalGETRateLimit } from "@/lib/server/request";
 
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
 import { db, eq, tables } from "@/database";
-import { generateNanoId, UserRole } from "@/database/schema";
+import { UserRole } from "@/database/schema";
 
 export async function GET(request: Request): Promise<Response> {
   if (!(await globalGETRateLimit())) {
@@ -81,13 +81,11 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
-  const id = generateNanoId();
   const role: UserRole = UserRole.CUSTOMER;
   const email_verified = true;
 
   // create new user
   const user = await createUser(
-    id,
     email,
     username,
     avatar,
@@ -97,7 +95,6 @@ export async function GET(request: Request): Promise<Response> {
 
   // create user oauth account
   await db.insert(tables.oauth_account).values({
-    id: generateNanoId(),
     provider: "google",
     provider_user_id: googleId,
     user_id: user.id

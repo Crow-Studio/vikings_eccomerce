@@ -147,7 +147,7 @@ export const email_verification_request_table = pgTable(
 );
 
 export const session = pgTable("session", {
-  id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
+  id: varchar("id", { length: 255 }).primaryKey(),
   user_id: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
