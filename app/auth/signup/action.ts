@@ -1,5 +1,6 @@
 "use server";
 
+import { UserRole } from "@/database/schema";
 import {
   checkEmailAvailability,
   createEmailVerificationRequest,
@@ -18,7 +19,6 @@ import { createUser } from "@/lib/server/user";
 import { generateRandomUsername } from "@/lib/server/username";
 import { ActionResult } from "@/types";
 import { headers } from "next/headers";
-import { v4 as uuidv4 } from "uuid";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
@@ -88,18 +88,16 @@ export async function signupAction({
       };
     }
 
-    const id = uuidv4();
     const username = generateRandomUsername();
     const avatar = `https://avatar.vercel.sh/vercel.svg?text=${username
       .split(" ")[0]
       .charAt(0)
       .toUpperCase()}`;
-    const role: "ADMIN" | "CUSTOMER" = "CUSTOMER";
+    const role: UserRole = UserRole.CUSTOMER;
     const email_verified = false;
     const passwordHash = await hashPassword(password);
 
     const user = await createUser(
-      id,
       email,
       username,
       avatar,
