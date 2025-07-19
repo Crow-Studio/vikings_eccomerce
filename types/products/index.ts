@@ -1,17 +1,19 @@
-// Shared type definitions for the collections feature
-
 export interface Product {
-  id: number;
-  name: string;
-  category: string;
-  price: number;
-  originalPrice?: number;
-  rating: number;
-  reviews: number;
-  image: string;
-  inStock: boolean;
-  isNew: boolean;
+  id: string
+  name: string
+  price: number
+  originalPrice?: number
+  isNew: boolean
+  inStock: boolean
+  rating: number
+  reviews: number
+  sku?: string
+  category: string
+  images?: string[]
+  features?: string[]
+  specifications?: Record<string, string>
 }
+
 
 export interface PriceRange {
   label: string;

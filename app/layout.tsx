@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Vikings",
-  description: "Kenya's trusted source for professional tools & equipment.",
+  title: "Vikings E-commerce",
+  description: "An e-commerce platform for tools and equipment",
 };
 
 export default function RootLayout({

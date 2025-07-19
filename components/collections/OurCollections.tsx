@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { Filter, X, Search, Grid, List, ChevronDown } from "lucide-react";
+import { usePathname } from "next/navigation";
 import Filters from "./Filters";
 import Products from "./Products";
 import GrainOverlay from '@/components/global/GrainOverlay';
@@ -14,14 +15,18 @@ export default function OurCollections() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({ categories: [], priceRange: null });
 
+  const pathname = usePathname();
+  const isProductsPage = pathname === '/products';
+  const title = isProductsPage ? 'Our Products' : 'Our Collections';
+
   return (
-    <section className="min-h-screen bg-[#fcfcfc] dark:bg-[#1d1d1d] relative overflow-hidden">
+    <section className="min-h-screen relative bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
       <GrainOverlay/>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent dark:text-white">
-            Our Collections
+            {title}
           </h1>
           <p className="text-slate-600 dark:text-muted-foreground mt-2">
             Discover quality tools and equipment from Vikings Kenya Power Traders
@@ -29,8 +34,8 @@ export default function OurCollections() {
         </div>
 
         {/* Search and Controls */}
-        <div className="bg-white dark:bg-background rounded-2xl shadow-lg border border-slate-200/60 dark:border-zinc-700 p-6 mb-6">
-          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div className="rounded-2xl  border border-primary/10 p-6 mb-6">
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-between ">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
@@ -39,7 +44,7 @@ export default function OurCollections() {
                 placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-slate-500 outline-none dark:bg-slate-800 dark:border-slate-600 dark:text-white"
+                className="w-full pl-10 pr-4 py-2 border border-primary/10 rounded-lg focus:ring-2  outline-none  dark:text-white"
               />
             </div>
 
@@ -50,7 +55,7 @@ export default function OurCollections() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as SortBy)}
-                  className="appearance-none bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg px-4 py-2 pr-8 text-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 outline-none dark:text-white"
+                  className="appearance-none bg-white dark:bg-black border  rounded-lg px-4 py-2 pr-8 text-sm focus:ring-2 focus:ring-slate-500 focus:border-slate-500 outline-none dark:text-white"
                 >
                   <option value="featured">Featured</option>
                   <option value="newest">Newest</option>
@@ -62,7 +67,7 @@ export default function OurCollections() {
               </div>
 
               {/* View Mode */}
-              <div className="hidden sm:flex items-center bg-slate-100 dark:bg-slate-800 rounded-lg p-1">
+              <div className="hidden sm:flex items-center bg-black dark:bg-gray-50 rounded-lg p-1">
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-md transition-colors ${
