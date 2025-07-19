@@ -1,10 +1,11 @@
 import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { addProductFormSchema } from "./products/form";
+import { Category } from "@/database/schema";
 
-export type ModalType = "signoutUser";
+export type ModalType = "signoutUser" | "newCategory"
 
-export interface ModalData {}
+export interface ModalData { }
 
 export interface ActionResult {
   message: string | null;
@@ -51,21 +52,17 @@ export interface VariantField {
     preview: string;
   }[];
   hasVariants: boolean;
-  variants?:
-    | {
-        values: string[];
-        title: string;
-      }[]
-    | undefined;
-  generatedVariants?:
-    | {
-        name: string;
-        attributes: Record<string, string>;
-        price?: string | undefined;
-        sku?: string | undefined;
-        inventory?: string | undefined;
-      }[]
-    | undefined;
+  variants?: {
+    values: string[];
+    title: string;
+  }[] | undefined;
+  generatedVariants?: {
+    name: string;
+    price: string;
+    attributes: Record<string, string>;
+    sku?: string | undefined;
+    inventory?: string | undefined;
+  }[] | undefined;
 }
 
 export interface VariantCombination {
@@ -94,10 +91,12 @@ export interface TagInputProps {
 export interface CategorySelectorProps {
   value: string;
   onChange: (value: string) => void;
+  categories: Category[]
 }
 
 export interface ProductSettingsProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
+  categories: Category[]
 }
 
 export interface ProductImagesProps {

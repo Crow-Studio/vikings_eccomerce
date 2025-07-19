@@ -1,9 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-} from "@/components/ui/form";
+import { FormControl, FormField, FormItem } from "@/components/ui/form";
 import {
   Accordion,
   AccordionContent,
@@ -13,14 +9,11 @@ import {
 import { Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import {
-  Controller,
-} from "react-hook-form";
+import { Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import TagInput from "./TagInput";
 import { Badge } from "@/components/ui/badge";
 import { VariantsConfigurationsProps } from "@/types";
-
 
 export default function VariantsConfigurations({
   form,
@@ -28,7 +21,7 @@ export default function VariantsConfigurations({
   fields,
   append,
   variantCombinations,
-  remove
+  remove,
 }: VariantsConfigurationsProps) {
   return (
     <Card>
@@ -195,6 +188,7 @@ export default function VariantsConfigurations({
                                   `generatedVariants.${index}.price`
                                 )}
                                 className="text-sm"
+                                type="number"
                               />
                             </div>
 

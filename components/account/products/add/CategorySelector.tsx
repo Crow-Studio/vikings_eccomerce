@@ -4,14 +4,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown, Plus } from "lucide-react";
 import {
@@ -21,43 +13,19 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command";
-import { Input } from "@/components/ui/input";
 import { CategorySelectorProps } from "@/types";
-
-const SAMPLE_CATEGORIES = [
-  "Electronics",
-  "Clothing & Accessories",
-  "Home & Garden",
-  "Sports & Outdoors",
-  "Books & Media",
-  "Health & Beauty",
-  "Toys & Games",
-  "Food & Beverages",
-  "Automotive",
-  "Office Supplies",
-];
+import { useModal } from "@/hooks/use-modal-store";
 
 export default function CategorySelector({
   value,
   onChange,
+  categories,
 }: CategorySelectorProps) {
   const [open, setOpen] = useState(false);
-  const [categories, setCategories] = useState(SAMPLE_CATEGORIES);
-  const [newCategoryOpen, setNewCategoryOpen] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const { onOpen } = useModal();
 
-  const handleAddNewCategory = () => {
-    if (
-      newCategoryName.trim() &&
-      !categories.includes(newCategoryName.trim())
-    ) {
-      const newCategory = newCategoryName.trim();
-      setCategories([...categories, newCategory]);
-      onChange(newCategory);
-      setNewCategoryName("");
-      setNewCategoryOpen(false);
-      setOpen(false);
-    }
+  const onAddNewCategory = () => {
+    onOpen("newCategory");
   };
 
   return (
@@ -71,7 +39,7 @@ export default function CategorySelector({
             className="flex-1 justify-between"
           >
             {value
-              ? categories.find((category) => category === value)
+              ? categories.find((category) => category.id === value)?.name
               : "Select category..."}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -83,57 +51,37 @@ export default function CategorySelector({
             <CommandGroup>
               {categories.map((category) => (
                 <CommandItem
-                  key={category}
-                  value={category}
+                  key={category.id}
+                  value={category.id}
                   onSelect={(currentValue) => {
                     onChange(currentValue === value ? "" : currentValue);
                     setOpen(false);
                   }}
+                  className="cursor-pointer"
                 >
                   <Check
                     className={`mr-2 h-4 w-4 ${
-                      value === category ? "opacity-100" : "opacity-0"
+                      value === category.id ? "opacity-100" : "opacity-0"
                     }`}
                   />
-                  {category}
+                  {category.name}
                 </CommandItem>
               ))}
+              <CommandItem
+                className="cursor-pointer"
+                onClick={() => onAddNewCategory()}
+                onSelect={() => {
+                  onAddNewCategory();
+                  setOpen(false);
+                }}
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add new category
+              </CommandItem>
             </CommandGroup>
           </Command>
         </PopoverContent>
       </Popover>
-
-      <Dialog open={newCategoryOpen} onOpenChange={setNewCategoryOpen}>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="icon">
-            <Plus className="h-4 w-4" />
-          </Button>
-        </DialogTrigger>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New Category</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <Input
-              placeholder="Enter category name"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleAddNewCategory();
-                }
-              }}
-            />
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setNewCategoryOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleAddNewCategory}>Add Category</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

@@ -45,7 +45,7 @@ export default function GeneralInformation({ form }: GeneralInformationProps) {
               <FormLabel>Base Price *</FormLabel>
               <FormControl>
                 <div>
-                  <Input {...field} placeholder="0.00" type="text" />
+                  <Input {...field} placeholder="0.00" type="number" min={1} />
                   <div className="mt-1 text-xs text-muted-foreground">
                     <p>Set a base price for this product.</p>
                     <p>Variants can override this price or inherit it.</p>

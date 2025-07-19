@@ -24,6 +24,7 @@ import {
 import Link from "next/link";
 import { User } from "@/lib/server/user";
 import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon";
+import { UserRole } from "@/database/schema";
 
 // Extend the Sidebar props to include user
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
@@ -43,13 +44,13 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         title: "Orders",
         url: "/account/orders",
         icon: ShoppingBasket,
-        isShowInterface: user.role === "ADMIN" ? true : false,
+        isShowInterface: user.role === UserRole.ADMIN ? true : false,
       },
       {
         title: "Products",
         url: "/account/products/all",
         icon: ShoppingBag,
-        isShowInterface: user.role === "ADMIN" ? true : false,
+        isShowInterface: user.role === UserRole.ADMIN ? true : false,
         items: [
           {
             title: "All Products",

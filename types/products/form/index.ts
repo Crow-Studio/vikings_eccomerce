@@ -7,8 +7,7 @@ export const addProductFormSchema = z.object({
     .max(60, "Name should be under 60 characters"),
   price: z
     .string()
-    .min(1, "Base price is required")
-    .regex(/^\d+(\.\d{2})?$/, "Enter valid price (e.g., 19.99)"),
+    .min(1, "Base price is required"),
   description: z
     .string()
     .min(10, "Description should be at least 10 characters")
@@ -39,7 +38,7 @@ export const addProductFormSchema = z.object({
     .array(
       z.object({
         name: z.string(),
-        price: z.string().optional(),
+        price: z.string(),
         sku: z.string().optional(),
         inventory: z.string().optional(),
         attributes: z.record(z.string()),

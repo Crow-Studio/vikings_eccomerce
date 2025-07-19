@@ -12,8 +12,15 @@ import GeneralInformation from "./GeneralInformation";
 import VariantsConfigurations from "./VariantsConfigurations";
 import ProductSettings from "./ProductSettings";
 import ProductImages from "./ProductImages";
+import { Category } from "@/database/schema";
 
-export default function AddNewProductForm() {
+interface AddNewProductFormProps {
+  categories: Category[];
+}
+
+export default function AddNewProductForm({
+  categories,
+}: AddNewProductFormProps) {
   const form = useForm<z.infer<typeof addProductFormSchema>>({
     resolver: zodResolver(addProductFormSchema),
     defaultValues: {
@@ -41,11 +48,10 @@ export default function AddNewProductForm() {
 
   useEffect(() => {
     if (hasVariants) {
-      const basePrice = form.getValues("price");
       const newGeneratedVariants = variantCombinations.map((combo) => ({
         name: combo.name,
-        price: basePrice,
-        sku: generateSKU(form.getValues("name"), combo.attributes),
+        price: "",
+        sku: generateSKU(form.watch("name"), combo.attributes),
         inventory: "",
         attributes: combo.attributes,
       }));
@@ -58,11 +64,11 @@ export default function AddNewProductForm() {
 
     const processedData = {
       ...values,
-      price: parseFloat(values.price),
+      price: values.price ? parseFloat(values.price.toString()) : 0,
       variants: hasVariants
         ? values.generatedVariants?.map((variant) => ({
             ...variant,
-            price: variant.price ? parseFloat(variant.price) : null,
+            price: variant.price,
             inventory: variant.inventory ? parseInt(variant.inventory) : 0,
           }))
         : null,
@@ -88,7 +94,7 @@ export default function AddNewProductForm() {
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-5 gap-3 lg:gap-5">
           <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-2">
             <GeneralInformation form={form} />
-            <ProductSettings form={form} />
+            <ProductSettings categories={categories} form={form} />
           </div>
           <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-3">
             <VariantsConfigurations

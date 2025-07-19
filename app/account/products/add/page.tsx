@@ -1,4 +1,5 @@
 import AddNewProductForm from "@/components/account/products/add/AddNewProductForm";
+import { db } from "@/database";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { redirect } from "next/navigation";
@@ -15,8 +16,8 @@ export default async function AddProductsPage() {
   if (!user.email_verified) {
     return redirect("/auth/verify-email");
   }
-  
-  return (
-    <AddNewProductForm />
-  );
+
+  const categories = await db.query.category.findMany();
+
+  return <AddNewProductForm categories={categories} />;
 }

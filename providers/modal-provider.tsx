@@ -1,7 +1,8 @@
 "use client";
 
+import AddNewCategory from "@/modals/account/AddNewCategory";
 import Signout from "@/modals/Signout";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ModalProvider() {
   const [isMounted, setIsMounted] = useState(false);
@@ -17,6 +18,7 @@ export default function ModalProvider() {
   return (
     <div>
       <Signout />
+      <AddNewCategory />
     </div>
   );
 }

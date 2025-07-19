@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import CategorySelector from "./CategorySelector";
 
-export default function ProductSettings({ form }: ProductSettingsProps) {
+export default function ProductSettings({ form, categories }: ProductSettingsProps) {
   return (
     <Card>
       <CardHeader>
@@ -79,6 +79,7 @@ export default function ProductSettings({ form }: ProductSettingsProps) {
                   <CategorySelector
                     value={field.value}
                     onChange={field.onChange}
+                    categories={categories}
                   />
                   <div className="mt-1 text-xs text-muted-foreground">
                     <p>

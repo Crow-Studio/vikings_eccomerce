@@ -1,7 +1,6 @@
 "use client"
 import type React from "react"
 import { useState, useEffect } from "react"
-import DeliriumSvgIcon from "../svgs/DeliriumSvgIcon"
 import SolarMagniferOutline from "../svgs/SolarMagniferOutline"
 import SolarCartLarge2Outline from "../svgs/SolarCartLarge2Outline"
 import { Button } from "../ui/button"
@@ -120,16 +119,11 @@ export default function Header() {
             <h2 className="text-xs xl:text-sm text-muted-foreground">Free shipping in Nairobi and 30 days return</h2>
           </div>
           {/* Center Section - Logo */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
             <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform hover:scale-105" />
             <h1 className="text-xl sm:text-2xl font-semibold text-[#353535] dark:text-white">
               Vikings
             </h1>
-          </div>
-
-          <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
-            <DeliriumSvgIcon className="w-6 h-auto sm:w-7 transition-transform hover:scale-105" />
-            <h1 className="text-lg sm:text-xl font-semibold text-[#353535] dark:text-white">Vikings</h1>
           </Link>
           {/* Right Section - Actions */}
           <div className="flex items-center gap-1 sm:gap-2 flex-1 justify-end">
