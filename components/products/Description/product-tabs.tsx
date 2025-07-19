@@ -5,7 +5,7 @@ import { TabButton } from "@/components/products/Description/tab-button"
 import { ReviewSummary } from "./review-summary"
 import { Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { Product } from "@/types/product"
+import type { Product } from "@/types/products"
 
 interface ProductTabsProps {
   product: Product

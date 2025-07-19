@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Star, Heart } from "lucide-react"
 import ShoppingBagIcon from "../svgs/shoppingBag"
 import { mockProducts } from "../../data/products"
-import type { Product, ProductCardProps, ProductsProps } from "@/types/product"
+import type { Product, ProductCardProps, ProductsProps } from "@/types/products"
 import Link from "next/link"
 import Image from "next/image"
 

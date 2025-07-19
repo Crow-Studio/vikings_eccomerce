@@ -3,7 +3,7 @@ import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ReviewSummary } from "./review-summary"
-import type { Product } from "@/types/product"
+import type { Product } from "@/types/products"
 
 interface RelatedProductsSectionProps {
   relatedProducts: Product[]

@@ -2,7 +2,7 @@
 import { useState, useCallback } from "react"
 import GrainOverlay from "@/components/global/GrainOverlay"
 import { useCartStore } from "@/store/cart-store"
-import { type Product } from "@/types/product"
+import { type Product } from "@/types/products"
 import { mockProducts } from "@/data/products"
 
 

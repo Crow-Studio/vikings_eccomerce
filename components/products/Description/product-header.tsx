@@ -2,7 +2,7 @@ import * as React from "react"
 import Link from "next/link"
 import { Badge } from "./badge"
 import { ReviewSummary } from "./review-summary"
-import type { Product } from "@/types/product"
+import type { Product } from "@/types/products"
 
 interface ProductHeaderProps {
   product: Product

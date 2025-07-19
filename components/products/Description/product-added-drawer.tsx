@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { ArrowRight, Check, ShoppingCart, Shield, Truck, RefreshCw, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { Product } from "@/types/product"
+import type { Product } from "@/types/products"
 
 interface ProductAddedDrawerProps {
   isOpen: boolean
