@@ -1,6 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -175,10 +176,11 @@ export default function ImageUpload({
                       </Badge>
                     </div>
                   )}
-                  <img
+                  <Image
                     src={image.preview}
                     alt={image.file.name}
                     className="size-full rounded-[inherit] object-cover"
+                    fill
                   />
                   <Button
                     type="button"
