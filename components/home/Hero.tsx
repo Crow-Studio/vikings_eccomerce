@@ -3,8 +3,17 @@ import { ArrowRight, Shield, Truck } from "lucide-react";
 import Link from "next/link";
 import FeaturedProducts from "@/components/home/FeaturedProduct";
 import GrainOverlay from "@/components/global/GrainOverlay";
+import { DBProduct } from "@/types";
 
-const Button = ({ children, className = "", ...props }: {
+interface VikingsHeroProps {
+  products: DBProduct[];
+}
+
+const Button = ({
+  children,
+  className = "",
+  ...props
+}: {
   children: React.ReactNode;
   className?: string;
   [key: string]: any;
@@ -17,10 +26,12 @@ const Button = ({ children, className = "", ...props }: {
   </button>
 );
 
-export default function VikingsHero() {
+export default function VikingsHero({ products }: VikingsHeroProps) {
+  const featuredProducts = products.slice(0, 3);
+
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
-      <GrainOverlay/>
+      <GrainOverlay />
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left Column - Hero Content */}
@@ -32,11 +43,13 @@ export default function VikingsHero() {
                 <span className="relative text-primary">
                   professional tools
                   <span className="absolute -bottom-2 left-0 w-full h-1 bg-primary/20 rounded-full"></span>
-                </span>
-                {" "}& equipment
+                </span>{" "}
+                & equipment
               </h1>
               <p className="text-base lg:text-lg text-muted-foreground leading-relaxed max-w-xl">
-                Shop quality domestic tools, professional equipment, agricultural implements, and repair services from Vikings Kenya Power Traders.
+                Shop quality domestic tools, professional equipment,
+                agricultural implements, and repair services from Vikings Kenya
+                Power Traders.
               </p>
             </div>
 
@@ -75,7 +88,9 @@ export default function VikingsHero() {
             <div className="pt-2">
               <Link href="/products">
                 <Button className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
-                  <span className="relative z-10 cursor-pointer">Shop All Products</span>
+                  <span className="relative z-10 cursor-pointer">
+                    Shop All Products
+                  </span>
                   <ArrowRight className="w-5 h-5 transform group-hover:translate-x-0.5 transition-transform" />
                 </Button>
               </Link>
@@ -102,7 +117,7 @@ export default function VikingsHero() {
                 </div>
                 <div className="text-center">
                   <div className="text-2xl sm:text-3xl font-bold text-foreground mb-1 tracking-tight">
-                   30
+                    30
                   </div>
                   <div className="text-xs sm:text-sm text-muted-foreground font-medium">
                     Day Returns
@@ -115,7 +130,9 @@ export default function VikingsHero() {
           {/* Right Column - Featured Products */}
           <div className="space-y-6 lg:space-y-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">Featured Products</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
+                Featured Products
+              </h2>
               <Link href="/products">
                 <button className=" bg-primary hover:bg-primary/80 text-primary-foreground rounded-lg cursor-pointer shadow-lg hover:shadow-xl px-4 py-1  font-medium text-base flex items-center gap-1 group transition-colors">
                   View All
@@ -123,8 +140,8 @@ export default function VikingsHero() {
                 </button>
               </Link>
             </div>
-            
-            <FeaturedProducts />
+
+            <FeaturedProducts featuredProducts={featuredProducts} />
 
             {/* Quick Category Links */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
@@ -136,7 +153,7 @@ export default function VikingsHero() {
                   Power tools & equipment
                 </p>
               </button>
-              
+
               <button className="p-5 bg-muted/30 hover:bg-muted/50 rounded-lg transition-all duration-300 text-left group">
                 <h4 className="font-semibold text-sm mb-2 group-hover:text-primary transition-colors">
                   Agricultural
