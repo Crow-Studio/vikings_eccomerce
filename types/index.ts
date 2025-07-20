@@ -102,3 +102,33 @@ export interface ProductSettingsProps {
 export interface ProductImagesProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
 }
+
+export interface ProcessedProductData {
+  price: number;
+  variants: {
+    title: string;
+    values: {
+      name: string;
+      price: string;
+      sku: string;
+      inventory: number;
+    }[];
+  }[] | null;
+  category: string;
+  name: string;
+  description: string;
+  visibility: "active" | "inactive";
+  images: {
+    id: string;
+    file: File;
+    preview: string;
+  }[];
+  hasVariants: boolean;
+  generatedVariants?: {
+    name: string;
+    price: string;
+    attributes: Record<string, string>;
+    sku?: string | undefined;
+    inventory?: string | undefined;
+  }[] | undefined;
+}

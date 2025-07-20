@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+        port: "",
+        pathname: "/dfa1yoc1v/**",
+      },
     ],
   },
   serverExternalPackages: ["@node-rs/argon2"],
