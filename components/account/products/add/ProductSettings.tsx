@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/select";
 import CategorySelector from "./CategorySelector";
 
-export default function ProductSettings({ form, categories }: ProductSettingsProps) {
+export default function ProductSettings({ form, categories, isAddingProduct }: ProductSettingsProps) {
   return (
     <Card>
       <CardHeader>
@@ -35,6 +35,7 @@ export default function ProductSettings({ form, categories }: ProductSettingsPro
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={isAddingProduct}
                     >
                       <SelectTrigger className="w-full">
                         <SelectValue placeholder="Select visibility status" />
@@ -80,6 +81,7 @@ export default function ProductSettings({ form, categories }: ProductSettingsPro
                     value={field.value}
                     onChange={field.onChange}
                     categories={categories}
+                    isAddingProduct={isAddingProduct}
                   />
                   <div className="mt-1 text-xs text-muted-foreground">
                     <p>

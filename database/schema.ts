@@ -167,3 +167,7 @@ export const sessionRelations = relations(session, ({ one }) => ({
 export type User = InferSelectModel<typeof user>
 export type Session = InferSelectModel<typeof session>
 export type Category = InferSelectModel<typeof category>
+export type GeneratedVariants = InferSelectModel<typeof generatedVariants>
+export type ProductImage = InferSelectModel<typeof images>
+export type Product = InferSelectModel<typeof product>
+export type ProductVariant = InferSelectModel<typeof variants>

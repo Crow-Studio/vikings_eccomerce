@@ -19,12 +19,14 @@ interface ImageUploadProps {
     }>
   ) => void;
   error?: string;
+  isAddingProduct: boolean;
 }
 
 export default function ImageUpload({
   images,
   onChange,
   error,
+  isAddingProduct,
 }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
@@ -107,6 +109,8 @@ export default function ImageUpload({
     setIsDragging(false);
     setDragCounter(0);
 
+    if (isAddingProduct) return;
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFiles(e.dataTransfer.files);
     }
@@ -153,7 +157,7 @@ export default function ImageUpload({
                 variant="outline"
                 size="sm"
                 onClick={openFileDialog}
-                disabled={images.length >= maxFiles}
+                disabled={images.length >= maxFiles && isAddingProduct}
               >
                 <UploadIcon
                   className="-ms-0.5 size-3.5 opacity-60"
@@ -185,6 +189,7 @@ export default function ImageUpload({
                   <Button
                     type="button"
                     onClick={() => removeFile(image.id)}
+                    disabled={isAddingProduct}
                     size="icon"
                     className="border-background focus-visible:border-background absolute -top-2 -right-2 size-6 rounded-full border-2 shadow-none"
                     aria-label="Remove image"
@@ -212,6 +217,7 @@ export default function ImageUpload({
               variant="outline"
               className="mt-4"
               onClick={openFileDialog}
+              disabled={isAddingProduct}
             >
               <UploadIcon className="-ms-1 opacity-60" aria-hidden="true" />
               Select images

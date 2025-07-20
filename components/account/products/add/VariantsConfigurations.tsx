@@ -22,6 +22,7 @@ export default function VariantsConfigurations({
   append,
   variantCombinations,
   remove,
+  isAddingProduct,
 }: VariantsConfigurationsProps) {
   return (
     <Card>
@@ -44,6 +45,7 @@ export default function VariantsConfigurations({
                 <Switch
                   checked={field.value}
                   onCheckedChange={field.onChange}
+                  disabled={isAddingProduct}
                 />
               </FormControl>
             </FormItem>
@@ -76,6 +78,7 @@ export default function VariantsConfigurations({
                             size="sm"
                             onClick={() => remove(index)}
                             className="text-red-500 hover:text-red-700 h-6 w-6 p-0"
+                            disabled={isAddingProduct}
                           >
                             <Trash2 className="h-3 w-3" />
                           </Button>
@@ -87,6 +90,7 @@ export default function VariantsConfigurations({
                               placeholder="e.g., Color, Size, Material"
                               {...form.register(`variants.${index}.title`)}
                               className="text-sm"
+                              disabled={isAddingProduct}
                             />
                             {form.formState.errors.variants?.[index]?.title && (
                               <p className="text-red-500 text-xs mt-1">
@@ -102,6 +106,7 @@ export default function VariantsConfigurations({
                             <Controller
                               control={form.control}
                               name={`variants.${index}.values`}
+                              disabled={isAddingProduct}
                               render={({ field: { value = [], onChange } }) => (
                                 <TagInput
                                   tags={Array.isArray(value) ? value : []}
@@ -129,6 +134,7 @@ export default function VariantsConfigurations({
                       variant="outline"
                       onClick={() => append({ title: "", values: [] })}
                       className="w-full"
+                      disabled={isAddingProduct}
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Add Option
@@ -187,6 +193,7 @@ export default function VariantsConfigurations({
                                 {...form.register(
                                   `generatedVariants.${index}.price`
                                 )}
+                                disabled={isAddingProduct}
                                 className="text-sm"
                                 type="number"
                               />
@@ -199,6 +206,7 @@ export default function VariantsConfigurations({
                                 {...form.register(
                                   `generatedVariants.${index}.sku`
                                 )}
+                                disabled={isAddingProduct}
                                 className="text-sm"
                               />
                             </div>
@@ -213,6 +221,7 @@ export default function VariantsConfigurations({
                                 {...form.register(
                                   `generatedVariants.${index}.inventory`
                                 )}
+                                disabled={isAddingProduct}
                                 className="text-sm"
                               />
                             </div>

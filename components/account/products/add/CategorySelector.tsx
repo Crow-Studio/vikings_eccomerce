@@ -20,6 +20,7 @@ export default function CategorySelector({
   value,
   onChange,
   categories,
+  isAddingProduct
 }: CategorySelectorProps) {
   const [open, setOpen] = useState(false);
   const { onOpen } = useModal();
@@ -37,6 +38,7 @@ export default function CategorySelector({
             role="combobox"
             aria-expanded={open}
             className="flex-1 justify-between"
+            disabled={isAddingProduct}
           >
             {value
               ? categories.find((category) => category.id === value)?.name

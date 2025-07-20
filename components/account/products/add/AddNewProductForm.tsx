@@ -138,8 +138,8 @@ export default function AddNewProductForm({
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-5 gap-3 lg:gap-5">
           <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-2">
-            <GeneralInformation form={form} />
-            <ProductSettings categories={categories} form={form} />
+            <GeneralInformation form={form} isAddingProduct={isAddingProduct} />
+            <ProductSettings categories={categories} form={form} isAddingProduct={isAddingProduct} />
           </div>
           <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-3">
             <VariantsConfigurations
@@ -149,8 +149,9 @@ export default function AddNewProductForm({
               append={append}
               variantCombinations={variantCombinations}
               remove={remove}
+              isAddingProduct={isAddingProduct}
             />
-            <ProductImages form={form} />
+            <ProductImages form={form} isAddingProduct={isAddingProduct} />
           </div>
         </div>
       </div>

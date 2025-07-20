@@ -1,7 +1,7 @@
 import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { addProductFormSchema } from "./products/form";
-import { Category } from "@/database/schema";
+import { Category, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
 
 export type ModalType = "signoutUser" | "newCategory"
 
@@ -77,10 +77,12 @@ export interface VariantsConfigurationsProps {
   append: UseFieldArrayAppend<VariantField, "variants">;
   variantCombinations: VariantCombination[]
   remove: UseFieldArrayRemove
+  isAddingProduct: boolean;
 }
 
 export interface GeneralInformationProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
+  isAddingProduct: boolean
 }
 export interface TagInputProps {
   tags: string[];
@@ -92,15 +94,18 @@ export interface CategorySelectorProps {
   value: string;
   onChange: (value: string) => void;
   categories: Category[]
+  isAddingProduct: boolean
 }
 
 export interface ProductSettingsProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   categories: Category[]
+  isAddingProduct: boolean
 }
 
 export interface ProductImagesProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
+  isAddingProduct: boolean;
 }
 
 export interface ProcessedProductData {
@@ -131,4 +136,24 @@ export interface ProcessedProductData {
     sku?: string | undefined;
     inventory?: string | undefined;
   }[] | undefined;
+}
+
+export interface DBProduct {
+  visibility: Visibility;
+  id: string;
+  name: string;
+  created_at: Date;
+  updated_at: Date | null;
+  price: string;
+  description: string;
+  category_id: string;
+  has_variants: boolean;
+  category: Category;
+  images: ProductImage[];
+  variants: {
+    id: string;
+    product_id: string;
+    title: string;
+    generatedVariants: GeneratedVariants[];
+  }[];
 }

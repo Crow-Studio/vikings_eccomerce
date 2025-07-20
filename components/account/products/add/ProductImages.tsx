@@ -9,7 +9,7 @@ import {
 import { ProductImagesProps } from "@/types";
 import ImageUpload from "./ImageUpload";
 
-export default function ProductImages({ form }: ProductImagesProps) {
+export default function ProductImages({ form, isAddingProduct }: ProductImagesProps) {
   return (
     <Card>
       <CardHeader>
@@ -28,6 +28,7 @@ export default function ProductImages({ form }: ProductImagesProps) {
                     images={field.value}
                     onChange={field.onChange}
                     error={form.formState.errors.images?.message}
+                    isAddingProduct={isAddingProduct}
                   />
                   <div className="mt-1 text-xs text-muted-foreground">
                     <p>
