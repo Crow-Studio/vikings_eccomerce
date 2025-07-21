@@ -23,6 +23,12 @@ export default function OurCollections({ products = [] }: OurCollectionsProps) {
   const isProductsPage = pathname === '/products';
   const title = isProductsPage ? 'Our Products' : 'Our Collections';
 
+  // Convert FilterState to the format expected by Products component
+  const normalizedFilters = {
+    categories: filters.categories,
+    priceRange: filters.priceRange || undefined
+  };
+
   return (
     <section className="min-h-screen relative bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
       <GrainOverlay/>
@@ -120,9 +126,10 @@ export default function OurCollections({ products = [] }: OurCollectionsProps) {
           <div className="flex-1 min-w-0">
             <Products 
               products={products}
-              filters={filters}
+              filters={normalizedFilters}
               searchQuery={searchQuery}
               sortBy={sortBy}
+              viewMode="grid"
             />
           </div>
         </div>
