@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import DeliriumSvgIcon from "../svgs/DeliriumSvgIcon";
+import VikingsSvgIcon from "../svgs/VikingsSvgIcon";
 import { ToggleTheme } from "../global/ToggleTheme";
 
 export default function Footer() {
@@ -32,7 +32,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Brand */}
           <div className="flex items-center gap-2">
-            <DeliriumSvgIcon className="w-6 h-auto" />
+            <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform hover:scale-105" />
             <span className="text-lg font-medium text-gray-900 dark:text-white">
               Vikings
             </span>
