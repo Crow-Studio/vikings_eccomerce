@@ -1,4 +1,4 @@
-export { default as Header } from "./header"
+export { default as Header } from "./Header"
 export { IconButton } from "./icon-button"
 export { CartItem } from "./cart-item"
 export { EmptyCart } from "./empty-cart"
