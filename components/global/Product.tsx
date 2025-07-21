@@ -4,6 +4,7 @@ import { DBProduct } from "@/types";
 import Image from "next/image";
 import { Heart } from "lucide-react";
 import ProductSkeleton from "./ProductSkeleton";
+import Link from "next/link";
 
 interface ProductUIProps {
   product?: DBProduct;
@@ -17,7 +18,10 @@ function isNewProduct(createdAt: Date): boolean {
   return createdAt > oneDayAgo;
 }
 
-export default function ProductUI({ product, isLoading = false }: ProductUIProps) {
+export default function ProductUI({
+  product,
+  isLoading = false,
+}: ProductUIProps) {
   if (isLoading || !product) {
     return <ProductSkeleton />;
   }
@@ -41,7 +45,7 @@ export default function ProductUI({ product, isLoading = false }: ProductUIProps
             </span>
           </div>
         )}
-        
+
         {/* Wishlist Icon */}
         <button
           onClick={handleWishlistClick}
@@ -50,7 +54,7 @@ export default function ProductUI({ product, isLoading = false }: ProductUIProps
         >
           <Heart className="w-3.5 h-3.5 text-gray-600 group-hover/wishlist:text-black group-hover/wishlist:fill-red-500 transition-colors duration-200" />
         </button>
-        
+
         <Image
           src={product.images[0].url}
           alt={`${product.name.toLowerCase()}_${product.images[0].id}`}
@@ -58,12 +62,29 @@ export default function ProductUI({ product, isLoading = false }: ProductUIProps
           className="object-contain transition-transform duration-300 group-hover:scale-110"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
+
+        <div className="absolute bottom-0 left-0 right-0 z-10 p-3 grid sm:group-hover:grid gap-y-1.5 sm:hidden transition-all duration-200">
+          <button
+            onClick={handleWishlistClick}
+            className="p-0.5 rounded-md w-full bg-white/90 backdrop-blur-sm border border-gray-200 group/wishlist shadow-sm dark:text-black hover:bg-zinc-200 cursor-pointer transition-colors duration-200"
+            aria-label="Add to wishlist"
+          >
+            Add to cart
+          </button>
+          <button
+            onClick={handleWishlistClick}
+            className="p-0.5 rounded-md w-full bg-white/90 backdrop-blur-sm border border-gray-200 group/wishlist shadow-sm dark:text-black hover:bg-zinc-200 cursor-pointer transition-colors duration-200"
+            aria-label="Add to wishlist"
+          >
+            View Details
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-y-1.5">
-        <h4 className="text-sm font-medium group-hover:text-primary transition-colors duration-200">
+        <Link href={`/products/${product.id}`} className="text-sm font-medium group-hover:text-primary transition-colors duration-200">
           {product.name}
-        </h4>
+        </Link>
         <p className="text-xs text-muted-foreground font-semibold opacity-70 group-hover:opacity-100 transition-opacity duration-200">
           ksh. {product.price}
         </p>
