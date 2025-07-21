@@ -19,6 +19,15 @@ export default function Header({ user }: HeaderProps) {
 
   const cartTotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items])
 
+  // Wrapper functions to handle type conversion between string and number IDs
+  const handleUpdateQuantity = useCallback((id: string, quantity: number) => {
+    updateQuantity(Number(id), quantity)
+  }, [updateQuantity])
+
+  const handleRemoveItem = useCallback((id: string) => {
+    removeItem(Number(id))
+  }, [removeItem])
+
   // Memoized callbacks
   const handleSearchOpen = useCallback(() => setIsSearchOpen(true), [])
   const handleSearchClose = useCallback(() => setIsSearchOpen(false), [])
@@ -60,8 +69,8 @@ export default function Header({ user }: HeaderProps) {
               items={items}
               itemCount={itemCount}
               cartTotal={cartTotal}
-              onUpdateQuantity={updateQuantity}
-              onRemoveItem={removeItem}
+              onUpdateQuantity={handleUpdateQuantity}
+              onRemoveItem={handleRemoveItem}
             />
 
             <MobileMenu
