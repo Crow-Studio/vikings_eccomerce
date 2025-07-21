@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
         pathname: "/dfa1yoc1v/**",
       },
     ],
+    
+  },
+   compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
   },
   serverExternalPackages: ["@node-rs/argon2"],
 };

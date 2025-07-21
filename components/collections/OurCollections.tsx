@@ -1,16 +1,20 @@
 'use client'
 
 import React, { useState } from "react";
-import { Filter, X, Search, Grid, List, ChevronDown } from "lucide-react";
+import { Filter, X, Search, ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Filters from "./Filters";
 import Products from "./Products";
 import GrainOverlay from '@/components/global/GrainOverlay';
-import { FilterState, SortBy, ViewMode } from "@/types/products";
+import { FilterState, SortBy } from "@/types/products";
+import { DBProduct } from "@/types";
 
-export default function OurCollections() {
+interface OurCollectionsProps {
+  products?: DBProduct[]; // Make products prop optional
+}
+
+export default function OurCollections({ products = [] }: OurCollectionsProps) {
   const [showFilters, setShowFilters] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortBy>('featured');
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<FilterState>({ categories: [], priceRange: null });
@@ -61,33 +65,8 @@ export default function OurCollections() {
                   <option value="newest">Newest</option>
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
-                  <option value="rating">Highest Rated</option>
                 </select>
                 <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
-              </div>
-
-              {/* View Mode */}
-              <div className="hidden sm:flex items-center bg-black dark:bg-gray-50 rounded-lg p-1">
-                <button
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'grid' 
-                      ? 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-sm' 
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
-                >
-                  <Grid size={18} />
-                </button>
-                <button
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 rounded-md transition-colors ${
-                    viewMode === 'list' 
-                      ? 'bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 shadow-sm' 
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
-                  }`}
-                >
-                  <List size={18} />
-                </button>
               </div>
 
               {/* Mobile Filter Toggle */}
@@ -110,7 +89,7 @@ export default function OurCollections() {
                 <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Filters</h3>
                 <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Refine your search</p>
               </div>
-              <Filters onFilterChange={setFilters} />
+              <Filters onFilterChange={setFilters} products={products} />
             </div>
           </div>
 
@@ -131,7 +110,7 @@ export default function OurCollections() {
                   </button>
                 </div>
                 <div className="p-6 overflow-y-auto h-full">
-                  <Filters onFilterChange={setFilters} />
+                  <Filters onFilterChange={setFilters} products={products} />
                 </div>
               </div>
             </div>
@@ -140,10 +119,10 @@ export default function OurCollections() {
           {/* Products */}
           <div className="flex-1 min-w-0">
             <Products 
+              products={products}
               filters={filters}
               searchQuery={searchQuery}
               sortBy={sortBy}
-              viewMode={viewMode}
             />
           </div>
         </div>

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { DBProduct } from "@/types";
 
 // Type definitions
 interface PriceRange {
@@ -16,18 +17,8 @@ interface FilterState {
 
 interface FiltersProps {
   onFilterChange: (filters: FilterState) => void;
+  products: DBProduct[]; // Add products prop to generate categories dynamically
 }
-
-const categories: string[] = [
-  "Power Tools",
-  "Hand Tools", 
-  "Agricultural",
-  "Welding",
-  "Measuring Tools",
-  "Safety Equipment",
-  "Hardware",
-  "Repair Services"
-];
 
 const priceRanges: PriceRange[] = [
   { label: "Under KSh 2,000", min: 0, max: 2000 },
@@ -37,9 +28,18 @@ const priceRanges: PriceRange[] = [
   { label: "Above KSh 20,000", min: 20000, max: Infinity }
 ];
 
-export default function Filters({ onFilterChange }: FiltersProps) {
+export default function Filters({ onFilterChange, products }: FiltersProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedPriceRange, setSelectedPriceRange] = useState<PriceRange | null>(null);
+  const [categories, setCategories] = useState<string[]>([]);
+
+  // Generate categories from actual products
+  useEffect(() => {
+    const uniqueCategories = Array.from(
+      new Set(products.map(product => product.category.name))
+    ).sort();
+    setCategories(uniqueCategories);
+  }, [products]);
 
   const handleCategoryChange = (category: string): void => {
     const updated = selectedCategories.includes(category)
