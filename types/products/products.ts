@@ -9,19 +9,19 @@ export interface ProductCategory{
   name: string
 }
 
-export interface ProductVariantGenerated\{
+export interface ProductVariantGenerated {
   id: string
   name: string // Human-readable name (e.g., "Small", "Red")
   value: string // Actual value (e.g., "S", "#FF0000")
 }
 
-export interface ProductVariant \{
+export interface ProductVariant {
   id: string
   title: string // e.g., "Size", "Color"
   generatedVariants: ProductVariantGenerated[]
-\}
+}
 
-export interface Product \{
+export interface Product {
   id: string
   name: string
   description: string
