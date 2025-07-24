@@ -73,10 +73,10 @@ const Products: React.FC<ProductsComponentProps> = ({
     )
   }
 
-  // Use viewMode to determine grid layout
+  // Use viewMode to determine grid layout - Updated to 4 columns for large screens
   const gridClasses = viewMode === 'list' 
     ? "grid grid-cols-1 gap-5"
-    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5";
+    : "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5";
 
   return (
     <div className={gridClasses}>

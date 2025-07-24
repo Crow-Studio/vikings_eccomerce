@@ -1,47 +1,42 @@
-export interface Product {
+export type ProductImage = {
+  id: string
+  product_id: string
+  url: string
+  created_at: string
+  updated_at: string
+}
+
+export type ProductCategory = {
   id: string
   name: string
-  price: number
-  originalPrice?: number
-  isNew: boolean
-  inStock: boolean
-  rating: number
-  reviews: number
-  sku?: string
-  category: string
-  images?: string[]
-  features?: string[]
-  specifications?: Record<string, string>
+  created_at: string
 }
 
-
-export interface PriceRange {
-  label: string;
-  min: number;
-  max: number;
+export type ProductVariantGenerated = {
+  id: string
+  variant_id: string
+  name: string
+  value: string // e.g., "S", "#FF0000", "Leather"
 }
 
-export interface FilterState {
-  categories: string[];
-  priceRange: PriceRange | null;
+export type ProductVariant = {
+  id: string
+  product_id: string
+  title: string // e.g., "Size", "Color", "Material"
+  generatedVariants: ProductVariantGenerated[]
 }
 
-export type ViewMode = 'grid' | 'list';
-export type SortBy = 'featured' | 'newest' | 'price-low' | 'price-high' | 'rating';
-
-// Component prop interfaces
-export interface ProductCardProps {
-  product: Product;
-  viewMode: ViewMode;
-}
-
-export interface ProductsProps {
-  filters: FilterState;
-  searchQuery: string;
-  sortBy: SortBy;
-  viewMode: ViewMode;
-}
-
-export interface FiltersProps {
-  onFilterChange: (filters: FilterState) => void;
+export type Product = {
+  id: string
+  name: string
+  price: string
+  description: string
+  visibility: "active" | "inactive"
+  category_id: string
+  has_variants: boolean
+  created_at: string
+  updated_at: string
+  category: ProductCategory
+  images: ProductImage[]
+  variants: ProductVariant[]
 }

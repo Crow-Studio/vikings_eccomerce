@@ -1,8 +1,8 @@
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ReviewSummary } from "./review-summary"
 import type { Product } from "@/types/products"
 
 interface RelatedProductsSectionProps {
@@ -19,7 +19,7 @@ export const RelatedProductsSection = React.memo(({ relatedProducts }: RelatedPr
         <Link href="/products">
           <Button variant="outline">
             View All
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </Link>
       </div>
@@ -27,17 +27,25 @@ export const RelatedProductsSection = React.memo(({ relatedProducts }: RelatedPr
         {relatedProducts.map((relatedProduct) => (
           <Link key={relatedProduct.id} href={`/products/${relatedProduct.id}`}>
             <div className="group bg-muted/30 rounded-xl p-4 hover:bg-muted/50 transition-all duration-300 cursor-pointer">
-              <div className="aspect-square bg-background rounded-lg mb-4 flex items-center justify-center">
-                {/* Replace with actual product image */}
-                <div className="w-16 h-16 bg-primary/20 rounded-lg"></div>
+              <div className="aspect-square bg-background rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+                <Image
+                  src={
+                    relatedProduct.images?.[0]?.url ||
+                    "/placeholder.svg?height=100&width=100&query=related product image" ||
+                    "/placeholder.svg"
+                  }
+                  alt={`Image of ${relatedProduct.name}`}
+                  fill
+                  className="object-cover rounded-lg"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 15vw"
+                />
               </div>
               <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
                 {relatedProduct.name}
               </h3>
-              <div className="flex items-center gap-2 mb-2">
-                <ReviewSummary rating={relatedProduct.rating} totalReviews={0} />
+              <div className="text-lg font-bold text-primary">
+                KSh {Number.parseFloat(relatedProduct.price).toLocaleString()}
               </div>
-              <div className="text-lg font-bold text-primary">KSh {relatedProduct.price.toLocaleString()}</div>
             </div>
           </Link>
         ))}

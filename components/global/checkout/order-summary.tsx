@@ -1,8 +1,9 @@
 import * as React from "react"
 import { Shield, Truck, MapPin } from "lucide-react"
+import type { CartItem } from "@/store/cart-store" // Import CartItem type
 
 interface OrderSummaryProps {
-  items: Array<{ id: string; name: string; price: number; quantity: number }>
+  items: CartItem[] // Use CartItem type
   subtotal: number
   shipping: number
   total: number
@@ -14,9 +15,19 @@ export const OrderSummary = React.memo(({ items, subtotal, shipping, total, isFr
     <h2 className="text-xl font-semibold mb-6 text-foreground">Order Summary</h2>
     <div className="space-y-4">
       {items.map((item) => (
-        <div key={item.id} className="flex justify-between items-center text-sm">
+        <div
+          key={item.id + JSON.stringify(item.selectedVariants)}
+          className="flex justify-between items-center text-sm"
+        >
           <div className="flex-1">
             <div className="font-medium">{item.name}</div>
+            {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
+              <div className="text-muted-foreground text-xs">
+                {Object.entries(item.selectedVariants)
+                  .map(([key, value]) => `${key}: ${value}`)
+                  .join(", ")}
+              </div>
+            )}
             <div className="text-muted-foreground">Qty: {item.quantity}</div>
           </div>
           <div className="font-medium">KSh {(item.price * item.quantity).toLocaleString()}</div>

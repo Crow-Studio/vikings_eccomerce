@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
-import GrainOverlay from "@/components/global/GrainOverlay"
+// import GrainOverlay from "@/components/global/GrainOverlay" // Removed as it was not provided
 import { useCartStore } from "@/store/cart-store"
 import Link from "next/link"
 
@@ -18,7 +18,7 @@ import { OrderSummary } from "@/components/global/checkout/order-summary"
 
 export default function VikingsCheckout() {
   const router = useRouter()
-  const { items,  } = useCartStore()
+  const { items, clearCart, getTotalPrice } = useCartStore() // Added clearCart and getTotalPrice
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -38,7 +38,7 @@ export default function VikingsCheckout() {
   const isFreeShipping = formData.county.toLowerCase() === "nairobi"
 
   // Calculate totals
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const subtotal = getTotalPrice() // Use store's getTotalPrice
   const shipping = isFreeShipping ? 0 : 500
   const total = subtotal + shipping
 
@@ -79,13 +79,14 @@ export default function VikingsCheckout() {
     setIsProcessing(true)
     // Simulate payment processing
     await new Promise((resolve) => setTimeout(resolve, 2000))
+    clearCart() // Clear cart after successful order
     // Redirect to success page
     router.push("/checkout/success")
-  }, [router])
+  }, [router, clearCart])
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/10 to-primary/5 relative">
-      <GrainOverlay />
+      {/* <GrainOverlay /> */}
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -134,7 +135,7 @@ export default function VikingsCheckout() {
           {/* Order Summary Sidebar */}
           <div className="lg:col-span-1">
             <OrderSummary
-              items={items.map(item => ({ ...item, id: item.id.toString() }))}
+              items={items} // Pass items directly
               subtotal={subtotal}
               shipping={shipping}
               total={total}

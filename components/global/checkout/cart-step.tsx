@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image" // Import Image
 import { ArrowRight, Minus, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useCartStore } from "@/store/cart-store"
@@ -11,7 +12,7 @@ interface CartStepProps {
 }
 
 export const CartStep = React.memo(({ setCurrentStep }: CartStepProps) => {
-  const { items, updateQuantity, removeItem } = useCartStore()
+  const { items, increaseQuantity, decreaseQuantity, removeItem } = useCartStore()
 
   return (
     <div className="space-y-6">
@@ -37,27 +38,43 @@ export const CartStep = React.memo(({ setCurrentStep }: CartStepProps) => {
         ) : (
           items.map((item) => (
             <div
-              key={item.id}
+              key={item.id + JSON.stringify(item.selectedVariants)} // Use a combined key for unique items with variants
               className="flex items-center gap-4 p-4 bg-background rounded-lg mb-4 hover:bg-muted/20 transition-colors"
             >
-              <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center">
-                <div className="w-8 h-8 bg-primary/20 rounded"></div>
+              <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center overflow-hidden">
+                <Image
+                  src={item.image || "/placeholder.svg?height=64&width=64&query=cart item"}
+                  alt={item.name}
+                  width={64}
+                  height={64}
+                  className="object-cover"
+                />
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-foreground">{item.name}</h3>
-                <p className="text-sm text-muted-foreground">KSh {item.price.toLocaleString()}</p>
+                {item.selectedVariants && Object.keys(item.selectedVariants).length > 0 && (
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {Object.entries(item.selectedVariants)
+                      .map(([key, value]) => `${key}: ${value}`)
+                      .join(", ")}
+                  </p>
+                )}
+                <p className="text-sm text-muted-foreground mt-1">KSh {item.price.toLocaleString()}</p>
               </div>
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                  onClick={() => decreaseQuantity(item.id)}
                   className="w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+                  aria-label="Decrease quantity"
+                  disabled={item.quantity <= 1}
                 >
                   <Minus className="w-4 h-4" />
                 </button>
                 <span className="w-8 text-center font-medium">{item.quantity}</span>
                 <button
-                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                  onClick={() => increaseQuantity(item.id)}
                   className="w-8 h-8 rounded-full bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
+                  aria-label="Increase quantity"
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -65,6 +82,7 @@ export const CartStep = React.memo(({ setCurrentStep }: CartStepProps) => {
               <button
                 onClick={() => removeItem(item.id)}
                 className="w-8 h-8 rounded-full bg-red-100 hover:bg-red-200 flex items-center justify-center transition-colors text-red-600"
+                aria-label={`Remove ${item.name} from cart`}
               >
                 <X className="w-4 h-4" />
               </button>
@@ -75,7 +93,7 @@ export const CartStep = React.memo(({ setCurrentStep }: CartStepProps) => {
       {items.length > 0 && (
         <Button onClick={() => setCurrentStep(2)} className="w-full">
           Continue to Details
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       )}
     </div>
