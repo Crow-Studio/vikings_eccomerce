@@ -4,9 +4,9 @@ import { desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
@@ -20,7 +20,7 @@ export async function generateStaticParams() {
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   const product = await db.query.product.findFirst({
     where: (table) => eq(table.id, id),
