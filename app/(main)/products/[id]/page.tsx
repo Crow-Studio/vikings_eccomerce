@@ -4,23 +4,30 @@ import { desc } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export async function generateStaticParams() {
-  const products = await db.query.product.findMany({
-    columns: { id: true },
-  });
+  try {
+    const products = await db.query.product.findMany({
+      columns: { id: true },
+    });
 
-  return products.map((product) => ({
-    id: product.id.toString(),
-  }));
+    return products.map((product) => ({
+      id: product.id.toString(),
+    }));
+  } catch (error) {
+    console.warn("Database connection failed during static generation:", error);
+    // Return empty array to allow build to continue
+    // Pages will be generated on-demand instead
+    return [];
+  }
 }
 
 export default async function ProductPage({ params }: PageProps) {
-  const { id } = params;
+  const { id } = await params;
 
   const product = await db.query.product.findFirst({
     where: (table) => eq(table.id, id),
