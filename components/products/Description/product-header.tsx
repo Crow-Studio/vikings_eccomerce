@@ -1,7 +1,6 @@
 import * as React from "react"
 import Link from "next/link"
-import { Badge } from "./badge"
-import { ReviewSummary } from "./review-summary"
+import { Badge } from "@/components/products/Description/badge"
 import type { Product } from "@/types/products"
 
 interface ProductHeaderProps {
@@ -20,20 +19,15 @@ export const ProductHeader = React.memo(({ product }: ProductHeaderProps) => (
         Products
       </Link>
       <span>/</span>
-      <span className="text-foreground">{product.category}</span>
+      <span className="text-foreground">{product.category.name}</span>
     </nav>
 
     {/* Product Info */}
     <div>
-      <div className="flex items-center gap-2 mb-2">
-        {product.isNew && <Badge variant="primary">New</Badge>}
-        <Badge variant={product.inStock ? "success" : "default"}>{product.inStock ? "In Stock" : "Out of Stock"}</Badge>
-      </div>
-      <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2">{product.name}</h1>
-      <div className="flex items-center gap-4 mb-4">
-        <ReviewSummary rating={product.rating} totalReviews={product.reviews} />
-        <span className="text-sm text-muted-foreground">SKU: {product.sku || `VKG-${product.id}`}</span>
-      </div>
+      <Badge variant={product.visibility === "active" ? "success" : "default"}>
+        {product.visibility === "active" ? "In Stock" : "Out of Stock"}
+      </Badge>
+      <h1 className="text-3xl lg:text-4xl font-bold text-foreground mb-2 mt-2">{product.name}</h1>
     </div>
   </>
 ))

@@ -34,6 +34,7 @@ export const ProductActions = React.memo(
             onClick={() => updateQuantity(quantity - 1)}
             className="w-10 h-10 rounded-md bg-muted hover:bg-muted/80 flex items-center justify-center transition-colors"
             aria-label="Decrease quantity"
+            disabled={quantity <= 1}
           >
             <Minus className="w-4 h-4" />
           </button>

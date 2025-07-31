@@ -1,32 +1,41 @@
 "use client"
 
-import { useState, useCallback, useMemo } from "react"
+import { useState, useCallback } from "react"
 import Link from "next/link"
 import { useCartStore } from "@/store/cart-store"
 import { useHeaderEffects } from "@/hooks/use-header-effects"
 import { DesktopActions } from "./desktop-actions"
 import { MobileMenu } from "./mobile-menu"
-import  MegaSearch  from "@/components/global/SearchComponent"
-import  VikingsSvgIcon  from "@/components/svgs/VikingsSvgIcon"
+import MegaSearch from "@/components/global/SearchComponent"
+import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon"
 import type { HeaderProps } from "@/types/header"
 
 export default function Header({ user }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
+  const { items, getTotalItems, removeItem, increaseQuantity, decreaseQuantity, getTotalPrice } = useCartStore() // Destructure all needed functions
 
-  const { items, itemCount, removeItem, updateQuantity } = useCartStore()
+  const itemCount = getTotalItems()
+  const cartTotal = getTotalPrice()
 
-  const cartTotal = useMemo(() => items.reduce((sum, item) => sum + item.price * item.quantity, 0), [items])
-
-  // Wrapper functions to handle type conversion between string and number IDs
-  const handleUpdateQuantity = useCallback((id: string, quantity: number) => {
-    updateQuantity(Number(id), quantity)
-  }, [updateQuantity])
-
-  const handleRemoveItem = useCallback((id: string) => {
-    removeItem(Number(id))
-  }, [removeItem])
+  // Wrapper functions to handle string IDs for cart store
+  const handleUpdateQuantity = useCallback(
+    (id: string, quantity: number) => {
+      if (quantity > (items.find((item) => item.id === id)?.quantity || 0)) {
+        increaseQuantity(id)
+      } else {
+        decreaseQuantity(id)
+      }
+    },
+    [increaseQuantity, decreaseQuantity, items],
+  )
+  const handleRemoveItem = useCallback(
+    (id: string) => {
+      removeItem(id)
+    },
+    [removeItem],
+  )
 
   // Memoized callbacks
   const handleSearchOpen = useCallback(() => setIsSearchOpen(true), [])
@@ -37,9 +46,9 @@ export default function Header({ user }: HeaderProps) {
     setIsCartOpen(true)
   }, [])
   const handleWishlistClick = useCallback(() => {
-    // Handle wishlist logic here
+    // This will likely open a wishlist drawer/page
+    console.log("Wishlist icon clicked")
   }, [])
-
   // Custom hook for effects
   useHeaderEffects(isMenuOpen, isCartOpen, setIsSearchOpen)
 
@@ -51,13 +60,11 @@ export default function Header({ user }: HeaderProps) {
           <div className="hidden lg:block flex-1">
             <h2 className="text-xs xl:text-sm text-muted-foreground">Free shipping in Nairobi and 30 days return</h2>
           </div>
-
           {/* Center Section - Logo */}
           <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
             <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform hover:scale-105" />
             <h1 className="text-xl sm:text-2xl font-semibold text-[#353535] dark:text-white">Vikings</h1>
           </Link>
-
           {/* Right Section - Actions */}
           <div className="flex items-center gap-1 sm:gap-2 flex-1 justify-end">
             <DesktopActions
@@ -72,7 +79,6 @@ export default function Header({ user }: HeaderProps) {
               onUpdateQuantity={handleUpdateQuantity}
               onRemoveItem={handleRemoveItem}
             />
-
             <MobileMenu
               user={user}
               isOpen={isMenuOpen}
@@ -86,7 +92,6 @@ export default function Header({ user }: HeaderProps) {
           </div>
         </div>
       </header>
-
       <MegaSearch isOpen={isSearchOpen} onClose={handleSearchClose} />
     </>
   )

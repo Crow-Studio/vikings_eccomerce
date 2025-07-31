@@ -1,31 +1,27 @@
 "use client"
+
 import { useState, useCallback } from "react"
-import GrainOverlay from "@/components/global/GrainOverlay"
 import { useCartStore } from "@/store/cart-store"
-import { type Product } from "@/types/products"
-import { mockProducts } from "@/data/products"
-
-
+import type { Product } from "@/types/products"
 import { ImageGallery } from "@/components/products/Description/image-gallery"
 import { ProductAddedDrawer } from "@/components/products/Description/product-added-drawer"
 import { ProductHeader } from "@/components/products/Description/product-header"
 import { ProductPricing } from "@/components/products/Description/product-pricing"
-import { ProductFeatures } from "@/components/products/Description/product-features"
 import { ProductActions } from "@/components/products/Description/product-action"
-import { ProductTrustBadges } from "@/components/products/Description/product-trust-badges"
-import { ProductContactOptions } from "@/components/products/Description/product-contact-option"
 import { ProductTabs } from "@/components/products/Description/product-tabs"
 import { RelatedProductsSection } from "@/components/products/Description/related-product"
+import { ProductVariants } from "@/components/products/Description/product-variants"
+import { ProductTrustBadges } from "@/components/products/Description/product-trust-badges"
+import { ProductContactOptions } from "@/components/products/Description/product-contact-option"
+import { Card, CardContent } from "@/components/ui/card"
+import { mockProducts } from "@/data/products" // Used for related products mock
+import GrainOverlay from "@/components/global/GrainOverlay"
 
-interface ProductDescPageProps {
-  params: {
-    id: string
-  }
+interface ProductDetailsClientProps {
+  product: Product
 }
 
-export default function ProductDescPage({ params }: ProductDescPageProps) {
-  const product: Product | undefined = mockProducts.find((p) => p.id.toString() === params.id) || mockProducts[0] as Product
-
+export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [quantity, setQuantity] = useState(1)
   const [selectedTab, setSelectedTab] = useState("description")
@@ -33,6 +29,23 @@ export default function ProductDescPage({ params }: ProductDescPageProps) {
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [showDrawer, setShowDrawer] = useState(false)
   const { addItem } = useCartStore()
+
+  // Initialize selected variants based on the first available option for each variant type
+  const initialSelectedVariants = product.variants.reduce(
+    (acc, variant) => {
+      if (variant.generatedVariants.length > 0) {
+        acc[variant.title] = variant.generatedVariants[0].value
+      }
+      return acc
+    },
+    {} as Record<string, string>,
+  )
+
+  const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(initialSelectedVariants)
+
+  const handleVariantChange = useCallback((variantTitle: string, value: string) => {
+    setSelectedVariants((prev) => ({ ...prev, [variantTitle]: value }))
+  }, [])
 
   const updateQuantity = useCallback((newQuantity: number) => {
     if (newQuantity >= 1) {
@@ -44,73 +57,78 @@ export default function ProductDescPage({ params }: ProductDescPageProps) {
     setIsAddingToCart(true)
     await new Promise((resolve) => setTimeout(resolve, 800))
     addItem({
-      id: Number(product.id),
+      id: product.id,
       name: product.name,
-      price: product.price,
+      price: Number.parseFloat(product.price),
       quantity: quantity,
-      image: product.images?.[0] || "/placeholder.svg?height=80&width=80",
+      image: product.images?.[0]?.url || "/placeholder.svg?height=80&width=80",
+      selectedVariants: selectedVariants, // Pass selected variants to cart
     })
     setIsAddingToCart(false)
     setShowDrawer(true)
-  }, [addItem, product, quantity])
+  }, [addItem, product, quantity, selectedVariants])
 
   const handleTabChange = useCallback((tabId: string) => {
     setSelectedTab(tabId)
   }, [])
 
-  if (!product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 to-primary/5 relative">
-        <GrainOverlay />
-        <p className="text-foreground text-xl">Product not found.</p>
-      </div>
-    )
-  }
-
-  const relatedProducts = mockProducts.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 4)
+  const relatedProducts = mockProducts
+    .filter((p) => p.category.id === product.category.id && p.id !== product.id)
+    .slice(0, 4)
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/10 to-primary/5 relative">
-      <GrainOverlay />
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden">
+      <GrainOverlay/>
       <div className="max-w-7xl mx-auto">
         <ProductHeader product={product} />
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 lg:gap-12 mb-12">
           {/* Product Images */}
-          <div>
+          <div className="lg:sticky lg:top-8 self-start">
             <ImageGallery
-              images={product.images}
+              images={product.images.map((img) => img.url)}
               currentIndex={currentImageIndex}
               onImageChange={setCurrentImageIndex}
             />
           </div>
           {/* Product Info */}
           <div className="space-y-6">
-            <ProductPricing price={product.price} originalPrice={product.originalPrice} />
-            <ProductFeatures features={product.features} />
-            <ProductActions
-              quantity={quantity}
-              updateQuantity={updateQuantity}
-              handleAddToCart={handleAddToCart}
-              isAddingToCart={isAddingToCart}
-              inStock={product.inStock}
-              isWishlisted={isWishlisted}
-              setIsWishlisted={setIsWishlisted}
-            />
+            <Card className="p-6">
+              <CardContent className="p-0 space-y-4">
+                <ProductPricing price={Number.parseFloat(product.price)} />
+
+                {product.has_variants && product.variants.length > 0 && (
+                  <ProductVariants
+                    variants={product.variants}
+                    selectedVariants={selectedVariants}
+                    onVariantChange={handleVariantChange}
+                  />
+                )}
+
+                <ProductActions
+                  quantity={quantity}
+                  updateQuantity={updateQuantity}
+                  handleAddToCart={handleAddToCart}
+                  isAddingToCart={isAddingToCart}
+                  inStock={product.visibility === "active"}
+                  isWishlisted={isWishlisted}
+                  setIsWishlisted={setIsWishlisted}
+                />
+              </CardContent>
+            </Card>
+            {/* Trust Badges and Contact Options outside the main card but still in the right column */}
             <ProductTrustBadges />
             <ProductContactOptions />
           </div>
         </div>
-
         <ProductTabs product={product} selectedTab={selectedTab} onTabChange={handleTabChange} />
         <RelatedProductsSection relatedProducts={relatedProducts} />
       </div>
-
       <ProductAddedDrawer
         isOpen={showDrawer}
         onClose={() => setShowDrawer(false)}
         product={product}
         quantity={quantity}
+        selectedVariants={selectedVariants}
       />
     </div>
   )
