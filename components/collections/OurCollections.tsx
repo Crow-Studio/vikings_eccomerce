@@ -7,10 +7,10 @@ import Filters from "./Filters";
 import Products from "./Products";
 import GrainOverlay from '@/components/global/GrainOverlay';
 import { FilterState, SortBy } from "@/types/products";
-import { DBProduct } from "@/types";
+import { DBProduct } from "@/types"; // Import DBProduct from main types
 
 interface OurCollectionsProps {
-  products?: DBProduct[]; // Make products prop optional
+  products?: DBProduct[]; // Use DBProduct instead of RawDBProduct
 }
 
 export default function OurCollections({ products = [] }: OurCollectionsProps) {

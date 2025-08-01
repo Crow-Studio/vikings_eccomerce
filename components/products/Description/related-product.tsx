@@ -3,7 +3,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { Product } from "@/types/products"
+import type { Product } from "@/types/products" // Updated import to use unified types
 
 interface RelatedProductsSectionProps {
   relatedProducts: Product[]
@@ -53,4 +53,5 @@ export const RelatedProductsSection = React.memo(({ relatedProducts }: RelatedPr
     </div>
   )
 })
+
 RelatedProductsSection.displayName = "RelatedProductsSection"

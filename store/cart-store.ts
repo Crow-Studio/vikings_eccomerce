@@ -1,77 +1,106 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
 
-interface CartState {
-  items: CartItem[]
-  addItem: (item: Omit<CartItem, "quantity">, quantity: number, selectedVariants?: Record<string, string>) => void
-  removeItem: (id: string) => void
-  increaseQuantity: (id: string) => void
-  decreaseQuantity: (id: string) => void
-  clearCart: () => void
-  getTotalPrice: () => number
-  getTotalItems: () => number
-}
-
-export const useCartStore = create<CartState>()(
-  persist(
-    (set, get) => ({
-      items: [],
-      addItem: (item, quantity, selectedVariants) => {
-        const existingItemIndex = get().items.findIndex(
-          (cartItem) =>
-            cartItem.id === item.id && JSON.stringify(cartItem.selectedVariants) === JSON.stringify(selectedVariants),
-        )
-
-        if (existingItemIndex > -1) {
-          set((state) => {
-            const newItems = [...state.items]
-            newItems[existingItemIndex].quantity += quantity
-            return { items: newItems }
-          })
-        } else {
-          set((state) => ({
-            items: [...state.items, { ...item, quantity, selectedVariants }],
-          }))
-        }
-      },
-      removeItem: (id) => {
-        set((state) => ({
-          items: state.items.filter((item) => item.id !== id),
-        }))
-      },
-      increaseQuantity: (id) => {
-        set((state) => ({
-          items: state.items.map((item) => (item.id === id ? { ...item, quantity: item.quantity + 1 } : item)),
-        }))
-      },
-      decreaseQuantity: (id) => {
-        set((state) => ({
-          items: state.items.map((item) =>
-            item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item,
-          ),
-        }))
-      },
-      clearCart: () => {
-        set({ items: [] })
-      },
-      getTotalPrice: () => {
-        return get().items.reduce((total, item) => total + item.price * item.quantity, 0)
-      },
-      getTotalItems: () => {
-        return get().items.reduce((total, item) => total + item.quantity, 0)
-      },
-    }),
-    {
-      name: "cart-storage",
-      storage: typeof window !== "undefined" ? localStorage : undefined,
-    },
-  ),
-)
 export interface CartItem {
-  id: string
+  id: string // Changed from number to string to match your database schema
   name: string
   price: number
   quantity: number
   image: string
-  selectedVariants?: Record<string, string>
+  selectedVariants?: Record<string, string> // Added to support product variants
 }
+
+interface CartStore {
+  items: CartItem[]
+  addItem: (item: CartItem) => void
+  removeItem: (id: string) => void
+  updateQuantity: (id: string, quantity: number) => void
+  increaseQuantity: (id: string) => void
+  decreaseQuantity: (id: string) => void
+  clearCart: () => void
+  getTotalItems: () => number
+  getTotalPrice: () => number
+}
+
+export const useCartStore = create<CartStore>()(
+  persist(
+    (set, get) => ({
+      items: [],
+      addItem: (item) => {
+        const { items } = get()
+        const existingItemIndex = items.findIndex((i) => 
+          i.id === item.id && 
+          JSON.stringify(i.selectedVariants) === JSON.stringify(item.selectedVariants)
+        )
+
+        if (existingItemIndex !== -1) {
+          // Update existing item quantity
+          const updatedItems = [...items]
+          updatedItems[existingItemIndex] = {
+            ...updatedItems[existingItemIndex],
+            quantity: updatedItems[existingItemIndex].quantity + item.quantity
+          }
+          set({ items: updatedItems })
+        } else {
+          // Add new item
+          set({ items: [...items, item] })
+        }
+      },
+      removeItem: (id) => {
+        const { items } = get()
+        set({
+          items: items.filter((i) => i.id !== id)
+        })
+      },
+      updateQuantity: (id, quantity) => {
+        const { items } = get()
+        if (quantity <= 0) {
+          // Remove item if quantity is 0 or less
+          set({
+            items: items.filter((i) => i.id !== id)
+          })
+        } else {
+          set({
+            items: items.map((i) => (i.id === id ? { ...i, quantity } : i))
+          })
+        }
+      },
+      increaseQuantity: (id) => {
+        const { items } = get()
+        set({
+          items: items.map((i) => 
+            i.id === id ? { ...i, quantity: i.quantity + 1 } : i
+          )
+        })
+      },
+      decreaseQuantity: (id) => {
+        const { items } = get()
+        const item = items.find((i) => i.id === id)
+        if (item && item.quantity > 1) {
+          set({
+            items: items.map((i) => 
+              i.id === id ? { ...i, quantity: i.quantity - 1 } : i
+            )
+          })
+        } else {
+          // Remove item if quantity would become 0
+          set({
+            items: items.filter((i) => i.id !== id)
+          })
+        }
+      },
+      clearCart: () => set({ items: [] }),
+      getTotalItems: () => {
+        const { items } = get()
+        return items.reduce((total, item) => total + item.quantity, 0)
+      },
+      getTotalPrice: () => {
+        const { items } = get()
+        return items.reduce((total, item) => total + (item.price * item.quantity), 0)
+      },
+    }),
+    {
+      name: "vikings-cart-storage",
+    },
+  ),
+)

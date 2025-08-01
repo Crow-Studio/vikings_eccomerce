@@ -84,6 +84,7 @@ export interface GeneralInformationProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   isAddingProduct: boolean
 }
+
 export interface TagInputProps {
   tags: string[];
   onChange: (tags: string[]) => void;
@@ -138,12 +139,13 @@ export interface ProcessedProductData {
   }[] | undefined;
 }
 
+// Updated DBProduct to match the Product interface expected by your component
 export interface DBProduct {
   visibility: Visibility;
   id: string;
   name: string;
-  created_at: Date;
-  updated_at: Date | null;
+  created_at: string; // Changed from Date to string
+  updated_at: string | null; // Changed from Date | null to string | null
   price: string;
   description: string;
   category_id: string;
@@ -155,5 +157,26 @@ export interface DBProduct {
     product_id: string;
     title: string;
     generatedVariants: GeneratedVariants[];
+  }[];
+}
+
+// Add a Product type that matches what your component expects
+export interface Product {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  visibility: Visibility;
+  category_id: string;
+  has_variants: boolean;
+  created_at: string;
+  updated_at: string; // Changed to always be string, not null
+  category: Category;
+  images: ProductImage[];
+  variants: {
+    id: string;
+    product_id: string;
+    title: string;
+    generatedVariants: (GeneratedVariants & { value: string })[];
   }[];
 }

@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import { useCartStore } from "@/store/cart-store"
 import type { Product } from "@/types/products"
+import { getRelatedProducts } from "@/actions/product-actions" 
 import { ImageGallery } from "@/components/products/Description/image-gallery"
 import { ProductAddedDrawer } from "@/components/products/Description/product-added-drawer"
 import { ProductHeader } from "@/components/products/Description/product-header"
@@ -14,7 +15,6 @@ import { ProductVariants } from "@/components/products/Description/product-varia
 import { ProductTrustBadges } from "@/components/products/Description/product-trust-badges"
 import { ProductContactOptions } from "@/components/products/Description/product-contact-option"
 import { Card, CardContent } from "@/components/ui/card"
-import { mockProducts } from "@/data/products" // Used for related products mock
 import GrainOverlay from "@/components/global/GrainOverlay"
 
 interface ProductDetailsClientProps {
@@ -28,6 +28,8 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
   const [isWishlisted, setIsWishlisted] = useState(false)
   const [isAddingToCart, setIsAddingToCart] = useState(false)
   const [showDrawer, setShowDrawer] = useState(false)
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+  const [, setIsLoadingRelated] = useState(true)
   const { addItem } = useCartStore()
 
   // Initialize selected variants based on the first available option for each variant type
@@ -42,6 +44,24 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
   )
 
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>(initialSelectedVariants)
+
+  // Fetch related products using server action
+  useEffect(() => {
+    const fetchRelatedProducts = async () => {
+      try {
+        setIsLoadingRelated(true)
+        const products = await getRelatedProducts(product.id, product.category_id)
+        setRelatedProducts(products)
+      } catch (error) {
+        console.error('Error fetching related products:', error)
+        setRelatedProducts([])
+      } finally {
+        setIsLoadingRelated(false)
+      }
+    }
+
+    fetchRelatedProducts()
+  }, [product.category_id, product.id])
 
   const handleVariantChange = useCallback((variantTitle: string, value: string) => {
     setSelectedVariants((prev) => ({ ...prev, [variantTitle]: value }))
@@ -62,7 +82,7 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
       price: Number.parseFloat(product.price),
       quantity: quantity,
       image: product.images?.[0]?.url || "/placeholder.svg?height=80&width=80",
-      selectedVariants: selectedVariants, // Pass selected variants to cart
+      selectedVariants: selectedVariants,
     })
     setIsAddingToCart(false)
     setShowDrawer(true)
@@ -71,10 +91,6 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
   const handleTabChange = useCallback((tabId: string) => {
     setSelectedTab(tabId)
   }, [])
-
-  const relatedProducts = mockProducts
-    .filter((p) => p.category.id === product.category.id && p.id !== product.id)
-    .slice(0, 4)
 
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden">
@@ -121,7 +137,9 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
           </div>
         </div>
         <ProductTabs product={product} selectedTab={selectedTab} onTabChange={handleTabChange} />
-        <RelatedProductsSection relatedProducts={relatedProducts} />
+        <RelatedProductsSection 
+          relatedProducts={relatedProducts} 
+        />
       </div>
       <ProductAddedDrawer
         isOpen={showDrawer}
