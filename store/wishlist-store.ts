@@ -1,5 +1,5 @@
 import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { persist, createJSONStorage } from "zustand/middleware"
 import type { WishlistItem } from "@/types/header" // Import the new WishlistItem type
 
 interface WishlistState {
@@ -40,7 +40,7 @@ export const useWishlistStore = create<WishlistState>()(
     }),
     {
       name: "wishlist-storage",
-      storage: typeof window !== "undefined" ? localStorage : undefined,
+      storage: createJSONStorage(() => localStorage),
     },
   ),
 )

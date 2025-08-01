@@ -34,6 +34,12 @@ export default async function AllProductsPage() {
     },
   });
 
+  const transformedProducts = products.map(product => ({
+    ...product,
+    created_at: product.created_at.toISOString(),
+    updated_at: product.updated_at?.toISOString() || null,
+  }));
+
   return (
     <div className="grid gap-y-5">
       <div className="flex items-center justify-between">
@@ -50,7 +56,7 @@ export default async function AllProductsPage() {
           </Link>
         </Button>
       </div>
-      <ProductsDataTable products={products} />
+      <ProductsDataTable products={transformedProducts} />
     </div>
   );
 }

@@ -55,16 +55,14 @@ export default function ProductUI({ product, isLoading = false }: ProductUIProps
     e.preventDefault() // Prevent Link navigation
     e.stopPropagation()
 
-    addItem(
-      {
-        id: product.id,
-        name: product.name,
-        price: Number.parseFloat(product.price),
-        image: product.images[0]?.url || "/placeholder.svg", // Use first image or placeholder
-        selectedVariants: {}, // Default empty variants for product card
-      },
-      1, // Add 1 quantity by default from product card
-    )
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: Number.parseFloat(product.price),
+      quantity: 1, // Default quantity for product card
+      image: product.images[0]?.url || "/placeholder.svg", // Use first image or placeholder
+      selectedVariants: {}, // Default empty variants for product card
+    })
     console.log(`Added to cart: ${product.name}`)
   }
 
