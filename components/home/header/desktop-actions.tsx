@@ -4,12 +4,14 @@ import { memo } from "react"
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { IconButton } from "./icon-button"
+import { IconButton } from "@/components/home/header/icon-button"
 import { CartSheet } from "./cart-sheet"
+import { WishlistSheet } from "@/components/global/wishlist-sheet"
 import SolarMagniferOutline from "@/components/svgs/SolarMagniferOutline"
 import ShoppingBagIcon from "@/components/svgs/shoppingBag"
-import WishListIcon from "@/components/svgs/Wishlist"
 import type { User } from "@/lib/server/user"
+import type { CartItem } from "@/store/cart-store"
+import type { WishlistItem } from "@/types/header"
 
 interface DesktopActionsProps {
   user: User | null
@@ -17,25 +19,34 @@ interface DesktopActionsProps {
   onWishlistClick: () => void
   isCartOpen: boolean
   onCartOpenChange: (open: boolean) => void
-  items: any[]
+  isWishlistOpen: boolean
+  onWishlistOpenChange: (open: boolean) => void
+  items: CartItem[]
   itemCount: number
   cartTotal: number
+  wishlistItems: WishlistItem[]
+  wishlistItemCount: number
   onUpdateQuantity: (id: string, quantity: number) => void
   onRemoveItem: (id: string) => void
+  onRemoveWishlistItem: (id: string) => void
 }
 
 export const DesktopActions = memo(
   ({
     user,
     onSearchOpen,
-    onWishlistClick,
     isCartOpen,
     onCartOpenChange,
+    isWishlistOpen,
+    onWishlistOpenChange,
     items,
     itemCount,
     cartTotal,
+    wishlistItems,
+    wishlistItemCount,
     onUpdateQuantity,
     onRemoveItem,
+    onRemoveWishlistItem,
   }: DesktopActionsProps) => (
     <div className="hidden sm:flex items-center space-x-1 md:space-x-2">
       <TooltipProvider>
@@ -43,7 +54,7 @@ export const DesktopActions = memo(
         <Link href="/products">
           <IconButton icon={ShoppingBagIcon} tooltip="Shop" />
         </Link>
-        <IconButton icon={WishListIcon} tooltip="Wishlist" onClick={onWishlistClick} badge="2" />
+        {/* Removed standalone wishlist IconButton - WishlistSheet provides its own trigger */}
         <CartSheet
           isOpen={isCartOpen}
           onOpenChange={onCartOpenChange}
@@ -52,6 +63,13 @@ export const DesktopActions = memo(
           cartTotal={cartTotal}
           onUpdateQuantity={onUpdateQuantity}
           onRemoveItem={onRemoveItem}
+        />
+        <WishlistSheet
+          isOpen={isWishlistOpen}
+          onOpenChange={onWishlistOpenChange}
+          items={wishlistItems}
+          itemCount={wishlistItemCount}
+          onRemoveItem={onRemoveWishlistItem}
         />
       </TooltipProvider>
       <Separator orientation="vertical" className="h-4 mx-1 md:mx-2" />
