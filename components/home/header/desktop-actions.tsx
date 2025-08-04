@@ -62,7 +62,6 @@ export const DesktopActions = memo(
           cartTotal={cartTotal}
           onUpdateQuantity={onUpdateQuantity}
           onRemoveItem={onRemoveItem}
-          tooltip={`Cart${itemCount > 0 ? ` (${itemCount})` : ''}`}
         />
         <WishlistSheet
           isOpen={isWishlistOpen}
