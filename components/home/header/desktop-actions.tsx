@@ -9,6 +9,7 @@ import { CartSheet } from "./cart-sheet"
 import { WishlistSheet } from "@/components/global/wishlist-sheet"
 import SolarMagniferOutline from "@/components/svgs/SolarMagniferOutline"
 import ShoppingBagIcon from "@/components/svgs/shoppingBag"
+import BlogIcon from '@/components/svgs/blogIcon'
 import type { User } from "@/lib/server/user"
 import type { CartItem } from "@/store/cart-store"
 import type { WishlistItem } from "@/types/header"
@@ -54,6 +55,20 @@ export const DesktopActions = memo(
         <Link href="/products">
           <IconButton icon={ShoppingBagIcon} tooltip="Shop" />
         </Link>
+        <Link href="/blogs">
+          <IconButton 
+            icon={BlogIcon}
+            tooltip="Blogs"
+          />
+        </Link>
+        
+        <WishlistSheet
+          isOpen={isWishlistOpen}
+          onOpenChange={onWishlistOpenChange}
+          items={wishlistItems}
+          itemCount={wishlistItemCount}
+          onRemoveItem={onRemoveWishlistItem}
+        />
         <CartSheet
           isOpen={isCartOpen}
           onOpenChange={onCartOpenChange}
@@ -63,15 +78,9 @@ export const DesktopActions = memo(
           onUpdateQuantity={onUpdateQuantity}
           onRemoveItem={onRemoveItem}
         />
-        <WishlistSheet
-          isOpen={isWishlistOpen}
-          onOpenChange={onWishlistOpenChange}
-          items={wishlistItems}
-          itemCount={wishlistItemCount}
-          onRemoveItem={onRemoveWishlistItem}
-        />
       </TooltipProvider>
       <Separator orientation="vertical" className="h-4 mx-1 md:mx-2" />
+      
       {user ? (
         <Link
           href="/account/dashboard"
