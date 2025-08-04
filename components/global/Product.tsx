@@ -1,19 +1,31 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-
+import { useState } from "react"
 import type * as React from "react"
 import Image from "next/image"
 import { Heart } from "lucide-react"
 import Link from "next/link"
-import { useCartStore } from "@/store/cart-store" // Import cart store
-import { useWishlistStore } from "@/store/wishlist-store" // Import wishlist store
+import { useCartStore } from "@/store/cart-store" 
+import { useWishlistStore } from "@/store/wishlist-store" 
 import ProductSkeleton from "./ProductSkeleton"
-import type { DBProduct } from "@/types" // Import DBProduct type
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import type { DBProduct } from "@/types"
 
 interface ProductUIProps {
+  products?: DBProduct[]
   product?: DBProduct
   isLoading?: boolean
+  itemsPerPage?: number
+  showPagination?: boolean
 }
 
 // Helper function to check if product is new (within last 1 day)
@@ -23,20 +35,17 @@ function isNewProduct(createdAt: Date): boolean {
   return createdAt > oneDayAgo
 }
 
-export default function ProductUI({ product, isLoading = false }: ProductUIProps) {
+// Individual Product Card Component
+function ProductCard({ product }: { product: DBProduct }) {
   const { addItem } = useCartStore()
   const { addItem: addWishlistItem, removeItem: removeWishlistItem, isWishlisted } = useWishlistStore()
-
-  if (isLoading || !product) {
-    return <ProductSkeleton />
-  }
 
   const isNew = isNewProduct(new Date(product.created_at))
   const isCurrentlyWishlisted = isWishlisted(product.id)
 
   const handleWishlistClick = (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent Link navigation
-    e.stopPropagation() // Prevent triggering parent click events
+    e.preventDefault() 
+    e.stopPropagation() 
 
     if (isCurrentlyWishlisted) {
       removeWishlistItem(product.id)
@@ -45,31 +54,29 @@ export default function ProductUI({ product, isLoading = false }: ProductUIProps
         id: product.id,
         name: product.name,
         price: Number.parseFloat(product.price),
-        image: product.images[0]?.url || "/placeholder.svg", // Use first image or placeholder
-        selectedVariants: {}, // Default empty variants for product card
+        image: product.images[0]?.url || "/placeholder.svg", 
+        selectedVariants: {}, 
       })
     }
   }
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault() // Prevent Link navigation
+    e.preventDefault() 
     e.stopPropagation()
 
     addItem({
       id: product.id,
       name: product.name,
       price: Number.parseFloat(product.price),
-      quantity: 1, // Default quantity for product card
-      image: product.images[0]?.url || "/placeholder.svg", // Use first image or placeholder
-      selectedVariants: {}, // Default empty variants for product card
+      quantity: 1,
+      image: product.images[0]?.url || "/placeholder.svg",
+      selectedVariants: {},
     })
     console.log(`Added to cart: ${product.name}`)
   }
 
   const handleViewDetails = (e: React.MouseEvent) => {
-    // Don't prevent default - let the Link navigation work
     e.stopPropagation()
-    // The Link wrapper will handle the navigation
   }
 
   return (
@@ -130,5 +137,155 @@ export default function ProductUI({ product, isLoading = false }: ProductUIProps
         </div>
       </div>
     </Link>
+  )
+}
+
+export default function ProductUI({ 
+  products, 
+  product, 
+  isLoading = false, 
+  itemsPerPage = 12,
+  showPagination = true 
+}: ProductUIProps) {
+  const [currentPage, setCurrentPage] = useState(1)
+
+  // Handle single product case (original behavior)
+  if (product && !products) {
+    if (isLoading) {
+      return <ProductSkeleton />
+    }
+    return <ProductCard product={product} />
+  }
+
+  // Handle multiple products case with pagination
+  if (!products) {
+    return <ProductSkeleton />
+  }
+
+  // Calculate pagination values
+  const totalPages = Math.ceil(products.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const currentProducts = products.slice(startIndex, endIndex)
+
+  // Generate page numbers for pagination
+  const getPageNumbers = () => {
+    const pages = []
+    const maxVisiblePages = 5
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i)
+      }
+    } else {
+      if (currentPage <= 3) {
+        for (let i = 1; i <= 4; i++) {
+          pages.push(i)
+        }
+        pages.push('ellipsis')
+        pages.push(totalPages)
+      } else if (currentPage >= totalPages - 2) {
+        pages.push(1)
+        pages.push('ellipsis')
+        for (let i = totalPages - 3; i <= totalPages; i++) {
+          pages.push(i)
+        }
+      } else {
+        pages.push(1)
+        pages.push('ellipsis')
+        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
+          pages.push(i)
+        }
+        pages.push('ellipsis')
+        pages.push(totalPages)
+      }
+    }
+
+    return pages
+  }
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  const pageNumbers = getPageNumbers()
+
+  return (
+    <div className="space-y-8">
+      {/* Products Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {isLoading
+          ? Array.from({ length: itemsPerPage }).map((_, index) => (
+              <ProductSkeleton key={index} />
+            ))
+          : currentProducts.map((productItem) => (
+              <ProductCard key={productItem.id} product={productItem} />
+            ))
+        }
+      </div>
+
+      {/* Pagination - Only show if enabled and there are products and more than one page */}
+      {!isLoading && showPagination && products.length > 0 && totalPages > 1 && (
+        <div className="flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              {/* Previous Button */}
+              <PaginationItem>
+                <PaginationPrevious
+                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === 1 && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+
+              {/* Page Numbers */}
+              {pageNumbers.map((page, index) => (
+                <PaginationItem key={index}>
+                  {page === 'ellipsis' ? (
+                    <PaginationEllipsis />
+                  ) : (
+                    <PaginationLink
+                      onClick={() => handlePageChange(page as number)}
+                      isActive={currentPage === page}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
+                  )}
+                </PaginationItem>
+              ))}
+
+              {/* Next Button */}
+              <PaginationItem>
+                <PaginationNext
+                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  className={cn(
+                    "cursor-pointer",
+                    currentPage === totalPages && "pointer-events-none opacity-50"
+                  )}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
+
+      {/* Results Info */}
+      {!isLoading && showPagination && products.length > 0 && (
+        <div className="text-center text-sm text-muted-foreground">
+          Showing {startIndex + 1} to {Math.min(endIndex, products.length)} of {products.length} products
+        </div>
+      )}
+
+      {/* No products message */}
+      {!isLoading && products.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No products found.</p>
+        </div>
+      )}
+    </div>
   )
 }

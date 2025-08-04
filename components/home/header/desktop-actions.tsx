@@ -54,7 +54,6 @@ export const DesktopActions = memo(
         <Link href="/products">
           <IconButton icon={ShoppingBagIcon} tooltip="Shop" />
         </Link>
-        {/* Removed standalone wishlist IconButton - WishlistSheet provides its own trigger */}
         <CartSheet
           isOpen={isCartOpen}
           onOpenChange={onCartOpenChange}
@@ -63,6 +62,7 @@ export const DesktopActions = memo(
           cartTotal={cartTotal}
           onUpdateQuantity={onUpdateQuantity}
           onRemoveItem={onRemoveItem}
+          tooltip={`Cart${itemCount > 0 ? ` (${itemCount})` : ''}`}
         />
         <WishlistSheet
           isOpen={isWishlistOpen}
