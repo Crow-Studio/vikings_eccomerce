@@ -29,7 +29,7 @@ export default function NotFoundPage() {
         <div className="flex-1 flex items-center justify-center p-6 sm:p-8 lg:p-12 bg-primary">
           <div className="text-center max-w-lg">
             <div className="mb-6 sm:mb-8">
-              <span className="inline-block text-7xl sm:text-8xl lg:text-9xl font-black text-black mb-4 tracking-tighter">
+              <span className="inline-block text-7xl sm:text-8xl lg:text-9xl font-black text-white mb-4 tracking-tighter">
                 404
               </span>
             </div>

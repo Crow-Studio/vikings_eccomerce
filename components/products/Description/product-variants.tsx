@@ -11,37 +11,86 @@ interface ProductVariantsProps {
 }
 
 export const ProductVariants = React.memo(({ variants, selectedVariants, onVariantChange }: ProductVariantsProps) => {
+  // Filter out duplicate variants and ensure each variant type appears only once
+  const uniqueVariants = React.useMemo(() => {
+    const seen = new Set<string>()
+    return variants.filter((variant) => {
+      const key = variant.title.toLowerCase()
+      if (seen.has(key)) {
+        return false
+      }
+      seen.add(key)
+      return variant.generatedVariants && variant.generatedVariants.length > 0
+    })
+  }, [variants])
+
+  // Deduplicate variant options within each variant type
+  const getUniqueVariantOptions = React.useCallback((options: ProductVariantGenerated[]) => {
+    const seen = new Set<string>()
+    return options.filter((option) => {
+      const key = `${option.value}-${option.name}`.toLowerCase()
+      if (seen.has(key)) {
+        return false
+      }
+      seen.add(key)
+      return true
+    })
+  }, [])
+
+  if (uniqueVariants.length === 0) {
+    return null
+  }
+
   return (
     <div className="space-y-6">
-      {variants.map((variant) => (
-        <div key={variant.id} className="space-y-2">
-          <h3 className="text-sm font-medium text-foreground">{variant.title}:</h3>
-          <div className="flex flex-wrap gap-2">
-            {variant.generatedVariants.map((option: ProductVariantGenerated) => {
-              const isSelected = selectedVariants[variant.title] === option.value
+      {uniqueVariants.map((variant) => {
+        const uniqueOptions = getUniqueVariantOptions(variant.generatedVariants)
+        
+        if (uniqueOptions.length === 0) {
+          return null
+        }
 
-              return (
-                <button
-                  key={option.id}
-                  onClick={() => onVariantChange(variant.title, option.value)}
-                  className={cn(
-                    "flex items-center justify-center rounded-md border text-sm font-medium transition-colors",
-                    "px-4 py-2", // Consistent padding for all variant types
-                    isSelected
-                      ? "border-primary ring-2 ring-primary"
-                      : "border-input bg-background hover:bg-accent hover:text-accent-foreground",
-                  )}
-                  aria-pressed={isSelected}
-                  aria-label={`${variant.title} ${option.name}`}
-                >
-                  {option.name} {/* Always display the human-readable name */}
-                </button>
-              )
-            })}
+        return (
+          <div key={variant.id} className="space-y-2">
+            <h3 className="text-sm font-medium text-foreground">
+              {variant.title}:
+              {selectedVariants[variant.title] && (
+                <span className="ml-2 text-muted-foreground font-normal">
+                  {uniqueOptions.find(opt => opt.value === selectedVariants[variant.title])?.name}
+                </span>
+              )}
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {uniqueOptions.map((option: ProductVariantGenerated) => {
+                const isSelected = selectedVariants[variant.title] === option.value
+                
+                return (
+                  <button
+                    key={`${variant.id}-${option.id}`}
+                    onClick={() => onVariantChange(variant.title, option.value)}
+                    className={cn(
+                      "flex items-center justify-center rounded-md border text-sm font-medium transition-colors",
+                      "px-4 py-2 min-w-[60px]", // Added min-width for consistency
+                      isSelected
+                        ? "border-primary bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2"
+                        : "border-input bg-background hover:bg-accent hover:text-accent-foreground",
+                      "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                      "disabled:opacity-50 disabled:cursor-not-allowed"
+                    )}
+                    aria-pressed={isSelected}
+                    aria-label={`Select ${variant.title}: ${option.name}`}
+                    type="button"
+                  >
+                    {option.name}
+                  </button>
+                )
+              })}
+            </div>
           </div>
-        </div>
-      ))}
+        )
+      })}
     </div>
   )
 })
+
 ProductVariants.displayName = "ProductVariants"

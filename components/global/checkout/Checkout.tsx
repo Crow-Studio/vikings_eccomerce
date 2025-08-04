@@ -90,7 +90,7 @@ export default function VikingsCheckout() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-4 mb-4 cursor-pointer">
             <Link href="/products">
               <Button variant="outline" size="sm">
                 <ArrowLeft className="w-4 h-4" />
