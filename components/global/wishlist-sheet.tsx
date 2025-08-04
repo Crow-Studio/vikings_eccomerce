@@ -15,12 +15,14 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { IconButton } from "@/components/home/header/icon-button"
 import WishListIcon from "@/components/svgs/Wishlist"
+import { useCartStore } from "@/store/cart-store" // Import the cart store
+import { toast } from "sonner" // Import toast from sonner
 import type { WishlistItem } from "@/types/header"
 
 interface WishlistSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
-  items?: WishlistItem[] // Make optional
+  items?: WishlistItem[]
   itemCount: number
   onRemoveItem: (id: string) => void
 }
@@ -28,9 +30,10 @@ interface WishlistSheetProps {
 interface WishlistItemComponentProps {
   item: WishlistItem
   onRemove: (id: string) => void
+  onAddToCart: (item: WishlistItem) => void
 }
 
-const WishlistItemComponent = memo(({ item, onRemove }: WishlistItemComponentProps) => (
+const WishlistItemComponent = memo(({ item, onRemove, onAddToCart }: WishlistItemComponentProps) => (
   <div className="flex items-center space-x-4 py-4">
     <div className="relative w-16 h-16 flex-shrink-0">
       <Image
@@ -61,10 +64,7 @@ const WishlistItemComponent = memo(({ item, onRemove }: WishlistItemComponentPro
         variant="outline"
         size="sm"
         className="h-8 px-2"
-        onClick={() => {
-          // Add to cart logic would go here
-          console.log("Add to cart:", item)
-        }}
+        onClick={() => onAddToCart(item)}
       >
         <ShoppingCart className="w-4 h-4" />
       </Button>
@@ -84,8 +84,73 @@ WishlistItemComponent.displayName = "WishlistItemComponent"
 
 export const WishlistSheet = memo(
   ({ isOpen, onOpenChange, items = [], itemCount, onRemoveItem }: WishlistSheetProps) => {
+    const { addItem } = useCartStore() // Get addItem function from cart store
+    
     // Ensure items is always an array
     const safeItems = items || []
+    
+    // Function to add single item to cart
+    const handleAddToCart = (wishlistItem: WishlistItem) => {
+      // Add to cart
+      addItem({
+        id: wishlistItem.id,
+        name: wishlistItem.name,
+        price: wishlistItem.price,
+        quantity: 1, // Default quantity when adding from wishlist
+        image: wishlistItem.image,
+        selectedVariants: wishlistItem.selectedVariants,
+      })
+      
+      // Remove from wishlist
+      onRemoveItem(wishlistItem.id)
+      
+      // Show success toast
+      toast.success(`${wishlistItem.name} added to cart`, {
+        description: `Moved from wishlist to cart successfully`,
+
+        action: {
+          label: "View Cart",
+          onClick: () => {
+            // You can add logic here to open cart or navigate to cart page
+            console.log("View cart clicked")
+          },
+        },
+      })
+    }
+    
+    // Function to add all items to cart
+    const handleAddAllToCart = () => {
+      const itemCount = safeItems.length
+      
+      // Add all items to cart
+      safeItems.forEach((item) => {
+        addItem({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: 1,
+          image: item.image,
+          selectedVariants: item.selectedVariants,
+        })
+      })
+      
+      // Remove all items from wishlist
+      safeItems.forEach((item) => {
+        onRemoveItem(item.id)
+      })
+      
+      // Show success toast
+      toast.success(`All items added to cart`, {
+        description: `${itemCount} ${itemCount === 1 ? 'item' : 'items'} moved from wishlist to cart`,
+        action: {
+          label: "View Cart",
+          onClick: () => {
+            // You can add logic here to open cart or navigate to cart page
+            console.log("View cart clicked")
+          },
+        },
+      })
+    }
     
     return (
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -121,7 +186,11 @@ export const WishlistSheet = memo(
               <div className="space-y-0">
                 {safeItems.map((item, index) => (
                   <div key={item.id}>
-                    <WishlistItemComponent item={item} onRemove={onRemoveItem} />
+                    <WishlistItemComponent 
+                      item={item} 
+                      onRemove={onRemoveItem}
+                      onAddToCart={handleAddToCart}
+                    />
                     {index < safeItems.length - 1 && <Separator />}
                   </div>
                 ))}
@@ -132,12 +201,9 @@ export const WishlistSheet = memo(
             <div className="border-t pt-4 mt-4">
               <Button 
                 className="w-full" 
-                onClick={() => {
-                  // Add all to cart logic would go here
-                  console.log("Add all to cart:", safeItems)
-                }}
+                onClick={handleAddAllToCart}
               >
-                Add All to Cart
+                Add All to Cart ({safeItems.length} items)
               </Button>
             </div>
           )}
