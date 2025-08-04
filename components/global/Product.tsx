@@ -171,7 +171,7 @@ export default function ProductUI({
   // Generate page numbers for pagination
   const getPageNumbers = () => {
     const pages = []
-    const maxVisiblePages = 5
+    const maxVisiblePages = 2
 
     if (totalPages <= maxVisiblePages) {
       for (let i = 1; i <= totalPages; i++) {
@@ -182,21 +182,21 @@ export default function ProductUI({
         for (let i = 1; i <= 4; i++) {
           pages.push(i)
         }
-        pages.push(ELLIPSIS)
+        pages.push('ellipsis')
         pages.push(totalPages)
       } else if (currentPage >= totalPages - 2) {
         pages.push(1)
-        pages.push(ELLIPSIS)
+        pages.push('ellipsis')
         for (let i = totalPages - 3; i <= totalPages; i++) {
           pages.push(i)
         }
       } else {
         pages.push(1)
-        pages.push(ELLIPSIS)
+        pages.push('ellipsis')
         for (let i = currentPage - 1; i <= currentPage + 1; i++) {
           pages.push(i)
         }
-        pages.push(ELLIPSIS)
+        pages.push('ellipsis')
         pages.push(totalPages)
       }
     }
