@@ -85,7 +85,7 @@ function BlogCard({ blog }: { blog: BlogPost }) {
           
           {/* Featured Badge */}
           {blog.featured && (
-            <div className="absolute top-4 left-4 z-10">
+            <div className="absolute top-4 left-20 z-10">
               <span className="bg-yellow-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
                 Featured
               </span>
