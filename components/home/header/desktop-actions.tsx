@@ -9,7 +9,7 @@ import { CartSheet } from "./cart-sheet"
 import { WishlistSheet } from "@/components/global/wishlist-sheet"
 import SolarMagniferOutline from "@/components/svgs/SolarMagniferOutline"
 import ShoppingBagIcon from "@/components/svgs/shoppingBag"
-import BlogIcon from '@/components/svgs/blogIcon'
+// import BlogIcon from '@/components/svgs/blogIcon'
 import type { User } from "@/lib/server/user"
 import type { CartItem } from "@/store/cart-store"
 import type { WishlistItem } from "@/types/header"
@@ -55,12 +55,12 @@ export const DesktopActions = memo(
         <Link href="/products">
           <IconButton icon={ShoppingBagIcon} tooltip="Shop" />
         </Link>
-        <Link href="/blogs">
+        {/* <Link href="/blogs">
           <IconButton 
             icon={BlogIcon}
             tooltip="Blogs"
           />
-        </Link>
+        </Link> */}
         
         <WishlistSheet
           isOpen={isWishlistOpen}
