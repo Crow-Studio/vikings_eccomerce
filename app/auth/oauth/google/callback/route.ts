@@ -9,8 +9,7 @@ import { ObjectParser } from "@pilcrowjs/object-parser";
 import { globalGETRateLimit } from "@/lib/server/request";
 
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
-import { db, eq } from "@/database";
-import { UserRole } from "@/database/schema";
+import { db, eq, tables } from "@/database";
 
 export async function GET(request: Request): Promise<Response> {
   if (!(await globalGETRateLimit())) {
@@ -55,35 +54,14 @@ export async function GET(request: Request): Promise<Response> {
   const claimsParser = new ObjectParser(claims);
 
   const googleId = claimsParser.getString("sub");
+  const email = claimsParser.getString("email");
 
   // check if user existing oauth account exists
   const existingOauthAccount = await db.query.oauth_account.findFirst({
     where: (table) => eq(table.provider_user_id, googleId),
   });
 
-  if (!existingOauthAccount) {
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/auth/admin/signin",
-      },
-    });
-  }
-
-  const user = await db.query.user.findFirst({
-    where: table => eq(table.id, existingOauthAccount.user_id)
-  })
-
-  if (!user) {
-    return new Response(null, {
-      status: 302,
-      headers: {
-        Location: "/auth/admin/signin",
-      },
-    });
-  }
-
-  if (existingOauthAccount && user.role ===UserRole.ADMIN) {
+  if (existingOauthAccount) {
     const sessionToken = generateSessionToken();
     const session = await createSession(
       sessionToken,
@@ -99,10 +77,34 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
+  const user = await db.query.user.findFirst({
+    where: table => eq(table.email, email)
+  })
+
+  if (!user) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: "/auth/admin/signin",
+      },
+    });
+  }
+
+  // create user oauth account
+  await db.insert(tables.oauth_account).values({
+    provider: "google",
+    provider_user_id: googleId,
+    user_id: user.id
+  });
+
+  const sessionToken = generateSessionToken();
+  const session = await createSession(sessionToken, user.id);
+  await setSessionTokenCookie(sessionToken, session.expires_at);
+
   return new Response(null, {
     status: 302,
     headers: {
-      Location: "/auth/admin/",
+      Location: "/account/dashboard",
     },
   });
 }

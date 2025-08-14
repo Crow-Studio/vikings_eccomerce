@@ -12,7 +12,7 @@ export default async function VerifyEmailPage() {
   const { user } = await getCurrentSession();
 
   if (user === null) {
-    return redirect("/auth/signin");
+    return redirect("/auth/admin/signin");
   }
 
   if (user.email_verified) {

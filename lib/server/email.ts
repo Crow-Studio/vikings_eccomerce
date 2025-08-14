@@ -33,8 +33,6 @@ export async function checkEmailAvailability(email: string): Promise<boolean> {
     where: (table) => eq(table.email, email),
   });
 
-  console.log(user, email);
-
   if (user) {
     return true;
   }

@@ -89,7 +89,7 @@ export const MobileMenu = memo(
                   <Button className="w-full transition-all duration-200 hover:scale-105">Account</Button>
                 </Link>
               ) : (
-                <Link href="/auth/signin" className="block w-full" onClick={onMenuClose}>
+                <Link href="/auth/admin/signin" className="block w-full" onClick={onMenuClose}>
                   <Button className="w-full transition-all duration-200 hover:scale-105">Sign in</Button>
                 </Link>
               )}

@@ -1,0 +1,18 @@
+# API Testing with REST Client
+# Save this as api-test.http or api-test.rest
+
+### Variables (optional)
+@baseUrl = http://localhost:3000/api
+
+### Create new admin user
+POST {{baseUrl}}/auth/admin/signup
+Content-Type: application/json
+Origin: http://localhost:3000
+Host: localhost:3000
+User-Agent: REST Client
+Accept: application/json
+
+{
+  "email": "thecodingmontana@gmail.com",
+  "password": "@B3tterM0ntana."
+}

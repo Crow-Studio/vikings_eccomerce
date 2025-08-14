@@ -25,5 +25,5 @@ export async function signoutAction(): Promise<ActionResult> {
   }
   await invalidateSession(session.id);
   await deleteSessionTokenCookie();
-  return redirect("/auth/signin");
+  return redirect("/auth/admin/signin");
 }
