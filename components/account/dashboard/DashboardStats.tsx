@@ -54,7 +54,7 @@ export default function DashboardStats({ stats: dbStats }: Props) {
           <div className="flex items-center gap-x-3">
             {stat.icon}
             <p className="text-5xl">
-              345{" "}
+              {stat.value}
               <span className="text-base text-muted-foreground uppercase">
                 / {stat.label}
               </span>

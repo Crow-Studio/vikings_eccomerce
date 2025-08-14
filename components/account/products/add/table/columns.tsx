@@ -54,6 +54,10 @@ export const columns: ColumnDef<DBProduct>[] = [
       return <DataTableColumnHeader column={column} title="Name" />;
     },
     cell: ({ row }) => <ProductDataTableCellViewer item={row.original} />,
+    filterFn: (row, _, filterValue: string) => {
+      const name = row.original.name.toLowerCase() ?? ''
+      return name.includes(filterValue.toLowerCase())
+    },
   },
   {
     accessorKey: "category",

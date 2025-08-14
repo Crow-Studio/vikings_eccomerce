@@ -173,6 +173,37 @@ export const session = pgTable("session", {
 })
 
 /* ------------------- RELATIONS ------------------- */
+export const userRelations = relations(user, ({ many }) => ({
+  oauth_accounts: many(oauth_account),
+  email_verification_requests: many(email_verification_request_table),
+  sessions: many(session),
+}))
+
+export const imageRelations = relations(images, ({ one }) => ({
+  product: one(product, { fields: [images.product_id], references: [product.id] }),
+}))
+
+export const variantRelations = relations(variants, ({ one, many }) => ({
+  product: one(product, { fields: [variants.product_id], references: [product.id] }),
+  generatedVariants: many(generatedVariants),
+}))
+
+export const generatedVariantRelations = relations(generatedVariants, ({ one }) => ({
+  variant: one(variants, { fields: [generatedVariants.variant_id], references: [variants.id] }),
+}))
+
+export const oauthAccountRelations = relations(oauth_account, ({ one }) => ({
+  user: one(user, { fields: [oauth_account.user_id], references: [user.id] }),
+}))
+
+export const emailVerificationRequestRelations = relations(email_verification_request_table, ({ one }) => ({
+  user: one(user, { fields: [email_verification_request_table.user_id], references: [user.id] }),
+}))
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, { fields: [session.user_id], references: [user.id] }),
+}))
+
 export const customerRelations = relations(customer, ({ many }) => ({
   orders: many(order)
 }))
