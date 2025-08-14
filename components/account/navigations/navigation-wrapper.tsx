@@ -13,7 +13,7 @@ export default async function NavigationWrapper({
   const { user } = await getCurrentSession();
 
   if (!user) {
-    return redirect("/auth/signin");
+    return redirect("/auth/admin/signin");
   }
 
   return (

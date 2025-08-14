@@ -21,7 +21,7 @@ import { formSchema } from "@/types";
 import { useState } from "react";
 import { redirect } from "next/navigation";
 import { toast } from "sonner";
-import { signupAction } from "@/app/auth/signup/action";
+import { signupAction } from "@/app/auth/admin/signup/action";
 import { Loader2 } from "lucide-react";
 
 export function SignupForm() {
@@ -52,7 +52,7 @@ export function SignupForm() {
         position: "top-center",
       });
 
-      return redirect("/auth/verify-email");
+      return redirect("/auth/admin/verify-email");
     } finally {
       setIsCreatingAccount(false);
     }
@@ -128,7 +128,7 @@ export function SignupForm() {
               <div className="text-center text-sm">
                 Already have an account?{" "}
                 <Link
-                  href="/auth/signin"
+                  href="/auth/admin/signin"
                   className="underline underline-offset-4"
                 >
                   Sign in

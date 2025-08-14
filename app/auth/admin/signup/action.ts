@@ -93,7 +93,7 @@ export async function signupAction({
       .split(" ")[0]
       .charAt(0)
       .toUpperCase()}`;
-    const role: UserRole = UserRole.CUSTOMER;
+    const role: UserRole = UserRole.ADMIN;
     const email_verified = false;
     const passwordHash = await hashPassword(password);
 

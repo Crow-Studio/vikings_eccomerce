@@ -205,3 +205,5 @@ export type Order = InferSelectModel<typeof order>
 export type OrderItem = InferSelectModel<typeof orderItem>
 export type Category = InferSelectModel<typeof category>
 export type Product = InferSelectModel<typeof product>
+export type ProductImage = InferSelectModel<typeof images>
+export type GeneratedVariants = InferSelectModel<typeof generatedVariants>

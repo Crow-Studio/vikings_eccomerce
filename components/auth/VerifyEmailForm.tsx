@@ -29,7 +29,7 @@ import { Loader, Loader2 } from "lucide-react";
 import {
   resendEmailVerificationCodeAction,
   verifyEmailAction,
-} from "@/app/auth/verify-email/action";
+} from "@/app/auth/admin/verify-email/action";
 import { redirect } from "next/navigation";
 
 export function VerifyEmailForm({ user }: { user: User }) {

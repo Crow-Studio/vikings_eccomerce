@@ -11,7 +11,7 @@ export default async function OrdersPage() {
   const { user } = await getCurrentSession();
 
   if (user === null) {
-    return redirect("/auth/signin");
+    return redirect("/auth/admin/signin");
   }
 
   if (!user.email_verified) {

@@ -12,11 +12,11 @@ export default async function DashboardPage() {
   const { user } = await getCurrentSession();
 
   if (user === null) {
-    return redirect("/auth/signin");
+    return redirect("/auth/admin/signin");
   }
 
   if (!user.email_verified) {
-    return redirect("/auth/verify-email");
+    return redirect("/auth/admin/verify-email");
   }
 
   const stats = await getDashboardStats()
