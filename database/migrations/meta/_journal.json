@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1752949588707,
-      "tag": "0000_aromatic_salo",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1752950627008,
-      "tag": "0001_rich_mongoose",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1753005949873,
-      "tag": "0002_bizarre_thanos",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1753006430706,
-      "tag": "0003_organic_korg",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1753006750367,
-      "tag": "0004_steady_mordo",
+      "when": 1755163224819,
+      "tag": "0000_adorable_luke_cage",
       "breakpoints": true
     }
   ]

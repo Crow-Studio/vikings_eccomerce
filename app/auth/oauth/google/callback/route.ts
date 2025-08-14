@@ -5,12 +5,11 @@ import {
 } from "@/lib/server/session";
 import { google } from "@/lib/server/oauth";
 import { cookies } from "next/headers";
-import { createUser } from "@/lib/server/user";
 import { ObjectParser } from "@pilcrowjs/object-parser";
 import { globalGETRateLimit } from "@/lib/server/request";
 
 import { decodeIdToken, type OAuth2Tokens } from "arctic";
-import { db, eq, tables } from "@/database";
+import { db, eq } from "@/database";
 import { UserRole } from "@/database/schema";
 
 export async function GET(request: Request): Promise<Response> {
@@ -56,16 +55,35 @@ export async function GET(request: Request): Promise<Response> {
   const claimsParser = new ObjectParser(claims);
 
   const googleId = claimsParser.getString("sub");
-  const username = claimsParser.getString("name");
-  const avatar = claimsParser.getString("picture");
-  const email = claimsParser.getString("email");
 
   // check if user existing oauth account exists
   const existingOauthAccount = await db.query.oauth_account.findFirst({
     where: (table) => eq(table.provider_user_id, googleId),
   });
 
-  if (existingOauthAccount) {
+  if (!existingOauthAccount) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: "/auth/admin/signin",
+      },
+    });
+  }
+
+  const user = await db.query.user.findFirst({
+    where: table => eq(table.id, existingOauthAccount.user_id)
+  })
+
+  if (!user) {
+    return new Response(null, {
+      status: 302,
+      headers: {
+        Location: "/auth/admin/signin",
+      },
+    });
+  }
+
+  if (existingOauthAccount && user.role ===UserRole.ADMIN) {
     const sessionToken = generateSessionToken();
     const session = await createSession(
       sessionToken,
@@ -81,32 +99,10 @@ export async function GET(request: Request): Promise<Response> {
     });
   }
 
-  const role: UserRole = UserRole.CUSTOMER;
-  const email_verified = true;
-
-  // create new user
-  const user = await createUser(
-    email,
-    username,
-    avatar,
-    role,
-    email_verified
-  );
-
-  // create user oauth account
-  await db.insert(tables.oauth_account).values({
-    provider: "google",
-    provider_user_id: googleId,
-    user_id: user.id
-  });
-
-  const sessionToken = generateSessionToken();
-  const session = await createSession(sessionToken, user.id);
-  await setSessionTokenCookie(sessionToken, session.expires_at);
   return new Response(null, {
     status: 302,
     headers: {
-      Location: "/account/dashboard",
+      Location: "/auth/admin/",
     },
   });
 }

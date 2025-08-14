@@ -81,19 +81,12 @@ export const DesktopActions = memo(
       </TooltipProvider>
       <Separator orientation="vertical" className="h-4 mx-1 md:mx-2" />
       
-      {user ? (
+      {user && (
         <Link
           href="/account/dashboard"
           className="text-xs md:text-sm hover:text-primary transition-colors whitespace-nowrap hover:scale-105 transform duration-200"
         >
           Account
-        </Link>
-      ) : (
-        <Link
-          href="/auth/signin"
-          className="text-xs md:text-sm hover:text-primary transition-colors whitespace-nowrap hover:scale-105 transform duration-200"
-        >
-          Sign in
         </Link>
       )}
     </div>

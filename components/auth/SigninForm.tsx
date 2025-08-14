@@ -3,7 +3,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import Link from "next/link";
 import GoogleOauthButton from "./GoogleOauthButton";
 import { PasswordInput } from "./PasswordInput";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { formSchema } from "@/types";
-import { signinAction } from "@/app/auth/signin/action";
+import { signinAction } from "@/app/auth/admin/signin/action";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -100,15 +99,7 @@ export function SigninForm() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <div className="flex items-center">
                         <FormLabel>Password</FormLabel>
-                        <Link
-                          href="/auth/forgot-password"
-                          className="ml-auto text-sm underline-offset-4 hover:underline"
-                        >
-                          Forgot your password?
-                        </Link>
-                      </div>
                       <FormControl>
                         <PasswordInput {...field} disabled={isAuthenticating} />
                       </FormControl>
@@ -130,15 +121,6 @@ export function SigninForm() {
                     <span>Sign in</span>
                   )}
                 </Button>
-              </div>
-              <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <Link
-                  href="/auth/signup"
-                  className="underline underline-offset-4"
-                >
-                  Sign up
-                </Link>
               </div>
             </div>
           </form>

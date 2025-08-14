@@ -1,5 +1,7 @@
+import DashboardStats from "@/components/account/dashboard/DashboardStats";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
+import { getDashboardStats } from "@/lib/stats";
 import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
@@ -17,5 +19,11 @@ export default async function DashboardPage() {
     return redirect("/auth/verify-email");
   }
 
-  return <div>DashboardPage</div>;
+  const stats = await getDashboardStats()
+
+  return (
+    <div>
+      <DashboardStats stats={stats} />
+    </div>
+  );
 }

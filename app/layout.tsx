@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
-import { ConsentManagerProvider, CookieBanner, ConsentManagerDialog } from "@c15t/nextjs";
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
+// import { ConsentManagerProvider, CookieBanner, ConsentManagerDialog } from "@c15t/nextjs";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,11 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-        <html lang="en" suppressHydrationWarning>
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-    		<ConsentManagerProvider options={{
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      >
+        {/* todo: I dont think we need the cookie banner */}
+        {/* <ConsentManagerProvider options={{
     					mode: 'c15t',
     					backendURL: '/api/c15t',
     					consentCategories: ['necessary', 'marketing'], // Optional: Specify which consent categories to show in the banner. 
@@ -38,18 +39,16 @@ export default function RootLayout({
     				}}>
     			<CookieBanner />
     			<ConsentManagerDialog />
-    			
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <NuqsAdapter>{children}</NuqsAdapter>
-            </ThemeProvider>
-          
-    		</ConsentManagerProvider>
-    	</body>
-        </html>
-      )
+    		</ConsentManagerProvider> */}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <NuqsAdapter>{children}</NuqsAdapter>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
 }
