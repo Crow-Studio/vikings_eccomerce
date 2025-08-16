@@ -14,5 +14,5 @@ Accept: application/json
 
 {
   "email": "thecodingmontana@gmail.com",
-  "password": "@B3tterM0ntana."
+  "password": "dummypassword"
 }
