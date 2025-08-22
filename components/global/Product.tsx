@@ -4,10 +4,7 @@ import { cn } from "@/lib/utils"
 import { useState } from "react"
 import type * as React from "react"
 import Image from "next/image"
-import { Heart } from "lucide-react"
 import Link from "next/link"
-import { useCartStore } from "@/store/cart-store" 
-import { useWishlistStore } from "@/store/wishlist-store" 
 import ProductSkeleton from "./ProductSkeleton"
 import {
   Pagination,
@@ -37,42 +34,17 @@ function isNewProduct(createdAt: Date): boolean {
 
 // Individual Product Card Component
 function ProductCard({ product }: { product: DBProduct }) {
-  const { addItem } = useCartStore()
-  const { addItem: addWishlistItem, removeItem: removeWishlistItem, isWishlisted } = useWishlistStore()
-
   const isNew = isNewProduct(new Date(product.created_at))
-  const isCurrentlyWishlisted = isWishlisted(product.id)
+  const whatsappNumber = "+254729016371"
 
-  const handleWishlistClick = (e: React.MouseEvent) => {
-    e.preventDefault() 
-    e.stopPropagation() 
-
-    if (isCurrentlyWishlisted) {
-      removeWishlistItem(product.id)
-    } else {
-      addWishlistItem({
-        id: product.id,
-        name: product.name,
-        price: Number.parseFloat(product.price),
-        image: product.images[0]?.url || "/placeholder.svg", 
-        selectedVariants: {}, 
-      })
-    }
-  }
-
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleWhatsAppOrder = (e: React.MouseEvent) => {
     e.preventDefault() 
     e.stopPropagation()
 
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: Number.parseFloat(product.price),
-      quantity: 1,
-      image: product.images[0]?.url || "/placeholder.svg",
-      selectedVariants: {},
-    })
-    console.log(`Added to cart: ${product.name}`)
+    const message = `Hi! I'm interested in ordering:\n\n*${product.name}*\nPrice: KSh ${Number.parseFloat(product.price).toLocaleString()}\n\nPlease let me know about availability and delivery details.`
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}?text=${encodeURIComponent(message)}`
+    
+    window.open(whatsappUrl, '_blank')
   }
 
   const handleViewDetails = (e: React.MouseEvent) => {
@@ -89,20 +61,6 @@ function ProductCard({ product }: { product: DBProduct }) {
               <span className="bg-black text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">New</span>
             </div>
           )}
-          {/* Wishlist Icon */}
-          <button
-            onClick={handleWishlistClick}
-            className="absolute top-2 right-2 z-10 p-1.5 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 hover:bg-white hover:scale-110 transition-all duration-200 group/wishlist shadow-sm"
-            aria-label="Add to wishlist"
-          >
-            <Heart
-              className={cn(
-                "w-3.5 h-3.5 text-gray-600 group-hover/wishlist:text-black transition-colors duration-200",
-                isCurrentlyWishlisted &&
-                  "fill-red-500 text-red-500 group-hover/wishlist:fill-red-600 group-hover/wishlist:text-red-600",
-              )}
-            />
-          </button>
           <Image
             src={product.images[0]?.url || "/placeholder.svg?height=240&width=240&text=Product Image"}
             alt={`${product.name.toLowerCase()}_${product.images[0]?.id}`}
@@ -112,11 +70,11 @@ function ProductCard({ product }: { product: DBProduct }) {
           />
           <div className="absolute bottom-0 left-0 right-0 z-10 p-3 grid sm:group-hover:grid gap-y-1.5 sm:hidden transition-all duration-200">
             <button
-              onClick={handleAddToCart}
-              className="p-0.5 rounded-md w-full bg-white/90 backdrop-blur-sm border border-gray-200 group/wishlist shadow-sm dark:text-black hover:bg-zinc-200 cursor-pointer transition-colors duration-200"
-              aria-label="Add to cart"
+              onClick={handleWhatsAppOrder}
+              className="p-0.5 rounded-md w-full bg-white/90 backdrop-blur-sm border border-gray-200 group/whatsapp shadow-sm dark:text-black hover:bg-zinc-200 cursor-pointer transition-colors duration-200"
+              aria-label="Order via WhatsApp"
             >
-              Add to cart
+              Order via WhatsApp
             </button>
             <button
               onClick={handleViewDetails}
