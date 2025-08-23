@@ -85,7 +85,3 @@ export default function CheckoutPage() {
   )
 }
 
-export const metadata = {
-  title: "Checkout - Vikings Kenya Power Traders",
-  description: "Complete your purchase securely with Vikings Kenya Power Traders",
-}
