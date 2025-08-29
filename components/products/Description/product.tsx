@@ -1,11 +1,9 @@
 "use client"
 
 import React, { useState, useCallback, useEffect } from "react"
-import { useCartStore } from "@/store/cart-store"
 import type { Product } from "@/types/products"
 import { getRelatedProducts } from "@/actions/product-actions" 
 import { ImageGallery } from "@/components/products/Description/image-gallery"
-import { ProductAddedDrawer } from "@/components/products/Description/product-added-drawer"
 import { ProductHeader } from "@/components/products/Description/product-header"
 import { ProductPricing } from "@/components/products/Description/product-pricing"
 import { ProductActions } from "@/components/products/Description/product-action"
@@ -13,7 +11,6 @@ import { ProductTabs } from "@/components/products/Description/product-tabs"
 import { RelatedProductsSection } from "@/components/products/Description/related-product"
 import { ProductVariants } from "@/components/products/Description/product-variants"
 import { ProductTrustBadges } from "@/components/products/Description/product-trust-badges"
-import { ProductContactOptions } from "@/components/products/Description/product-contact-option"
 import { Card, CardContent } from "@/components/ui/card"
 import GrainOverlay from "@/components/global/GrainOverlay"
 
@@ -23,14 +20,10 @@ interface ProductDetailsClientProps {
 
 export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
-  const [quantity, setQuantity] = useState(1)
+  const [quantity] = useState(1)
   const [selectedTab, setSelectedTab] = useState("description")
-  const [isWishlisted, setIsWishlisted] = useState(false)
-  const [isAddingToCart, setIsAddingToCart] = useState(false)
-  const [showDrawer, setShowDrawer] = useState(false)
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
   const [, setIsLoadingRelated] = useState(true)
-  const { addItem } = useCartStore()
 
   // Initialize selected variants based on the first available option for each variant type
   const initialSelectedVariants = product.variants.reduce(
@@ -67,27 +60,6 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
     setSelectedVariants((prev) => ({ ...prev, [variantTitle]: value }))
   }, [])
 
-  const updateQuantity = useCallback((newQuantity: number) => {
-    if (newQuantity >= 1) {
-      setQuantity(newQuantity)
-    }
-  }, [])
-
-  const handleAddToCart = useCallback(async () => {
-    setIsAddingToCart(true)
-    await new Promise((resolve) => setTimeout(resolve, 800))
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: Number.parseFloat(product.price),
-      quantity: quantity,
-      image: product.images?.[0]?.url || "/placeholder.svg?height=80&width=80",
-      selectedVariants: selectedVariants,
-    })
-    setIsAddingToCart(false)
-    setShowDrawer(true)
-  }, [addItem, product, quantity, selectedVariants])
-
   const handleTabChange = useCallback((tabId: string) => {
     setSelectedTab(tabId)
   }, [])
@@ -121,19 +93,19 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
                 )}
 
                 <ProductActions
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    price: product.price
+                  }}
                   quantity={quantity}
-                  updateQuantity={updateQuantity}
-                  handleAddToCart={handleAddToCart}
-                  isAddingToCart={isAddingToCart}
+                  selectedVariants={selectedVariants}
                   inStock={product.visibility === "active"}
-                  isWishlisted={isWishlisted}
-                  setIsWishlisted={setIsWishlisted}
                 />
               </CardContent>
             </Card>
             {/* Trust Badges and Contact Options outside the main card but still in the right column */}
             <ProductTrustBadges />
-            <ProductContactOptions />
           </div>
         </div>
         <ProductTabs product={product} selectedTab={selectedTab} onTabChange={handleTabChange} />
@@ -141,13 +113,6 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
           relatedProducts={relatedProducts} 
         />
       </div>
-      <ProductAddedDrawer
-        isOpen={showDrawer}
-        onClose={() => setShowDrawer(false)}
-        product={product}
-        quantity={quantity}
-        selectedVariants={selectedVariants}
-      />
     </div>
   )
 }

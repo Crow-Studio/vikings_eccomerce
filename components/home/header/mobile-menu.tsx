@@ -8,9 +8,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { Menu } from "lucide-react"
 import { MobileMenuItem } from "./mobile-menu-item"
 import SolarMagniferOutline from "@/components/svgs/SolarMagniferOutline"
-import SolarCartLarge2Outline from "@/components/svgs/SolarCartLarge2Outline"
-import ShoppingBagIcon from "@/components/svgs/shoppingBag"
-import WishListIcon from "@/components/svgs/Wishlist"
 import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon"
 import type { User } from "@/lib/server/user"
 
@@ -19,9 +16,6 @@ interface MobileMenuProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
   onSearchOpen: () => void
-  onWishlistClick: () => void
-  onCartOpen: () => void
-  itemCount: number
   onMenuClose: () => void
 }
 
@@ -31,11 +25,10 @@ export const MobileMenu = memo(
     isOpen,
     onOpenChange,
     onSearchOpen,
-    onWishlistClick,
-    onCartOpen,
-    itemCount,
     onMenuClose,
-  }: MobileMenuProps) => (
+  }: MobileMenuProps) => {
+
+    return (
     <div className="sm:hidden">
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
         <SheetTrigger asChild>
@@ -66,20 +59,15 @@ export const MobileMenu = memo(
                 onClick={onSearchOpen}
                 onMenuClose={onMenuClose}
               />
-              <MobileMenuItem icon={ShoppingBagIcon} label="Shop" href="/products" onMenuClose={onMenuClose} />
-              <MobileMenuItem
-                icon={WishListIcon}
-                label="Wishlist"
-                onClick={onWishlistClick}
-                badge="2"
-                onMenuClose={onMenuClose}
-              />
-              <MobileMenuItem
-                icon={SolarCartLarge2Outline}
-                label="Cart"
-                onClick={onCartOpen}
-                badge={itemCount > 0 ? itemCount : undefined}
-                onMenuClose={onMenuClose}
+              <MobileMenuItem 
+                icon={() => (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                  </svg>
+                )} 
+                label="Shop" 
+                href="/products" 
+                onMenuClose={onMenuClose} 
               />
             </div>
             <Separator />
@@ -98,7 +86,8 @@ export const MobileMenu = memo(
         </SheetContent>
       </Sheet>
     </div>
-  ),
+    )
+  },
 )
 
 MobileMenu.displayName = "MobileMenu"

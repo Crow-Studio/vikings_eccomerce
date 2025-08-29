@@ -1,27 +1,36 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Search, X, Clock, TrendingUp, ArrowRight } from "lucide-react";
+import { Search, X, Clock, ArrowRight, Loader2 } from "lucide-react";
+import { useSearch } from "@/hooks/use-search";
+import Link from "next/link";
+import Image from "next/image";
 
 interface MegaSearchProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: string;
-  image?: string;
-}
-
-
 const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [recentSearches] = useState<string[]>([]);
-  const [trendingSearches] = useState<string[]>([]);
-  const [searchResults, setSearchResults] = useState<Product[]>([]);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  
+  const { searchResults, isLoading, total, error, searchProducts, clearSearch } = useSearch();
+
+  const popularCategories = [
+    { name: "Power Tools", count: "150+ items", href: "/products?category=power-tools" },
+    { name: "Garden Tools", count: "80+ items", href: "/products?category=garden-tools" },
+    { name: "Generators", count: "25+ items", href: "/products?category=generators" },
+    { name: "Safety Equipment", count: "40+ items", href: "/products?category=safety" },
+  ];
+
+  // Load recent searches from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('recentSearches');
+    if (saved) {
+      setRecentSearches(JSON.parse(saved).slice(0, 5));
+    }
+  }, []);
 
   // Focus search input when opened
   useEffect(() => {
@@ -30,16 +39,21 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
     }
   }, [isOpen]);
 
-  // Handle search - replace with actual search logic
+  // Handle search
   useEffect(() => {
     if (searchQuery.trim()) {
-      // TODO: Implement actual search logic here
-      // Example: searchProducts(searchQuery).then(setSearchResults);
-      setSearchResults([]);
+      searchProducts(searchQuery);
     } else {
-      setSearchResults([]);
+      clearSearch();
     }
-  }, [searchQuery]);
+  }, [searchQuery, searchProducts, clearSearch]);
+
+  // Save search to recent searches
+  const saveToRecentSearches = (query: string) => {
+    const updated = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
+    setRecentSearches(updated);
+    localStorage.setItem('recentSearches', JSON.stringify(updated));
+  };
 
   // Handle escape key and body scroll
   useEffect(() => {
@@ -84,11 +98,19 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
               <input
                 ref={searchInputRef}
                 type="text"
-                placeholder="Search for tools, equipment, parts..."
+                placeholder="Search for products, categories..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery.trim()) {
+                    saveToRecentSearches(searchQuery.trim());
+                  }
+                }}
                 className="w-full pl-10 sm:pl-12 pr-3 sm:pr-4 py-3 sm:py-4 bg-muted/50 border border-border rounded-xl text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary text-sm sm:text-lg transition-all duration-200"
               />
+              {isLoading && (
+                <Loader2 className="absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground animate-spin" />
+              )}
             </div>
             <button
               onClick={onClose}
@@ -109,40 +131,57 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
                   Search Results
                 </h3>
                 <span className="text-sm text-muted-foreground">
-                  {searchResults.length} results found
+                  {total} results found
                 </span>
               </div>
+              
+              {error && (
+                <div className="text-center py-4 mb-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
+                  <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
+                </div>
+              )}
               
               {searchResults.length > 0 ? (
                 <div className="space-y-3">
                   {searchResults.map((product) => (
-                    <div
+                    <Link
                       key={product.id}
+                      href={`/products/${product.id}`}
                       className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:bg-muted/50 rounded-lg cursor-pointer transition-all duration-200 group"
                       onClick={() => {
                         onClose();
-                        // Navigate to product
+                        saveToRecentSearches(searchQuery.trim());
                       }}
                     >
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-muted/50 flex items-center justify-center shrink-0">
-                        <Search className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg overflow-hidden bg-muted/50 flex items-center justify-center shrink-0">
+                        {product.image_url ? (
+                          <Image
+                            src={product.image_url}
+                            alt={product.name}
+                            width={48}
+                            height={48}
+                            className="object-cover w-full h-full"
+                          />
+                        ) : (
+                          <Search className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
+                        )}
                       </div>
                       <div className="flex-1 min-w-0">
                         <h4 className="font-medium text-foreground group-hover:text-primary transition-colors duration-200 truncate">
                           {product.name}
                         </h4>
-                        <p className="text-sm text-muted-foreground">{product.category}</p>
+                        <p className="text-sm text-muted-foreground">{product.category_name}</p>
                       </div>
                       <div className="text-right shrink-0">
                         <p className="font-semibold text-foreground text-sm sm:text-base">
-                          {product.price}
+                          ${product.price.toFixed(2)}
                         </p>
                         <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-1 transition-all duration-200 ml-auto mt-1" />
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
-              ) : (
+              ) : !isLoading && searchQuery.trim() ? (
                 <div className="text-center py-8 sm:py-12">
                   <Search className="w-12 h-12 sm:w-16 sm:h-16 text-muted-foreground/50 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-foreground mb-2">
@@ -152,52 +191,33 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
                     Try adjusting your search terms or browse our categories
                   </p>
                 </div>
-              )}
+              ) : null}
             </div>
           ) : (
-            // Default Content (Recent + Trending)
+            // Default Content (Recent + Categories)
             <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
               {/* Recent Searches */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
-                  <h3 className="text-base sm:text-lg font-semibold text-foreground">
-                    Recent Searches
-                  </h3>
+              {recentSearches.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-4">
+                    <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
+                    <h3 className="text-base sm:text-lg font-semibold text-foreground">
+                      Recent Searches
+                    </h3>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {recentSearches.map((search, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setSearchQuery(search)}
+                        className="px-3 py-2 bg-muted/50 text-foreground rounded-lg hover:bg-muted transition-colors duration-200 text-sm border border-border hover:border-primary/50"
+                      >
+                        {search}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {recentSearches.map((search, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSearchQuery(search)}
-                      className="px-3 py-2 bg-muted/50 text-foreground rounded-lg hover:bg-muted transition-colors duration-200 text-sm border border-border hover:border-primary/50"
-                    >
-                      {search}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Trending Searches */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  <h3 className="text-base sm:text-lg font-semibold text-foreground">
-                    Trending Searches
-                  </h3>
-                </div>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {trendingSearches.map((search, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSearchQuery(search)}
-                      className="px-3 py-2 sm:px-4 sm:py-3 bg-gradient-to-r from-primary/5 to-primary/10 text-foreground rounded-lg hover:from-primary/10 hover:to-primary/20 transition-all duration-200 text-sm font-medium border border-border hover:border-primary/50 hover:scale-105"
-                    >
-                      {search}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              )}
 
               {/* Quick Categories */}
               <div>
@@ -205,25 +225,18 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
                   Browse Categories
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {[
-                    { name: "Power Tools", count: "150+ items" },
-                    { name: "Garden Tools", count: "80+ items" },
-                    { name: "Generators", count: "25+ items" },
-                    { name: "Welding Equipment", count: "40+ items" },
-                  ].map((category, index) => (
-                    <button
+                  {popularCategories.map((category, index) => (
+                    <Link
                       key={index}
-                      onClick={() => {
-                        onClose();
-                        // Navigate to category
-                      }}
+                      href={category.href}
+                      onClick={onClose}
                       className="p-3 sm:p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-all duration-200 text-left group border border-border hover:border-primary/50 hover:scale-[1.02]"
                     >
                       <h4 className="font-medium text-foreground group-hover:text-primary transition-colors duration-200">
                         {category.name}
                       </h4>
                       <p className="text-sm text-muted-foreground mt-1">{category.count}</p>
-                    </button>
+                    </Link>
                   ))}
                 </div>
               </div>

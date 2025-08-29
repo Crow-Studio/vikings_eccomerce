@@ -2,8 +2,6 @@
 
 import { useState, useCallback } from "react"
 import Link from "next/link"
-import { useCartStore } from "@/store/cart-store"
-import { useWishlistStore } from "@/store/wishlist-store" 
 import { useHeaderEffects } from "@/hooks/use-header-effects"
 import { DesktopActions } from "./desktop-actions"
 import { MobileMenu } from "./mobile-menu"
@@ -14,65 +12,14 @@ import type { HeaderProps } from "@/types/header"
 export default function Header({ user }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
-  const [isCartOpen, setIsCartOpen] = useState(false)
-  const [isWishlistOpen, setIsWishlistOpen] = useState(false) 
-  
-  // Cart store
-  const { items, getTotalItems, removeItem, increaseQuantity, decreaseQuantity, getTotalPrice } = useCartStore()
-  
-  // Wishlist store - add this
-  const { 
-    items: wishlistItems, 
-    getTotalItems: getWishlistTotalItems, 
-    removeItem: removeWishlistItem 
-  } = useWishlistStore()
-
-  const itemCount = getTotalItems()
-  const cartTotal = getTotalPrice()
-  const wishlistItemCount = getWishlistTotalItems() // Add wishlist count
-
-  // Wrapper functions to handle string IDs for cart store
-  const handleUpdateQuantity = useCallback(
-    (id: string, quantity: number) => {
-      if (quantity > (items.find((item) => item.id === id)?.quantity || 0)) {
-        increaseQuantity(id)
-      } else {
-        decreaseQuantity(id)
-      }
-    },
-    [increaseQuantity, decreaseQuantity, items],
-  )
-  
-  const handleRemoveItem = useCallback(
-    (id: string) => {
-      removeItem(id)
-    },
-    [removeItem],
-  )
-
-  // Add wishlist remove handler
-  const handleRemoveWishlistItem = useCallback(
-    (id: string) => {
-      removeWishlistItem(id)
-    },
-    [removeWishlistItem],
-  )
 
   // Memoized callbacks
   const handleSearchOpen = useCallback(() => setIsSearchOpen(true), [])
   const handleSearchClose = useCallback(() => setIsSearchOpen(false), [])
   const handleMenuClose = useCallback(() => setIsMenuOpen(false), [])
-  const handleCartOpen = useCallback(() => {
-    setIsMenuOpen(false)
-    setIsCartOpen(true)
-  }, [])
-  const handleWishlistClick = useCallback(() => {
-    setIsMenuOpen(false)
-    setIsWishlistOpen(true)
-  }, [])
   
   // Custom hook for effects
-  useHeaderEffects(isMenuOpen, isCartOpen, setIsSearchOpen)
+  useHeaderEffects(isMenuOpen, false, setIsSearchOpen)
 
   return (
     <>
@@ -92,28 +39,12 @@ export default function Header({ user }: HeaderProps) {
             <DesktopActions
               user={user}
               onSearchOpen={handleSearchOpen}
-              onWishlistClick={handleWishlistClick}
-              isCartOpen={isCartOpen}
-              onCartOpenChange={setIsCartOpen}
-              isWishlistOpen={isWishlistOpen} // Add missing prop
-              onWishlistOpenChange={setIsWishlistOpen} // Add missing prop
-              items={items}
-              itemCount={itemCount}
-              cartTotal={cartTotal}
-              wishlistItems={wishlistItems} // Add missing prop
-              wishlistItemCount={wishlistItemCount} // Add missing prop
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveItem={handleRemoveItem}
-              onRemoveWishlistItem={handleRemoveWishlistItem} // Add missing prop
             />
             <MobileMenu
               user={user}
               isOpen={isMenuOpen}
               onOpenChange={setIsMenuOpen}
               onSearchOpen={handleSearchOpen}
-              onWishlistClick={handleWishlistClick}
-              onCartOpen={handleCartOpen}
-              itemCount={itemCount}
               onMenuClose={handleMenuClose}
             />
           </div>
