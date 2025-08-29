@@ -17,7 +17,6 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
   
   const { searchResults, isLoading, total, error, searchProducts, clearSearch } = useSearch();
 
-  // Popular categories based on your business
   const popularCategories = [
     { name: "Power Tools", count: "150+ items", href: "/products?category=power-tools" },
     { name: "Garden Tools", count: "80+ items", href: "/products?category=garden-tools" },
