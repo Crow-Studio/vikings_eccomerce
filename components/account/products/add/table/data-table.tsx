@@ -24,6 +24,12 @@ import {
 } from "@/components/ui/table";
 import DataTablePagination from "./data-table-pagination";
 import { DataTableViewOptions } from "./data-table-view-options";
+import { Button } from "@/components/ui/button";
+import { Loader2, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { DBProduct } from "@/types";
+import { useRouter } from "next/navigation";
+import { deleteProductAction } from "@/app/account/products/add/action";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,7 +40,9 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
 
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -64,6 +72,40 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange: setRowSelection,
   });
 
+  const onDeleteProduct = async () => {
+    const rows = table.getFilteredSelectedRowModel().rows;
+
+    let selectedProductsIds: string[] = [];
+
+    if (rows.length > 0) {
+      selectedProductsIds = rows.map(({ original }) => {
+        const product = original as DBProduct;
+        return product.id;
+      });
+    }
+    toast.promise(
+      (async () => {
+        setIsDeletingProduct(true);
+        const { message, errorMessage } = await deleteProductAction(
+          selectedProductsIds
+        );
+        if (errorMessage) throw new Error(errorMessage);
+        return message;
+      })(),
+      {
+        loading: "Deleting products...",
+        success: "Products deleted successfully!",
+        error: (error) =>
+          error instanceof Error ? error.message : "Failed to delete products",
+        finally() {
+          setIsDeletingProduct(false);
+          router.refresh();
+        },
+        position: "top-center",
+      }
+    );
+  };
+
   return (
     <div className="space-y-4">
       <div className="space-y-4">
@@ -76,7 +118,25 @@ export function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-          <DataTableViewOptions table={table} />
+
+          <div className="flex items-center gap-x-3">
+            {table.getFilteredSelectedRowModel().rows.length > 0 && (
+              <Button
+                aria-label="Delete Products"
+                variant={"destructive"}
+                className="h-8 lg:flex"
+                onClick={() => onDeleteProduct()}
+              >
+                {isDeletingProduct ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <Trash2 className="size-4" />
+                )}
+                Remove ({table.getFilteredSelectedRowModel().rows.length})
+              </Button>
+            )}
+            <DataTableViewOptions table={table} />
+          </div>
         </div>
         <div className="rounded-md border">
           <Table>
