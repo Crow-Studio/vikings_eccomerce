@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/providers/theme-provider";
 // import { ConsentManagerProvider, CookieBanner, ConsentManagerDialog } from "@c15t/nextjs";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import NprogressProvider from "@/providers/nprogress-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
     			<CookieBanner />
     			<ConsentManagerDialog />
     		</ConsentManagerProvider> */}
+        <NprogressProvider />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

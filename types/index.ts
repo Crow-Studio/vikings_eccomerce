@@ -1,6 +1,6 @@
 import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { addProductFormSchema } from "./products/form";
+import { addProductFormSchema, editProductFormSchema } from "./products/form";
 import { Category, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
 
 export type ModalType = "signoutUser" | "newCategory"
@@ -65,6 +65,31 @@ export interface VariantField {
   }[] | undefined;
 }
 
+export interface EditVariantField {
+  name: string;
+  price: string;
+  description: string;
+  visibility: "active" | "inactive";
+  category: string;
+  images: {
+    id: string;
+    preview: string;
+    file?: File | null | undefined;
+  }[];
+  hasVariants: boolean;
+  variants?: {
+    values: string[];
+    title: string;
+  }[] | undefined;
+  generatedVariants?: {
+    name: string;
+    price: string;
+    attributes: Record<string, string>;
+    sku?: string | undefined;
+    inventory?: string | undefined;
+  }[] | undefined;
+}
+
 export interface VariantCombination {
   name: string;
   attributes: Record<string, string>;
@@ -80,9 +105,24 @@ export interface VariantsConfigurationsProps {
   isAddingProduct: boolean;
 }
 
+export interface EditVariantsConfigurationsProps {
+  form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
+  hasVariants: boolean;
+  fields: FieldArrayWithId<EditVariantField, "variants", "id">[];
+  append: UseFieldArrayAppend<EditVariantField, "variants">;
+  variantCombinations: VariantCombination[]
+  remove: UseFieldArrayRemove
+  isUpdatingProduct: boolean;
+}
+
 export interface GeneralInformationProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   isAddingProduct: boolean
+}
+
+export interface EditGeneralInformationProps {
+  form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
+  isUpdatingProduct: boolean
 }
 
 export interface TagInputProps {
@@ -98,15 +138,33 @@ export interface CategorySelectorProps {
   isAddingProduct: boolean
 }
 
+export interface EditCategorySelectorProps {
+  value: string;
+  onChange: (value: string) => void;
+  categories: Category[]
+  isUpdatingProduct: boolean
+}
+
 export interface ProductSettingsProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   categories: Category[]
   isAddingProduct: boolean
 }
 
+export interface EditProductSettingsProps {
+  form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
+  categories: Category[]
+  isUpdatingProduct: boolean
+}
+
 export interface ProductImagesProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   isAddingProduct: boolean;
+}
+
+export interface EditProductImagesProps {
+  form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
+  isUpdatingProduct: boolean;
 }
 
 export interface ProcessedProductData {
@@ -127,6 +185,37 @@ export interface ProcessedProductData {
   images: {
     id: string;
     file: File;
+    preview: string;
+  }[];
+  hasVariants: boolean;
+  generatedVariants?: {
+    name: string;
+    price: string;
+    attributes: Record<string, string>;
+    sku?: string | undefined;
+    inventory?: string | undefined;
+  }[] | undefined;
+}
+
+export interface EditedProcessedProductData {
+  id: string;
+  price: number;
+  variants: {
+    title: string;
+    values: {
+      name: string;
+      price: string;
+      sku: string;
+      inventory: number;
+    }[];
+  }[] | null;
+  category: string;
+  name: string;
+  description: string;
+  visibility: "active" | "inactive";
+  images: {
+    id: string;
+    file?: File | null | undefined;
     preview: string;
   }[];
   hasVariants: boolean;

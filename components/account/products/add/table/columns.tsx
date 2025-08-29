@@ -2,22 +2,13 @@
 
 import { DBProduct } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "./data-table-column-header";
 import { Badge } from "@/components/ui/badge";
 import { Visibility } from "@/database/schema";
 import { IconCircleCheckFilled, IconLoader } from "@tabler/icons-react";
 import ProductDataTableCellViewer from "./product-data-table-cell-viewer";
+import DataTableActions from "./data-table-actions";
 
 export const columns: ColumnDef<DBProduct>[] = [
   {
@@ -55,8 +46,8 @@ export const columns: ColumnDef<DBProduct>[] = [
     },
     cell: ({ row }) => <ProductDataTableCellViewer item={row.original} />,
     filterFn: (row, _, filterValue: string) => {
-      const name = row.original.name.toLowerCase() ?? ''
-      return name.includes(filterValue.toLowerCase())
+      const name = row.original.name.toLowerCase() ?? "";
+      return name.includes(filterValue.toLowerCase());
     },
   },
   {
@@ -103,24 +94,8 @@ export const columns: ColumnDef<DBProduct>[] = [
   },
   {
     id: "actions",
-    cell: () => {
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem>Copy payment ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+    cell: ({ row: { original } }) => {
+      return <DataTableActions product={original} />;
     },
   },
 ];

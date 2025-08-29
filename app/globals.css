@@ -138,3 +138,12 @@
 .animate-slide-in {
   animation: slide-in 0.3s ease-out;
 }
+
+#nprogress .bar {
+  background: #29d !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #29d, 0 0 5px #29d !important;
+}
