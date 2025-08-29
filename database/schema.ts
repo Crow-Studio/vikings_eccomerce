@@ -114,6 +114,7 @@ export const customer = pgTable('customer', {
   full_name: varchar("full_name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull(),
   phone: varchar('phone', { length: 20 }),
+  avatar: text("avatar"),
   address: text("address"),
   city: varchar('city', { length: 100 }),
   country: varchar('country', { length: 100 }),

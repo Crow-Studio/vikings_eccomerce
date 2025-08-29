@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/database";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
+import { desc } from "drizzle-orm";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -32,9 +33,10 @@ export default async function AllProductsPage() {
         },
       },
     },
+    orderBy: (table) => desc(table.updated_at),
   });
 
-  const transformedProducts = products.map(product => ({
+  const transformedProducts = products.map((product) => ({
     ...product,
     created_at: product.created_at.toISOString(),
     updated_at: product.updated_at?.toISOString() || null,

@@ -1,4 +1,5 @@
 import DashboardStats from "@/components/account/dashboard/DashboardStats";
+import { SalesOvertime } from "@/components/account/dashboard/SalesOvertime";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { getDashboardStats } from "@/lib/stats";
@@ -19,11 +20,13 @@ export default async function DashboardPage() {
     return redirect("/auth/admin/verify-email");
   }
 
-  const stats = await getDashboardStats()
+  const stats = await getDashboardStats();
 
   return (
-    <div>
+    <div className="space-y-5">
       <DashboardStats stats={stats} />
+      <SalesOvertime salesData={stats.salesOverTime} />
+      <div className="grid gap-6"></div>
     </div>
   );
 }
