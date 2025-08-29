@@ -9,5 +9,9 @@ interface ProductsDataTableProps {
 export default async function ProductsDataTable({
   products,
 }: ProductsDataTableProps) {
-  return <DataTable columns={columns} data={products} />;
+  return (
+    <div>
+      <DataTable columns={columns} data={products} />
+    </div>
+  );
 }

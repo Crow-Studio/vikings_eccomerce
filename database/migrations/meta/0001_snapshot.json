@@ -1,6 +1,6 @@
 {
-  "id": "4ae4db9f-8e71-4d60-8bea-afe669bd7f52",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "ffd9adb1-1729-4bce-b527-679794f2e4cc",
+  "prevId": "4ae4db9f-8e71-4d60-8bea-afe669bd7f52",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -61,6 +61,12 @@
         "phone": {
           "name": "phone",
           "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },

@@ -3,7 +3,7 @@ import { getCurrentSession } from "@/lib/server/session";
 import { redirect } from "next/navigation";
 import React from "react";
 
-export default async function EditProductsPage() {
+export default async function CustomersPage() {
   if (!(await globalGETRateLimit())) {
     return "Too many requests";
   }
@@ -17,6 +17,5 @@ export default async function EditProductsPage() {
   if (!user.email_verified) {
     return redirect("/auth/admin/verify-email");
   }
-
-  return <div>EditProductsPage</div>;
+  return <div>CustomersPage</div>;
 }

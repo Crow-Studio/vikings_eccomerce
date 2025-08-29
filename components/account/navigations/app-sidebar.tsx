@@ -7,6 +7,7 @@ import {
   Settings2,
   ShoppingBag,
   ShoppingBasket,
+  Users,
 } from "lucide-react";
 
 import { NavMain } from "@/components/account/navigations/nav-main";
@@ -39,6 +40,12 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         url: "/account/dashboard",
         icon: House,
         isShowInterface: true,
+      },
+      {
+        title: "Customers",
+        url: "/account/customers",
+        icon: Users,
+        isShowInterface: user.role === UserRole.ADMIN ? true : false,
       },
       {
         title: "Orders",
