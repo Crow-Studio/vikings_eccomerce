@@ -1,5 +1,4 @@
-import EditCustomerForm from "@/components/account/customer/edit-customer-form";
-import NewCustomerForm from "@/components/account/customer/new-customer-form";
+import CreateOrderForm from "@/components/account/orders/create-order-form";
 import {
   Sheet,
   SheetContent,
@@ -9,15 +8,15 @@ import {
 } from "@/components/ui/sheet";
 import { useModal } from "@/hooks/use-modal-store";
 
-export default function EditCustomer() {
+export default function CreateOrder() {
   const {
     isOpen,
     onClose,
     type,
-    data: { customer },
+    data: { customers, products },
   } = useModal();
 
-  const isModalOpen = isOpen && type === "editCustomer";
+  const isModalOpen = isOpen && type === "createOrder";
 
   return (
     <Sheet open={isModalOpen} onOpenChange={onClose}>
@@ -31,13 +30,12 @@ export default function EditCustomer() {
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
       >
         <SheetHeader>
-          <SheetTitle>Update customer info</SheetTitle>
+          <SheetTitle>Create new order</SheetTitle>
           <SheetDescription>
-            Edit the customer's information for your Vikings store records and
-            orders.
+            Fill in the details below to create a new order.
           </SheetDescription>
         </SheetHeader>
-        <EditCustomerForm customer={customer!} />
+        <CreateOrderForm customers={customers!} products={products!} />
       </SheetContent>
     </Sheet>
   );

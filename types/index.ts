@@ -1,17 +1,28 @@
 import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { addProductFormSchema, editProductFormSchema } from "./products/form";
-import { Category, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
+import { Category, Customer as DBCustomer, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
 import { Customer } from "./customers";
-export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer"
+
+export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder"
 
 export interface ModalData {
-  customer: Customer
+  customer?: Customer
+  customers?: DBCustomer[]
+  products?: IProduct[]
 }
 export interface ActionResult {
   message: string | null;
   errorMessage: string | null;
 }
+
+export interface IProduct {
+  id: string;
+  name: string;
+  price: string;
+  imageUrl: string;
+}
+
 export interface ModalStore {
   type: ModalType | null;
   isOpen: boolean;
@@ -213,8 +224,8 @@ export interface DBProduct {
   visibility: Visibility;
   id: string;
   name: string;
-  created_at: string; 
-  updated_at: string | null; 
+  created_at: string;
+  updated_at: string | null;
   price: string;
   description: string;
   category_id: string;
@@ -237,7 +248,7 @@ export interface Product {
   category_id: string;
   has_variants: boolean;
   created_at: string;
-  updated_at: string; 
+  updated_at: string;
   category: Category;
   images: ProductImage[];
   variants: {

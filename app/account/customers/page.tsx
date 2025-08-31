@@ -5,7 +5,7 @@ import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { desc } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import React from "react";
+
 export default async function CustomersPage() {
   if (!(await globalGETRateLimit())) {
     return "Too many requests";

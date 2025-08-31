@@ -108,7 +108,7 @@ export function UserProfileForm({ user }: Props) {
       form.setValue("first_name", username[0]);
       form.setValue("last_name", username[1]);
     }
-  }, [user, form, username]);
+  }, [user, form]);
   return (
     <Form {...form}>
       <form

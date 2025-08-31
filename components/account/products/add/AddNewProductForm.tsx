@@ -57,6 +57,7 @@ export default function AddNewProductForm({
       form.setValue("generatedVariants", newGeneratedVariants);
     }
   }, [variantCombinations.length, hasVariants, form, variantCombinations]);
+  
   async function onSubmit(values: z.infer<typeof addProductFormSchema>) {
     setIsAddingProduct(true);
     const processedData = {
