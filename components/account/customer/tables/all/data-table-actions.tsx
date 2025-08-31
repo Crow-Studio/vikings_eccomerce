@@ -11,17 +11,17 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { deleteProductAction } from "@/app/account/products/add/action";
 import { Customer } from "@/types/customers";
+import { useModal } from "@/hooks/use-modal-store";
 
 interface Props {
   customer: Customer;
 }
+
 export default function DataTableActions({ customer }: Props) {
+  const { onOpen } = useModal();
   const router = useRouter();
   const [isDeletingCustomer, setIsDeletingCustomer] = useState(false);
 
-  const onEditCustomer = async () => {
-    return router.push(`/account/customer/${customer.id}/edit`);
-  };
   const onDeleteCustomer = async () => {
     toast.promise(
       (async () => {
@@ -55,7 +55,11 @@ export default function DataTableActions({ customer }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          onClick={() => onEditCustomer()}
+          onClick={() =>
+            onOpen("editCustomer", {
+              customer,
+            })
+          }
           className="cursor-pointer"
           disabled={isDeletingCustomer}
         >

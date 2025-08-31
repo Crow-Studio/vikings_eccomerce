@@ -2,8 +2,12 @@ import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFormRetu
 import { z } from "zod";
 import { addProductFormSchema, editProductFormSchema } from "./products/form";
 import { Category, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
-export type ModalType = "signoutUser" | "newCategory" | "newCustomer"
-export interface ModalData { }
+import { Customer } from "./customers";
+export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer"
+
+export interface ModalData {
+  customer: Customer
+}
 export interface ActionResult {
   message: string | null;
   errorMessage: string | null;

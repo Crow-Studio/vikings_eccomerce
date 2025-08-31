@@ -14,9 +14,17 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/dfa1yoc1v/**",
       },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+        port: "",
+        pathname: "/**",
+      },
     ],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-   compiler: {
+  compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
   serverExternalPackages: ["@node-rs/argon2"],
