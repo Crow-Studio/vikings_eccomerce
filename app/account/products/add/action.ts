@@ -8,6 +8,7 @@ import { ActionResult, EditedProcessedProductData, ProcessedProductData } from "
 import { headers } from "next/headers";
 import { v2 as cloudinary } from "cloudinary";
 import { inArray } from "drizzle-orm";
+import { extractPublicId } from "@/lib/server/utils";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -311,7 +312,7 @@ export async function deleteProductAction(productIds: string[]): Promise<ActionR
     })
     if (imagesToDelete.length > 0) {
       await Promise.all(
-        imagesToDelete.map(async img => {
+        imagesToDelete.map(async (img: { url: string; }) => {
           const publicId = extractPublicId(img.url)
           if (!publicId) return Promise.resolve()
           try {
@@ -328,14 +329,5 @@ export async function deleteProductAction(productIds: string[]): Promise<ActionR
       return { errorMessage: error.message, message: null }
     }
     return { errorMessage: "Failed to delete products", message: null }
-  }
-}
-function extractPublicId(url: string): string | null {
-  try {
-    const parts = url.split("/")
-    const filename = parts[parts.length - 1]
-    return filename.split(".")[0] 
-  } catch {
-    return null
   }
 }

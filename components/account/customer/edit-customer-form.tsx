@@ -20,7 +20,7 @@ import {
   customerFormSchema,
   CustomerFormValues,
 } from "@/types/customers";
-import { UpdateNewCustomerAction } from "@/app/account/customers/action";
+import { updateCustomerAction } from "@/app/account/customers/action";
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -54,7 +54,7 @@ export default function EditCustomerForm({ customer }: Props) {
 
   async function onSubmit(values: CustomerFormValues) {
     setIsAddingCustomer(true);
-    const { message, errorMessage } = await UpdateNewCustomerAction({
+    const { message, errorMessage } = await updateCustomerAction({
       ...values,
       id: customer.id,
     });

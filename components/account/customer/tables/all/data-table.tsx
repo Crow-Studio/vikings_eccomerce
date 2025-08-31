@@ -27,8 +27,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { deleteProductAction } from "@/app/account/products/add/action";
-import { Customer } from "@/types/customers";
+import { Customer, CustomerEditInfo } from "@/types/customers";
+import { deleteCustomersAction } from "@/app/account/customers/action";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,7 +41,7 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
+  const [isDeletingCustomer, setIsDeletingCustomer] = React.useState(false);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -68,18 +68,28 @@ export function DataTable<TData, TValue>({
   });
   const onDeleteCustomer = async () => {
     const rows = table.getFilteredSelectedRowModel().rows;
-    let selectedCustomersIds: string[] = [];
+    let customers: CustomerEditInfo[] = [];
+
     if (rows.length > 0) {
-      selectedCustomersIds = rows.map(({ original }) => {
-        const product = original as Customer;
-        return product.id;
+      customers = rows.map(({ original }) => {
+        const customer = original as Customer;
+        return {
+          id: customer.id,
+          address: customer.address!,
+          avatar: customer.avatar,
+          city: customer.city!,
+          country: customer.country!,
+          email: customer.email,
+          full_name: customer.email,
+          phone: customer.phone!,
+        };
       });
     }
     toast.promise(
       (async () => {
-        setIsDeletingProduct(true);
-        const { message, errorMessage } = await deleteProductAction(
-          selectedCustomersIds
+        setIsDeletingCustomer(true);
+        const { message, errorMessage } = await deleteCustomersAction(
+          customers
         );
         if (errorMessage) throw new Error(errorMessage);
         return message;
@@ -90,7 +100,7 @@ export function DataTable<TData, TValue>({
         error: (error) =>
           error instanceof Error ? error.message : "Failed to delete customers",
         finally() {
-          setIsDeletingProduct(false);
+          setIsDeletingCustomer(false);
           router.refresh();
         },
         position: "top-center",
@@ -117,7 +127,7 @@ export function DataTable<TData, TValue>({
                 className="h-8 lg:flex"
                 onClick={() => onDeleteCustomer()}
               >
-                {isDeletingProduct ? (
+                {isDeletingCustomer ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
                   <Trash2 className="size-4" />

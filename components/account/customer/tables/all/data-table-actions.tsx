@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
-import { deleteProductAction } from "@/app/account/products/add/action";
-import { Customer } from "@/types/customers";
+import { Customer, CustomerEditInfo } from "@/types/customers";
 import { useModal } from "@/hooks/use-modal-store";
+import { deleteCustomersAction } from "@/app/account/customers/action";
 
 interface Props {
   customer: Customer;
@@ -22,13 +22,26 @@ export default function DataTableActions({ customer }: Props) {
   const router = useRouter();
   const [isDeletingCustomer, setIsDeletingCustomer] = useState(false);
 
+  const customers: CustomerEditInfo[] = [];
+
   const onDeleteCustomer = async () => {
+    customers.push({
+      id: customer.id,
+      address: customer.address!,
+      avatar: customer.avatar,
+      city: customer.city!,
+      country: customer.country!,
+      email: customer.email,
+      full_name: customer.email,
+      phone: customer.phone!,
+    });
+
     toast.promise(
       (async () => {
         setIsDeletingCustomer(true);
-        const { message, errorMessage } = await deleteProductAction([
-          customer.id,
-        ]);
+        const { message, errorMessage } = await deleteCustomersAction(
+          customers
+        );
         if (errorMessage) throw new Error(errorMessage);
         return message;
       })(),

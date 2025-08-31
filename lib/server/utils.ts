@@ -11,3 +11,13 @@ export function generateRandomRecoveryCode(): string {
   const recoveryCode = encodeBase32UpperCaseNoPadding(recoveryCodeBytes);
   return recoveryCode;
 }
+
+export function extractPublicId(url: string): string | null {
+  try {
+    const parts = url.split("/")
+    const filename = parts[parts.length - 1]
+    return filename.split(".")[0] 
+  } catch {
+    return null
+  }
+}

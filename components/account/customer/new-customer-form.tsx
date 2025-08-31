@@ -16,7 +16,7 @@ import PhoneFlag from "./phone/phone-flags";
 import CountrySelect from "./phone/country-select";
 import PhoneInput from "./phone/phone-input";
 import { customerFormSchema, CustomerFormValues } from "@/types/customers";
-import { CreateNewCustomerAction } from "@/app/account/customers/action";
+import { createNewCustomerAction } from "@/app/account/customers/action";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -40,7 +40,7 @@ export default function NewCustomerForm() {
   });
   async function onSubmit(values: CustomerFormValues) {
     setIsAddingCustomer(true);
-    const { message, errorMessage } = await CreateNewCustomerAction(values);
+    const { message, errorMessage } = await createNewCustomerAction(values);
     if (errorMessage) {
       setIsAddingCustomer(false);
       return toast.error(errorMessage, {

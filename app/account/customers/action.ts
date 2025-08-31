@@ -8,6 +8,8 @@ import { ActionResult } from "@/types";
 import { headers } from "next/headers";
 import { v2 as cloudinary } from "cloudinary";
 import { CustomerEditInfo, CustomerFormValues } from "@/types/customers";
+import { inArray } from "drizzle-orm";
+import { extractPublicId } from "@/lib/server/utils";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -15,7 +17,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
 });
 
-export async function CreateNewCustomerAction(
+export async function createNewCustomerAction(
     data: CustomerFormValues
 ): Promise<ActionResult> {
     if (!(await globalPOSTRateLimit())) {
@@ -55,7 +57,7 @@ export async function CreateNewCustomerAction(
     }
 }
 
-export async function UpdateNewCustomerAction(
+export async function updateCustomerAction(
     data: CustomerEditInfo
 ): Promise<ActionResult> {
     if (!(await globalPOSTRateLimit())) {
@@ -93,6 +95,49 @@ export async function UpdateNewCustomerAction(
         }
         return { errorMessage: "Failed to update customer", message: null };
     }
+}
+
+export async function deleteCustomersAction(
+  customers: CustomerEditInfo[]
+): Promise<ActionResult> {
+  if (!(await globalPOSTRateLimit())) {
+    return { errorMessage: "Too many requests!", message: null }
+  }
+
+  const clientIP = (await headers()).get("X-Forwarded-For")
+
+  if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
+    return { errorMessage: "Too many requests!", message: null }
+  }
+
+  const { user } = await getCurrentSession()
+  if (user?.role !== UserRole.ADMIN) {
+    return { errorMessage: "Only admins can delete customers info", message: null }
+  }
+
+  try {
+    if (clientIP !== null) ipBucket.consume(clientIP, 1)
+
+    for (const customer of customers) {
+      if (customer.avatar && typeof customer.avatar === "string") {
+        const publicId = extractPublicId(customer.avatar)
+        if (publicId) {
+          await cloudinary.uploader.destroy(publicId)
+        }
+      }
+    }
+
+    const ids = customers.map((c) => c.id)
+
+    await db.delete(tables.customer).where(inArray(tables.customer.id, ids))
+
+    return { message: "Customers deleted successfully", errorMessage: null }
+  } catch (error) {
+    if (error instanceof Error) {
+      return { errorMessage: error.message, message: null }
+    }
+    return { errorMessage: "Failed to delete customers", message: null }
+  }
 }
 
 async function uploadFileToCloudinary(file: File): Promise<string> {
