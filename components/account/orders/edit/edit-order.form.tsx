@@ -47,7 +47,7 @@ export default function EditOrderForm({
         <CustomerSelector
           control={form.control}
           customers={customers}
-          isSavingToDB={isUpdatingOrder}
+          isSavingToDB={true}
         />
 
         <FormField
@@ -80,7 +80,7 @@ export default function EditOrderForm({
           selectedItems={fields}
           onAppend={append}
           onRemove={remove}
-          isSavingToDB={isUpdatingOrder}
+          isSavingToDB={true}
         />
 
         <div className="space-y-4">
@@ -92,7 +92,7 @@ export default function EditOrderForm({
               control={form.control}
               onRemove={remove}
               onUpdate={update}
-              isSavingToDB={isUpdatingOrder}
+              isSavingToDB={true}
             />
           ))}
         </div>
