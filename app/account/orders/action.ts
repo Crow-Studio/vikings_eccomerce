@@ -52,9 +52,10 @@ export async function createOrderAction(data: {
 
 export async function updateOrderAction(data: {
     id: string
-    status?: OrderStatus
-    items?: { productId: string, price: string, quantity: number }[]
-    totalAmount?: string
+    customerId: string
+    status: OrderStatus
+    items: { productId: string, price: string, quantity: number }[]
+    totalAmount: string
 }): Promise<ActionResult> {
     if (!(await globalPOSTRateLimit())) return { errorMessage: "Too many requests!", message: null }
     const clientIP = (await headers()).get("X-Forwarded-For")

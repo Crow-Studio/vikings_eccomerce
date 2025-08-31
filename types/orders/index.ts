@@ -42,13 +42,11 @@ export const createOrderSchema = z.object({
 export type CreateOrderFormValues = z.infer<typeof createOrderSchema>;
 
 export interface OrderItems {
-    id: string;
-    created_at: Date;
-    updated_at: Date | null;
+    productId: string;
+    productName: string;
     price: string;
-    product_id: string;
-    order_id: string;
     quantity: number;
+    imageUrl: string | null;
 }
 
 export interface Order {

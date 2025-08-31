@@ -31,7 +31,7 @@ export default function CreateOrderForm({
         <CustomerSelector
           control={form.control}
           customers={customers}
-          isCreatingOrder={isCreatingOrder}
+          isSavingToDB={isCreatingOrder}
         />
 
         <ProductSelector
@@ -39,7 +39,7 @@ export default function CreateOrderForm({
           selectedItems={fields}
           onAppend={append}
           onRemove={remove}
-          isCreatingOrder={isCreatingOrder}
+          isSavingToDB={isCreatingOrder}
         />
 
         <div className="space-y-4">
@@ -51,7 +51,7 @@ export default function CreateOrderForm({
               control={form.control}
               onRemove={remove}
               onUpdate={update}
-              isCreatingOrder={isCreatingOrder}
+              isSavingToDB={isCreatingOrder}
             />
           ))}
         </div>

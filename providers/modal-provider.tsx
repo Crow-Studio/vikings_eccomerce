@@ -4,6 +4,7 @@ import AddNewCategory from "@/modals/account/AddNewCategory";
 import EditCustomer from "@/modals/account/customers/EditCustomer";
 import NewCustomer from "@/modals/account/customers/NewCustomer";
 import CreateOrder from "@/modals/account/orders/CreateOrder";
+import EditOrder from "@/modals/account/orders/EditOrder";
 import Signout from "@/modals/Signout";
 import { useEffect, useState } from "react";
 
@@ -25,6 +26,7 @@ export default function ModalProvider() {
       <NewCustomer />
       <EditCustomer />
       <CreateOrder />
+      <EditOrder />
     </div>
   );
 }

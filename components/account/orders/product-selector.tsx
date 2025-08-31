@@ -26,7 +26,7 @@ interface ProductSelectorProps {
   selectedItems: CreateOrderFormValues["items"];
   onAppend: UseFieldArrayAppend<CreateOrderFormValues, "items">;
   onRemove: (index: number) => void;
-  isCreatingOrder: boolean;
+  isSavingToDB: boolean;
 }
 
 export function ProductSelector({
@@ -34,7 +34,7 @@ export function ProductSelector({
   selectedItems,
   onAppend,
   onRemove,
-  isCreatingOrder,
+  isSavingToDB,
 }: ProductSelectorProps) {
   const [open, setOpen] = useState(false);
 
@@ -58,10 +58,10 @@ export function ProductSelector({
   };
 
   return (
-    <div>
+    <div className="space-y-2">
       <FormLabel>Products</FormLabel>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger disabled={isCreatingOrder} asChild>
+        <PopoverTrigger disabled={isSavingToDB} asChild>
           <Button variant="outline" className="justify-between w-full">
             {selectedItems.length > 0
               ? `${selectedItems.length} ${

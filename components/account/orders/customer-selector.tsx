@@ -30,13 +30,13 @@ import Image from "next/image";
 interface CustomerSelectorProps {
   control: Control<CreateOrderFormValues>;
   customers: Customer[];
-  isCreatingOrder: boolean
+  isSavingToDB: boolean
 }
 
 export function CustomerSelector({
   control,
   customers,
-  isCreatingOrder
+  isSavingToDB
 }: CustomerSelectorProps) {
   const [open, setOpen] = useState(false);
 
@@ -51,7 +51,7 @@ export function CustomerSelector({
           <FormItem className="flex flex-col">
             <FormLabel>Customer</FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger disabled={isCreatingOrder} asChild>
+              <PopoverTrigger disabled={isSavingToDB} asChild>
                 <FormControl>
                   <Button
                     variant="outline"

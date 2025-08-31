@@ -31,6 +31,7 @@ export interface ModalStore {
   data: ModalData;
   onOpen: (type: ModalType, data?: ModalData) => void;
   onClose: () => void;
+  onPopulateData: (data?: ModalData) =>void
 }
 export const formSchema = z.object({
   email: z.string().email({

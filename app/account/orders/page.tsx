@@ -29,7 +29,15 @@ export default async function OrdersPage() {
   const ordersData = await db.query.order.findMany({
     with: {
       customer: true,
-      items: true,
+      items: {
+        with: {
+          product: {
+            with: {
+              images: true,
+            },
+          },
+        },
+      },
     },
     orderBy: (table) => desc(table.updated_at),
   });
@@ -40,12 +48,16 @@ export default async function OrdersPage() {
     status: order.status,
     total_amount: order.total_amount,
     total_ordered_items: order.items.length,
-    items: order.items,
+    items: order.items.map((item) => ({
+      productId: item.product.id,
+      productName: item.product.name,
+      price: item.product.price,
+      quantity: item.quantity,
+      imageUrl: item.product.images[0].url ?? undefined,
+    })),
     created_at: order.created_at.toISOString(),
     updated_at: order.updated_at?.toISOString() || null,
   }));
-
-  console.log("orders", orders);
 
   const products = await db.query.product.findMany({
     with: {
@@ -72,7 +84,11 @@ export default async function OrdersPage() {
         </div>
         <CreateOrderButton customers={customers} products={productData} />
       </div>
-      <OrdersDataTable orders={orders} />
+      <OrdersDataTable
+        orders={orders}
+        customers={customers}
+        products={productData}
+      />
     </div>
   );
 }
