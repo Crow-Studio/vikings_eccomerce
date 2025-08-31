@@ -30,11 +30,13 @@ import Image from "next/image";
 interface CustomerSelectorProps {
   control: Control<CreateOrderFormValues>;
   customers: Customer[];
+  isCreatingOrder: boolean
 }
 
 export function CustomerSelector({
   control,
   customers,
+  isCreatingOrder
 }: CustomerSelectorProps) {
   const [open, setOpen] = useState(false);
 
@@ -49,7 +51,7 @@ export function CustomerSelector({
           <FormItem className="flex flex-col">
             <FormLabel>Customer</FormLabel>
             <Popover open={open} onOpenChange={setOpen}>
-              <PopoverTrigger asChild>
+              <PopoverTrigger disabled={isCreatingOrder} asChild>
                 <FormControl>
                   <Button
                     variant="outline"
@@ -67,7 +69,8 @@ export function CustomerSelector({
                             src={selectedCustomer.avatar}
                             alt={selectedCustomer.full_name}
                             className="w-6 h-6 rounded-full object-cover"
-                            fill
+                            width={24}
+                            height={24}
                           />
                         ) : (
                           <div className="w-6 h-6 rounded-full bg-gray-500 text-white text-xs flex items-center justify-center">
@@ -116,7 +119,8 @@ export function CustomerSelector({
                                 src={c.avatar}
                                 alt={c.full_name}
                                 className="w-6 h-6 rounded-full object-cover"
-                                fill
+                                width={24}
+                                height={24}
                               />
                             ) : (
                               <div className="w-6 h-6 rounded-full bg-gray-500 text-white text-xs flex items-center justify-center">

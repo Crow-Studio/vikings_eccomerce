@@ -1,10 +1,18 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { OrderStatus } from "@/database/schema";
 import { CreateOrderFormValues, createOrderSchema } from "@/types/orders";
+import { useRouter } from "next/navigation";
+import { createOrderAction } from "@/app/account/orders/action";
+import { toast } from "sonner";
+import { useModal } from "./use-modal-store";
 
 export function useOrderForm() {
+  const router = useRouter();
+  const { onClose } = useModal()
+  const [isCreatingOrder, setIsCreatingOrder] = useState(false);
+
   const form = useForm<CreateOrderFormValues>({
     resolver: zodResolver(createOrderSchema),
     defaultValues: {
@@ -30,8 +38,25 @@ export function useOrderForm() {
   }, [watchedItems, form]);
 
   const handleSubmit = async (values: CreateOrderFormValues) => {
-    console.log("Order submitted:", values);
-    // Add your submission logic here
+    setIsCreatingOrder(true);
+    const { message, errorMessage } = await createOrderAction(values);
+
+    if (errorMessage) {
+      setIsCreatingOrder(false);
+
+      return toast.error(errorMessage, {
+        position: "top-center",
+      });
+    }
+
+    form.reset();
+    router.refresh();
+    setIsCreatingOrder(false);
+    onClose()
+
+    return toast.success(message, {
+      position: "top-center",
+    });
   };
 
   const handleProductRemove = (index: number) => {
@@ -45,5 +70,6 @@ export function useOrderForm() {
     remove: handleProductRemove,
     update,
     handleSubmit,
+    isCreatingOrder,
   };
 }

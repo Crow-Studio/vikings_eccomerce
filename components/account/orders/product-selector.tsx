@@ -26,6 +26,7 @@ interface ProductSelectorProps {
   selectedItems: CreateOrderFormValues["items"];
   onAppend: UseFieldArrayAppend<CreateOrderFormValues, "items">;
   onRemove: (index: number) => void;
+  isCreatingOrder: boolean;
 }
 
 export function ProductSelector({
@@ -33,6 +34,7 @@ export function ProductSelector({
   selectedItems,
   onAppend,
   onRemove,
+  isCreatingOrder,
 }: ProductSelectorProps) {
   const [open, setOpen] = useState(false);
 
@@ -42,10 +44,8 @@ export function ProductSelector({
     );
 
     if (existingIndex >= 0) {
-      // Product is already selected, remove it
       onRemove(existingIndex);
     } else {
-      // Product is not selected, add it
       onAppend({
         productId: product.id,
         productName: product.name,
@@ -61,7 +61,7 @@ export function ProductSelector({
     <div>
       <FormLabel>Products</FormLabel>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+        <PopoverTrigger disabled={isCreatingOrder} asChild>
           <Button variant="outline" className="justify-between w-full">
             {selectedItems.length > 0
               ? `${selectedItems.length} ${
@@ -98,7 +98,8 @@ export function ProductSelector({
                           src={p.imageUrl}
                           alt={p.name}
                           className="w-8 h-8 rounded object-cover"
-                          fill
+                          width={24}
+                          height={24}
                         />
                         <div>
                           <p className="font-medium">

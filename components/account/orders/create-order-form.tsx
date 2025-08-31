@@ -6,12 +6,21 @@ import { CustomerSelector } from "./customer-selector";
 import { ProductSelector } from "./product-selector";
 import { OrderItem } from "./order-item";
 import { TotalAmountField } from "./total-amount-field";
+import { Loader2 } from "lucide-react";
 
 export default function CreateOrderForm({
   customers,
   products,
 }: CreateOrderFormProps) {
-  const { form, fields, append, remove, update, handleSubmit } = useOrderForm();
+  const {
+    form,
+    fields,
+    append,
+    remove,
+    update,
+    handleSubmit,
+    isCreatingOrder,
+  } = useOrderForm();
 
   return (
     <Form {...form}>
@@ -19,13 +28,18 @@ export default function CreateOrderForm({
         onSubmit={form.handleSubmit(handleSubmit)}
         className="space-y-6 px-4 -mt-4 mb-3"
       >
-        <CustomerSelector control={form.control} customers={customers} />
+        <CustomerSelector
+          control={form.control}
+          customers={customers}
+          isCreatingOrder={isCreatingOrder}
+        />
 
         <ProductSelector
           products={products}
           selectedItems={fields}
           onAppend={append}
           onRemove={remove}
+          isCreatingOrder={isCreatingOrder}
         />
 
         <div className="space-y-4">
@@ -37,13 +51,19 @@ export default function CreateOrderForm({
               control={form.control}
               onRemove={remove}
               onUpdate={update}
+              isCreatingOrder={isCreatingOrder}
             />
           ))}
         </div>
 
         <TotalAmountField control={form.control} />
 
-        <Button type="submit" disabled={fields.length === 0} className="w-full">
+        <Button
+          type="submit"
+          disabled={fields.length === 0 || isCreatingOrder}
+          className="w-full"
+        >
+          {isCreatingOrder && <Loader2 className="animate-spin" />}
           Create Order
         </Button>
       </form>

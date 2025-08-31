@@ -18,6 +18,7 @@ interface OrderItemProps {
   control: Control<CreateOrderFormValues>;
   onRemove: (index: number) => void;
   onUpdate: UseFieldArrayUpdate<CreateOrderFormValues, "items">;
+  isCreatingOrder: boolean;
 }
 
 export function OrderItem({
@@ -26,6 +27,7 @@ export function OrderItem({
   control,
   onRemove,
   onUpdate,
+  isCreatingOrder,
 }: OrderItemProps) {
   return (
     <div className="flex items-center gap-4 border p-3 rounded-lg">
@@ -33,7 +35,8 @@ export function OrderItem({
         src={item.imageUrl}
         alt={item.productName}
         className="w-12 h-12 rounded object-cover flex-shrink-0"
-        fill
+        width={400}
+        height={400}
       />
       <div className="flex-1">
         <div className="flex items-start justify-between mb-2">
@@ -49,6 +52,7 @@ export function OrderItem({
             size="icon"
             className="h-6 w-6"
             onClick={() => onRemove(index)}
+            disabled={isCreatingOrder}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -62,6 +66,7 @@ export function OrderItem({
               <FormControl>
                 <Input
                   type="number"
+                  disabled={isCreatingOrder}
                   min={1}
                   {...field}
                   onChange={(e) => {
