@@ -1,0 +1,2 @@
+ALTER TABLE "order_item" ADD COLUMN "variant_id" text;--> statement-breakpoint
+ALTER TABLE "order_item" ADD CONSTRAINT "order_item_variant_id_generated_variants_id_fk" FOREIGN KEY ("variant_id") REFERENCES "public"."generated_variants"("id") ON DELETE no action ON UPDATE no action;

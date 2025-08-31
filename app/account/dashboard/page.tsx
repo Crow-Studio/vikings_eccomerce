@@ -19,7 +19,10 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-5">
       <DashboardStats stats={stats} />
-      <SalesOvertime salesData={stats.salesOverTime} />
+      <SalesOvertime
+        thisMonthData={stats.thisMonthData}
+        lastMonthData={stats.lastMonthData}
+      />
       <div className="grid gap-6"></div>
     </div>
   );

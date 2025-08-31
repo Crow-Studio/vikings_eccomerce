@@ -1,55 +1,34 @@
 "use client";
 import { ShoppingBasket } from "@/components/svgs/ShoppingBasket";
-import { OrderStatus } from "@/database/schema";
+import { DashboardStats as IDashboardStats } from "@/types/dashboard";
 import { ShoppingBasketIcon, Users, Wallet } from "lucide-react";
 import { useState } from "react";
 interface Props {
-  stats: {
-    totalProducts: number;
-    totalOrders: number;
-    totalCustomers: number;
-    totalRevenue: number;
-    salesOverTime: {
-      month: string;
-      desktop: number;
-    }[];
-    salesByCategory: {
-      category: string;
-      revenue: number;
-    }[];
-    ordersByStatus: {
-      status: OrderStatus;
-      count: number;
-    }[];
-    topProducts: {
-      product: string;
-      revenue: number;
-    }[];
-  };
+  stats: IDashboardStats;
 }
 export default function DashboardStats({ stats: dbStats }: Props) {
   const [stats] = useState([
     {
       title: "Total Products",
-      icon: <ShoppingBasket className="size-7 md:size-8 xl:size-12" />,
+      icon: <ShoppingBasket className="size-5 md:size-6 xl:size-8" />,
       value: dbStats.totalProducts,
       label: "active",
     },
     {
       title: "Total Orders",
-      icon: <ShoppingBasketIcon className="size-7 md:size-8 xl:size-12" />,
+      icon: <ShoppingBasketIcon className="size-5 md:size-6 xl:size-8" />,
       value: dbStats.totalOrders,
       label: "fulfilled ",
     },
     {
       title: "Total Customers",
-      icon: <Users className="size-7 md:size-8 xl:size-12" />,
+      icon: <Users className="size-5 md:size-6 xl:size-8" />,
       value: dbStats.totalCustomers,
       label: "registered",
     },
     {
       title: "Total Sales",
-      icon: <Wallet className="size-7 md:size-8 xl:size-12" />,
+      icon: <Wallet className="size-5 md:size-6 xl:size-8" />,
       value: dbStats.totalRevenue.toLocaleString(),
       label: "revenue",
     },
@@ -66,7 +45,7 @@ export default function DashboardStats({ stats: dbStats }: Props) {
           </h2>
           <div className="flex items-center gap-x-3">
             {stat.icon}
-            <p className="text-3xl xl:text-5xl">
+            <p className="text-xl xl:text-2xl">
               {stat.value}
               <span className="text-xs xl:text-base text-muted-foreground uppercase">
                 / {stat.label}

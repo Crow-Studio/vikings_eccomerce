@@ -123,6 +123,7 @@ export const orderItem = pgTable('order_item', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   order_id: text("order_id").notNull().references(() => order.id, { onDelete: "cascade" }),
   product_id: text("product_id").notNull().references(() => product.id),
+  variant_id: text("variant_id").references(() => generatedVariants.id),
   quantity: integer('quantity').default(1).notNull(),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
@@ -198,7 +199,8 @@ export const orderRelations = relations(order, ({ one, many }) => ({
 
 export const orderItemRelations = relations(orderItem, ({ one }) => ({
   order: one(order, { fields: [orderItem.order_id], references: [order.id] }),
-  product: one(product, { fields: [orderItem.product_id], references: [product.id] })
+  product: one(product, { fields: [orderItem.product_id], references: [product.id] }),
+  variant: one(generatedVariants, { fields: [orderItem.variant_id], references: [generatedVariants.id] }) // Add this
 }))
 
 export const categoryRelations = relations(category, ({ many }) => ({
