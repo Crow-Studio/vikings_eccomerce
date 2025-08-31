@@ -3,13 +3,15 @@ import { z } from "zod";
 import { addProductFormSchema, editProductFormSchema } from "./products/form";
 import { Category, Customer as DBCustomer, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
 import { Customer } from "./customers";
+import { Order } from "./orders";
 
-export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder"
+export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder" | "editOrder"
 
 export interface ModalData {
   customer?: Customer
   customers?: DBCustomer[]
   products?: IProduct[]
+  order?: Order
 }
 export interface ActionResult {
   message: string | null;

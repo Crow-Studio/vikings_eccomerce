@@ -1,4 +1,5 @@
 "use client";
+
 import * as React from "react";
 import {
   ColumnDef,
@@ -27,8 +28,8 @@ import { Button } from "@/components/ui/button";
 import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Customer, CustomerEditInfo } from "@/types/customers";
-import { deleteCustomersAction } from "@/app/account/customers/action";
+import { Order } from "@/types/orders";
+import { deleteOrdersAction } from "@/app/account/orders/action";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,7 +42,8 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [isDeletingCustomer, setIsDeletingCustomer] = React.useState(false);
+  const [globalFilter, setGlobalFilter] = React.useState("");
+  const [isDeletingOrder, setIsDeletingOrder] = React.useState(false);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -56,51 +58,43 @@ export function DataTable<TData, TValue>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
+    globalFilterFn: "includesString",
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
+      globalFilter,
     },
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
   });
-  const onDeleteCustomer = async () => {
+  const onDeleteOrder = async () => {
     const rows = table.getFilteredSelectedRowModel().rows;
-    let customers: CustomerEditInfo[] = [];
+    let ordersIds: string[] = [];
 
     if (rows.length > 0) {
-      customers = rows.map(({ original }) => {
-        const customer = original as Customer;
-        return {
-          id: customer.id,
-          address: customer.address!,
-          avatar: customer.avatar,
-          city: customer.city!,
-          country: customer.country!,
-          email: customer.email,
-          full_name: customer.email,
-          phone: customer.phone!,
-        };
+      ordersIds = rows.map(({ original }) => {
+        const order = original as Order;
+        return order.id;
       });
     }
     toast.promise(
       (async () => {
-        setIsDeletingCustomer(true);
-        const { message, errorMessage } = await deleteCustomersAction(
-          customers
-        );
+        setIsDeletingOrder(true);
+        const { message, errorMessage } = await deleteOrdersAction(ordersIds);
         if (errorMessage) throw new Error(errorMessage);
         return message;
       })(),
       {
-        loading: "Deleting customers...",
-        success: "Customers deleted successfully!",
+        loading: "Deleting orders...",
+        success: "Orders deleted successfully!",
         error: (error) =>
-          error instanceof Error ? error.message : "Failed to delete customers",
+          error instanceof Error ? error.message : "Failed to delete orders",
         finally() {
-          setIsDeletingCustomer(false);
+          setIsDeletingOrder(false);
           router.refresh();
         },
         position: "top-center",
@@ -112,23 +106,22 @@ export function DataTable<TData, TValue>({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Input
-            placeholder="Filter customer name..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
+            placeholder="Search customers, IDs, status..."
+            value={table.getState().globalFilter ?? ""}
+            onChange={(event) => table.setGlobalFilter(event.target.value)}
             className="max-w-sm"
           />
+
           <div className="flex items-center gap-x-3">
             {table.getFilteredSelectedRowModel().rows.length > 0 && (
               <Button
                 aria-label="Delete Customers"
                 variant={"destructive"}
                 className="h-8 lg:flex"
-                onClick={() => onDeleteCustomer()}
-                disabled={isDeletingCustomer}
+                onClick={() => onDeleteOrder()}
+                disabled={isDeletingOrder}
               >
-                {isDeletingCustomer ? (
+                {isDeletingOrder ? (
                   <Loader2 className="size-4 animate-spin" />
                 ) : (
                   <Trash2 className="size-4" />

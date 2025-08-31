@@ -114,6 +114,7 @@ export function DataTable<TData, TValue>({
                 variant={"destructive"}
                 className="h-8 lg:flex"
                 onClick={() => onDeleteProduct()}
+                disabled={isDeletingProduct}
               >
                 {isDeletingProduct ? (
                   <Loader2 className="size-4 animate-spin" />

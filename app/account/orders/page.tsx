@@ -1,4 +1,5 @@
 import CreateOrderButton from "@/components/account/orders/create-order-button";
+import OrdersDataTable from "@/components/account/orders/tables/Orders";
 import { db } from "@/database";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
@@ -25,12 +26,26 @@ export default async function OrdersPage() {
     orderBy: (table) => desc(table.updated_at),
   });
 
-  const orders = await db.query.order.findMany({
+  const ordersData = await db.query.order.findMany({
     with: {
       customer: true,
+      items: true,
     },
     orderBy: (table) => desc(table.updated_at),
   });
+
+  const orders = ordersData.map((order) => ({
+    customer: order.customer,
+    id: order.id,
+    status: order.status,
+    total_amount: order.total_amount,
+    total_ordered_items: order.items.length,
+    items: order.items,
+    created_at: order.created_at.toISOString(),
+    updated_at: order.updated_at?.toISOString() || null,
+  }));
+
+  console.log("orders", orders);
 
   const products = await db.query.product.findMany({
     with: {
@@ -57,9 +72,7 @@ export default async function OrdersPage() {
         </div>
         <CreateOrderButton customers={customers} products={productData} />
       </div>
-      <p>
-        Total orders: {orders.length}
-      </p>
+      <OrdersDataTable orders={orders} />
     </div>
   );
 }
