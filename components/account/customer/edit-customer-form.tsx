@@ -15,33 +15,49 @@ import * as RPNInput from "react-phone-number-input";
 import PhoneFlag from "./phone/phone-flags";
 import CountrySelect from "./phone/country-select";
 import PhoneInput from "./phone/phone-input";
-import { customerFormSchema, CustomerFormValues } from "@/types/customers";
-import { CreateNewCustomerAction } from "@/app/account/customers/action";
-import { useState } from "react";
+import {
+  Customer,
+  customerFormSchema,
+  CustomerFormValues,
+} from "@/types/customers";
+import { UpdateNewCustomerAction } from "@/app/account/customers/action";
+import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useModal } from "@/hooks/use-modal-store";
 import { Loader2 } from "lucide-react";
+import isEqual from "lodash/isEqual";
 
-export default function EditCustomerForm() {
+interface Props {
+  customer: Customer;
+}
+
+export default function EditCustomerForm({ customer }: Props) {
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
   const router = useRouter();
   const { onClose } = useModal();
+
+  const defaultValues: CustomerFormValues = {
+    full_name: customer?.full_name || "",
+    email: customer?.email || "",
+    phone: customer?.phone || "",
+    avatar: customer?.avatar || "",
+    address: customer?.address || "",
+    city: customer?.city || "",
+    country: customer?.country || "",
+  };
+
   const form = useForm<CustomerFormValues>({
     resolver: zodResolver(customerFormSchema),
-    defaultValues: {
-      full_name: "",
-      email: "",
-      phone: "",
-      avatar: null,
-      address: "",
-      city: "",
-      country: "",
-    },
+    defaultValues,
   });
+
   async function onSubmit(values: CustomerFormValues) {
     setIsAddingCustomer(true);
-    const { message, errorMessage } = await CreateNewCustomerAction(values);
+    const { message, errorMessage } = await UpdateNewCustomerAction({
+      ...values,
+      id: customer.id,
+    });
     if (errorMessage) {
       setIsAddingCustomer(false);
       return toast.error(errorMessage, {
@@ -54,8 +70,14 @@ export default function EditCustomerForm() {
     });
     router.refresh();
     onClose();
-    form.reset();
+    form.reset(values);
   }
+
+  // check if form data changed compared to initial values
+  const isChanged = useMemo(() => {
+    return !isEqual(form.getValues(), defaultValues);
+  }, [form.watch(), defaultValues]);
+
   return (
     <Form {...form}>
       <form
@@ -188,9 +210,13 @@ export default function EditCustomerForm() {
             </FormItem>
           )}
         />
-        <Button disabled={isAddingCustomer} type="submit" className="w-full">
+        <Button
+          disabled={isAddingCustomer || !isChanged}
+          type="submit"
+          className="w-full"
+        >
           {isAddingCustomer && <Loader2 className="animate-spin" />}
-          Save Customer
+          Update Customer
         </Button>
       </form>
     </Form>

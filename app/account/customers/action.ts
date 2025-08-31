@@ -1,5 +1,5 @@
 "use server"
-import { db, tables } from "@/database";
+import { db, eq, tables } from "@/database";
 import { UserRole } from "@/database/schema";
 import { RefillingTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
@@ -7,13 +7,14 @@ import { getCurrentSession } from "@/lib/server/session";
 import { ActionResult } from "@/types";
 import { headers } from "next/headers";
 import { v2 as cloudinary } from "cloudinary";
-import { CustomerFormValues } from "@/types/customers";
+import { CustomerEditInfo, CustomerFormValues } from "@/types/customers";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
     api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
 });
+
 export async function CreateNewCustomerAction(
     data: CustomerFormValues
 ): Promise<ActionResult> {
@@ -53,6 +54,47 @@ export async function CreateNewCustomerAction(
         return { errorMessage: "Failed to create customer", message: null };
     }
 }
+
+export async function UpdateNewCustomerAction(
+    data: CustomerEditInfo
+): Promise<ActionResult> {
+    if (!(await globalPOSTRateLimit())) {
+        return { errorMessage: "Too many requests!", message: null };
+    }
+    const clientIP = (await headers()).get("X-Forwarded-For");
+    if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
+        return { errorMessage: "Too many requests!", message: null };
+    }
+    const { user } = await getCurrentSession();
+    if (user?.role !== UserRole.ADMIN) {
+        return { errorMessage: "Only admins can update customers info", message: null };
+    }
+    try {
+        if (clientIP !== null) ipBucket.consume(clientIP, 1);
+        let avatarUrl: string | null = null;
+        if (data.avatar instanceof File) {
+            avatarUrl = await uploadFileToCloudinary(data.avatar);
+        } else if (typeof data.avatar === "string") {
+            avatarUrl = data.avatar;
+        }
+        await db.update(tables.customer).set({
+            full_name: data.full_name,
+            email: data.email,
+            phone: data.phone,
+            avatar: avatarUrl,
+            address: data.address,
+            city: data.city,
+            country: data.country,
+        }).where(eq(tables.customer.id, data.id));
+        return { message: "Customer updated successfully", errorMessage: null };
+    } catch (error) {
+        if (error instanceof Error) {
+            return { errorMessage: error.message, message: null };
+        }
+        return { errorMessage: "Failed to update customer", message: null };
+    }
+}
+
 async function uploadFileToCloudinary(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(

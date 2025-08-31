@@ -10,12 +10,17 @@ import {
 import { useModal } from "@/hooks/use-modal-store";
 
 export default function EditCustomer() {
-  const { isOpen, onClose, type } = useModal();
+  const {
+    isOpen,
+    onClose,
+    type,
+    data: { customer },
+  } = useModal();
 
   const isModalOpen = isOpen && type === "editCustomer";
 
   return (
-    <Sheet open={isModalOpen} onOpenChange={() => onClose()}>
+    <Sheet open={isModalOpen} onOpenChange={onClose}>
       <SheetContent
         className="overflow-y-auto
   [&::-webkit-scrollbar]:w-2
@@ -32,7 +37,7 @@ export default function EditCustomer() {
             orders.
           </SheetDescription>
         </SheetHeader>
-        <EditCustomerForm />
+        <EditCustomerForm customer={customer} />
       </SheetContent>
     </Sheet>
   );

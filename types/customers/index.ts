@@ -28,6 +28,10 @@ export const customerFormSchema = z.object({
 });
 export type CustomerFormValues = z.infer<typeof customerFormSchema>;
 
+export type CustomerEditInfo = CustomerFormValues & {
+  id: string
+}
+
 export interface Customer {
   id: string;
   full_name: string;
