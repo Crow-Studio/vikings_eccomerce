@@ -4,15 +4,12 @@ import {
   Font,
   Head,
   Html,
-  Img,
   Tailwind,
   Text,
 } from "@react-email/components";
-
 interface VerificationCodeRequestMailProps {
   code: string;
 }
-
 export const VerificationCodeRequestMail: React.FC<
   Readonly<VerificationCodeRequestMailProps>
 > = ({ code }) => {
@@ -45,13 +42,6 @@ export const VerificationCodeRequestMail: React.FC<
         }}
       >
         <Container className="mx-auto max-w-[600px] px-4 py-8 font-roboto">
-          <Img
-            src="https://res.cloudinary.com/dfa1yoc1v/image/upload/v1732631847/wmmww1qiii7eiprbwphj.png"
-            alt="useOdama"
-            width="200"
-            height="60"
-            className="rounded-md mx-auto object-contain"
-          />
           <Text className="text-xl text-center font-semibold">
             The code below is only valid for 10 minutes.
           </Text>

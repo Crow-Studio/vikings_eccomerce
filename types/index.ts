@@ -2,16 +2,12 @@ import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFormRetu
 import { z } from "zod";
 import { addProductFormSchema, editProductFormSchema } from "./products/form";
 import { Category, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
-
-export type ModalType = "signoutUser" | "newCategory"
-
+export type ModalType = "signoutUser" | "newCategory" | "newCustomer"
 export interface ModalData { }
-
 export interface ActionResult {
   message: string | null;
   errorMessage: string | null;
 }
-
 export interface ModalStore {
   type: ModalType | null;
   isOpen: boolean;
@@ -19,7 +15,6 @@ export interface ModalStore {
   onOpen: (type: ModalType, data?: ModalData) => void;
   onClose: () => void;
 }
-
 export const formSchema = z.object({
   email: z.string().email({
     message: "Invalid email!",
@@ -28,7 +23,6 @@ export const formSchema = z.object({
     message: "Password too short! 8 characters minimum",
   }),
 });
-
 export const emailVerificationSchema = z.object({
   code: z
     .string()
@@ -39,7 +33,6 @@ export const emailVerificationSchema = z.object({
       message: "Code shouldn't be more than 8 characters.",
     }),
 });
-
 export interface VariantField {
   name: string;
   price: string;
@@ -64,7 +57,6 @@ export interface VariantField {
     inventory?: string | undefined;
   }[] | undefined;
 }
-
 export interface EditVariantField {
   name: string;
   price: string;
@@ -89,12 +81,10 @@ export interface EditVariantField {
     inventory?: string | undefined;
   }[] | undefined;
 }
-
 export interface VariantCombination {
   name: string;
   attributes: Record<string, string>;
 }
-
 export interface VariantsConfigurationsProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   hasVariants: boolean;
@@ -104,7 +94,6 @@ export interface VariantsConfigurationsProps {
   remove: UseFieldArrayRemove
   isAddingProduct: boolean;
 }
-
 export interface EditVariantsConfigurationsProps {
   form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
   hasVariants: boolean;
@@ -114,59 +103,49 @@ export interface EditVariantsConfigurationsProps {
   remove: UseFieldArrayRemove
   isUpdatingProduct: boolean;
 }
-
 export interface GeneralInformationProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   isAddingProduct: boolean
 }
-
 export interface EditGeneralInformationProps {
   form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
   isUpdatingProduct: boolean
 }
-
 export interface TagInputProps {
   tags: string[];
   onChange: (tags: string[]) => void;
   placeholder: string;
 }
-
 export interface CategorySelectorProps {
   value: string;
   onChange: (value: string) => void;
   categories: Category[]
   isAddingProduct: boolean
 }
-
 export interface EditCategorySelectorProps {
   value: string;
   onChange: (value: string) => void;
   categories: Category[]
   isUpdatingProduct: boolean
 }
-
 export interface ProductSettingsProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   categories: Category[]
   isAddingProduct: boolean
 }
-
 export interface EditProductSettingsProps {
   form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
   categories: Category[]
   isUpdatingProduct: boolean
 }
-
 export interface ProductImagesProps {
   form: UseFormReturn<z.infer<typeof addProductFormSchema>>;
   isAddingProduct: boolean;
 }
-
 export interface EditProductImagesProps {
   form: UseFormReturn<z.infer<typeof editProductFormSchema>>;
   isUpdatingProduct: boolean;
 }
-
 export interface ProcessedProductData {
   price: number;
   variants: {
@@ -196,7 +175,6 @@ export interface ProcessedProductData {
     inventory?: string | undefined;
   }[] | undefined;
 }
-
 export interface EditedProcessedProductData {
   id: string;
   price: number;
@@ -227,14 +205,12 @@ export interface EditedProcessedProductData {
     inventory?: string | undefined;
   }[] | undefined;
 }
-
-// Updated DBProduct to match the Product interface expected by your component
 export interface DBProduct {
   visibility: Visibility;
   id: string;
   name: string;
-  created_at: string; // Changed from Date to string
-  updated_at: string | null; // Changed from Date | null to string | null
+  created_at: string; 
+  updated_at: string | null; 
   price: string;
   description: string;
   category_id: string;
@@ -248,8 +224,6 @@ export interface DBProduct {
     generatedVariants: GeneratedVariants[];
   }[];
 }
-
-// Add a Product type that matches what your component expects
 export interface Product {
   id: string;
   name: string;
@@ -259,7 +233,7 @@ export interface Product {
   category_id: string;
   has_variants: boolean;
   created_at: string;
-  updated_at: string; // Changed to always be string, not null
+  updated_at: string; 
   category: Category;
   images: ProductImage[];
   variants: {

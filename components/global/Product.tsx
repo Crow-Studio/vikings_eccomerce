@@ -1,5 +1,4 @@
 "use client"
-
 import { cn } from "@/lib/utils"
 import { useState } from "react"
 import type * as React from "react"
@@ -25,26 +24,29 @@ interface ProductUIProps {
   showPagination?: boolean
 }
 
-// Helper function to check if product is new (within last 1 day)
 function isNewProduct(createdAt: Date): boolean {
   const now = new Date()
   const oneDayAgo = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
   return createdAt > oneDayAgo
 }
 
-// Individual Product Card Component
 function ProductCard({ product }: { product: DBProduct }) {
   const isNew = isNewProduct(new Date(product.created_at))
   const whatsappNumber = "+254729016371"
 
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
-    e.preventDefault() 
+    e.preventDefault()
     e.stopPropagation()
 
-    const message = `Hi! I'm interested in ordering:\n\n*${product.name}*\nPrice: KSh ${Number.parseFloat(product.price).toLocaleString()}\n\nPlease let me know about availability and delivery details.`
-    const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}?text=${encodeURIComponent(message)}`
-    
-    window.open(whatsappUrl, '_blank')
+    const message = `Hi! I'm interested in ordering:\n\n*${product.name}*\nPrice: KSh ${Number.parseFloat(
+      product.price
+    ).toLocaleString()}\n\nPlease let me know about availability and delivery details.`
+
+    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(
+      /[^0-9]/g,
+      ""
+    )}?text=${encodeURIComponent(message)}`
+    window.open(whatsappUrl, "_blank")
   }
 
   const handleViewDetails = (e: React.MouseEvent) => {
@@ -58,16 +60,24 @@ function ProductCard({ product }: { product: DBProduct }) {
           {/* New Badge */}
           {isNew && (
             <div className="absolute top-2 left-2 z-10">
-              <span className="bg-black text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">New</span>
+              <span className="bg-black text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
+                New
+              </span>
             </div>
           )}
+
           <Image
-            src={product.images[0]?.url || "/placeholder.svg?height=240&width=240&text=Product Image"}
-            alt={`${product.name.toLowerCase()}_${product.images[0]?.id}`}
+            src={
+              product.images[0]?.url ||
+              "/placeholder.svg?height=240&width=240&text=Product Image"
+            }
+            alt={`${product.name.toLowerCase()}_${product.images[0]?.id ?? "img"}`}
             fill
             className="object-contain transition-transform duration-300 group-hover:scale-110"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
+
+          {/* Hover actions */}
           <div className="absolute bottom-0 left-0 right-0 z-10 p-3 grid sm:group-hover:grid gap-y-1.5 sm:hidden transition-all duration-200">
             <button
               onClick={handleWhatsAppOrder}
@@ -85,6 +95,7 @@ function ProductCard({ product }: { product: DBProduct }) {
             </button>
           </div>
         </div>
+
         <div className="grid gap-y-1.5">
           <div className="text-sm font-medium group-hover:text-primary transition-colors duration-200">
             {product.name}
@@ -98,16 +109,15 @@ function ProductCard({ product }: { product: DBProduct }) {
   )
 }
 
-export default function ProductUI({ 
-  products, 
-  product, 
-  isLoading = false, 
+export default function ProductUI({
+  products,
+  product,
+  isLoading = false,
   itemsPerPage = 12,
-  showPagination = true 
+  showPagination = true,
 }: ProductUIProps) {
   const [currentPage, setCurrentPage] = useState(1)
 
-  // Handle single product case (original behavior)
   if (product && !products) {
     if (isLoading) {
       return <ProductSkeleton />
@@ -115,47 +125,30 @@ export default function ProductUI({
     return <ProductCard product={product} />
   }
 
-  // Handle multiple products case with pagination
   if (!products) {
     return <ProductSkeleton />
   }
 
-  // Calculate pagination values
   const totalPages = Math.ceil(products.length / itemsPerPage)
   const startIndex = (currentPage - 1) * itemsPerPage
   const endIndex = startIndex + itemsPerPage
   const currentProducts = products.slice(startIndex, endIndex)
 
-  // Generate page numbers for pagination
   const getPageNumbers = () => {
-    const pages = []
+    const pages: (number | "ellipsis")[] = []
     const maxVisiblePages = 2
 
     if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i)
-      }
+      for (let i = 1; i <= totalPages; i++) pages.push(i)
     } else {
       if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) {
-          pages.push(i)
-        }
-        pages.push('ellipsis')
-        pages.push(totalPages)
+        for (let i = 1; i <= 4; i++) pages.push(i)
+        pages.push("ellipsis", totalPages)
       } else if (currentPage >= totalPages - 2) {
-        pages.push(1)
-        pages.push('ellipsis')
-        for (let i = totalPages - 3; i <= totalPages; i++) {
-          pages.push(i)
-        }
+        pages.push(1, "ellipsis")
+        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i)
       } else {
-        pages.push(1)
-        pages.push('ellipsis')
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-          pages.push(i)
-        }
-        pages.push('ellipsis')
-        pages.push(totalPages)
+        pages.push(1, "ellipsis", currentPage - 1, currentPage, currentPage + 1, "ellipsis", totalPages)
       }
     }
 
@@ -164,14 +157,14 @@ export default function ProductUI({
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: "smooth" })
   }
 
   const pageNumbers = getPageNumbers()
 
   return (
     <div className="space-y-8">
-      {/* Products Grid */}
+      {/* Products grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {isLoading
           ? Array.from({ length: itemsPerPage }).map((_, index) => (
@@ -179,16 +172,14 @@ export default function ProductUI({
             ))
           : currentProducts.map((productItem) => (
               <ProductCard key={productItem.id} product={productItem} />
-            ))
-        }
+            ))}
       </div>
 
-      {/* Pagination - Only show if enabled and there are products and more than one page */}
+      {/* Pagination */}
       {!isLoading && showPagination && products.length > 0 && totalPages > 1 && (
         <div className="flex justify-center">
           <Pagination>
             <PaginationContent>
-              {/* Previous Button */}
               <PaginationItem>
                 <PaginationPrevious
                   onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
@@ -199,14 +190,13 @@ export default function ProductUI({
                 />
               </PaginationItem>
 
-              {/* Page Numbers */}
               {pageNumbers.map((page, index) => (
                 <PaginationItem key={index}>
-                  {page === 'ellipsis' ? (
+                  {page === "ellipsis" ? (
                     <PaginationEllipsis />
                   ) : (
                     <PaginationLink
-                      onClick={() => handlePageChange(page as number)}
+                      onClick={() => handlePageChange(page)}
                       isActive={currentPage === page}
                       className="cursor-pointer"
                     >
@@ -216,10 +206,11 @@ export default function ProductUI({
                 </PaginationItem>
               ))}
 
-              {/* Next Button */}
               <PaginationItem>
                 <PaginationNext
-                  onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                  onClick={() =>
+                    handlePageChange(Math.min(totalPages, currentPage + 1))
+                  }
                   className={cn(
                     "cursor-pointer",
                     currentPage === totalPages && "pointer-events-none opacity-50"
@@ -231,14 +222,15 @@ export default function ProductUI({
         </div>
       )}
 
-      {/* Results Info */}
+      {/* Pagination info */}
       {!isLoading && showPagination && products.length > 0 && (
         <div className="text-center text-sm text-muted-foreground">
-          Showing {startIndex + 1} to {Math.min(endIndex, products.length)} of {products.length} products
+          Showing {startIndex + 1} to {Math.min(endIndex, products.length)} of{" "}
+          {products.length} products
         </div>
       )}
 
-      {/* No products message */}
+      {/* Empty state */}
       {!isLoading && products.length === 0 && (
         <div className="text-center py-12">
           <p className="text-muted-foreground">No products found.</p>

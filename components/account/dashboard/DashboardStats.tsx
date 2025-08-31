@@ -1,10 +1,8 @@
 "use client";
-
 import { ShoppingBasket } from "@/components/svgs/ShoppingBasket";
 import { OrderStatus } from "@/database/schema";
 import { ShoppingBasketIcon, Users, Wallet } from "lucide-react";
 import { useState } from "react";
-
 interface Props {
   stats: {
     totalProducts: number;
@@ -29,7 +27,6 @@ interface Props {
     }[];
   };
 }
-
 export default function DashboardStats({ stats: dbStats }: Props) {
   const [stats] = useState([
     {
@@ -57,7 +54,6 @@ export default function DashboardStats({ stats: dbStats }: Props) {
       label: "revenue",
     },
   ]);
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8">
       {stats.map((stat, index) => (

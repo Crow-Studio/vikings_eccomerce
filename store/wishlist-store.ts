@@ -1,7 +1,6 @@
 import { create } from "zustand"
 import { persist, createJSONStorage } from "zustand/middleware"
-import type { WishlistItem } from "@/types/header" // Import the new WishlistItem type
-
+import type { WishlistItem } from "@/types/header" 
 interface WishlistState {
   items: WishlistItem[]
   addItem: (item: WishlistItem) => void
@@ -10,7 +9,6 @@ interface WishlistState {
   getTotalItems: () => number
   clearWishlist: () => void
 }
-
 export const useWishlistStore = create<WishlistState>()(
   persist(
     (set, get) => ({
@@ -20,7 +18,7 @@ export const useWishlistStore = create<WishlistState>()(
           if (!state.items.some((wishlistItem) => wishlistItem.id === item.id)) {
             return { items: [...state.items, item] }
           }
-          return state // Item already exists, do nothing
+          return state 
         })
       },
       removeItem: (id) => {

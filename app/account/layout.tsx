@@ -1,7 +1,6 @@
 import NavigationWrapper from "@/components/account/navigations/navigation-wrapper";
 import ModalProvider from "@/providers/modal-provider";
 import { Toaster } from "@/components/ui/sonner";
-
 export default function AccountLayout({
   children,
 }: Readonly<{

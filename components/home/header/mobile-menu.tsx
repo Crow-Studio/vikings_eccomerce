@@ -1,5 +1,4 @@
 "use client"
-
 import { memo } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -10,7 +9,6 @@ import { MobileMenuItem } from "./mobile-menu-item"
 import SolarMagniferOutline from "@/components/svgs/SolarMagniferOutline"
 import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon"
 import type { User } from "@/lib/server/user"
-
 interface MobileMenuProps {
   user: User | null
   isOpen: boolean
@@ -18,7 +16,6 @@ interface MobileMenuProps {
   onSearchOpen: () => void
   onMenuClose: () => void
 }
-
 export const MobileMenu = memo(
   ({
     user,
@@ -27,7 +24,6 @@ export const MobileMenu = memo(
     onSearchOpen,
     onMenuClose,
   }: MobileMenuProps) => {
-
     return (
     <div className="sm:hidden">
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -89,5 +85,4 @@ export const MobileMenu = memo(
     )
   },
 )
-
 MobileMenu.displayName = "MobileMenu"

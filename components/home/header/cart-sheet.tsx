@@ -5,7 +5,6 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose 
 import SolarCartLarge2Outline from "@/components/svgs/SolarCartLarge2Outline"
 import { CartItem } from "./cart-item"
 import { EmptyCart } from "./empty-cart"
-
 interface CartSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
@@ -15,7 +14,6 @@ interface CartSheetProps {
   onUpdateQuantity: (id: string, quantity: number) => void
   onRemoveItem: (id: string) => void
 }
-
 export const CartSheet = memo(
   ({ isOpen, onOpenChange, items, itemCount, cartTotal, onUpdateQuantity, onRemoveItem }: CartSheetProps) => (
     <Sheet open={isOpen} onOpenChange={onOpenChange}>
@@ -72,5 +70,4 @@ export const CartSheet = memo(
     </Sheet>
   ),
 )
-
 CartSheet.displayName = "CartSheet"

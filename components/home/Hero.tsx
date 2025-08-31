@@ -4,11 +4,9 @@ import Link from "next/link";
 import FeaturedProducts from "@/components/home/FeaturedProduct";
 import GrainOverlay from "@/components/global/GrainOverlay";
 import { DBProduct } from "@/types";
-
 interface VikingsHeroProps {
   products: DBProduct[];
 }
-
 const Button = ({
   children,
   className = "",
@@ -25,18 +23,16 @@ const Button = ({
     {children}
   </button>
 );
-
 export default function VikingsHero({ products }: VikingsHeroProps) {
   const featuredProducts = products.slice(0, 3);
-
   return (
     <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
       <GrainOverlay />
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Column - Hero Content */}
+          {}
           <div className="space-y-8 lg:space-y-12">
-            {/* Main Heading */}
+            {}
             <div className="space-y-4">
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight text-balance">
                 Kenya&apos;s trusted source for{" "}
@@ -52,8 +48,7 @@ export default function VikingsHero({ products }: VikingsHeroProps) {
                 Power Traders.
               </p>
             </div>
-
-            {/* Key Features */}
+            {}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex items-start gap-4 p-5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all duration-300 group">
                 <div className="flex-shrink-0 p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
@@ -68,7 +63,6 @@ export default function VikingsHero({ products }: VikingsHeroProps) {
                   </p>
                 </div>
               </div>
-
               <div className="flex items-start gap-4 p-5 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all duration-300 group">
                 <div className="flex-shrink-0 p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
                   <Truck className="w-5 h-5 text-primary" />
@@ -83,8 +77,7 @@ export default function VikingsHero({ products }: VikingsHeroProps) {
                 </div>
               </div>
             </div>
-
-            {/* CTA Button */}
+            {}
             <div className="pt-2">
               <Link href="/products">
                 <Button className="group relative overflow-hidden bg-primary hover:bg-primary/90 text-primary-foreground px-8 py-4 rounded-lg font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-0.5">
@@ -95,8 +88,7 @@ export default function VikingsHero({ products }: VikingsHeroProps) {
                 </Button>
               </Link>
             </div>
-
-            {/* Trust Indicators - Enhanced Layout */}
+            {}
             <div className="pt-6 border-t border-muted">
               <div className="grid grid-cols-3 gap-4 sm:gap-6">
                 <div className="text-center">
@@ -126,8 +118,7 @@ export default function VikingsHero({ products }: VikingsHeroProps) {
               </div>
             </div>
           </div>
-
-          {/* Right Column - Featured Products */}
+          {}
           <div className="space-y-6 lg:space-y-8">
             <div className="flex items-center justify-between">
               <h2 className="text-2xl lg:text-3xl font-bold text-foreground">
@@ -140,10 +131,8 @@ export default function VikingsHero({ products }: VikingsHeroProps) {
                 </button>
               </Link>
             </div>
-
             <FeaturedProducts featuredProducts={featuredProducts} />
-
-            {/* Quick Category Links */}
+            {}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
               <button className="p-5 bg-muted/30 hover:bg-muted/50 rounded-lg transition-all duration-300 text-left group">
                 <h4 className="font-semibold text-sm mb-2 group-hover:text-primary transition-colors">
@@ -153,7 +142,6 @@ export default function VikingsHero({ products }: VikingsHeroProps) {
                   Power tools & equipment
                 </p>
               </button>
-
               <button className="p-5 bg-muted/30 hover:bg-muted/50 rounded-lg transition-all duration-300 text-left group">
                 <h4 className="font-semibold text-sm mb-2 group-hover:text-primary transition-colors">
                   Agricultural

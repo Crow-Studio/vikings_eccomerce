@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,16 +16,13 @@ import { addNewProductAction } from "@/app/account/products/add/action";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-
 interface AddNewProductFormProps {
   categories: Category[];
 }
-
 export default function AddNewProductForm({
   categories,
 }: AddNewProductFormProps) {
   const router = useRouter();
-
   const form = useForm<z.infer<typeof addProductFormSchema>>({
     resolver: zodResolver(addProductFormSchema),
     defaultValues: {
@@ -41,19 +37,14 @@ export default function AddNewProductForm({
       generatedVariants: [],
     },
   });
-
   const [isAddingProduct, setIsAddingProduct] = useState(false);
-
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "variants",
   });
-
   const hasVariants = form.watch("hasVariants");
   const variants = form.watch("variants") || [];
-
   const variantCombinations = generateVariantCombinations(variants);
-
   useEffect(() => {
     if (hasVariants) {
       const newGeneratedVariants = variantCombinations.map((combo) => ({
@@ -66,7 +57,6 @@ export default function AddNewProductForm({
       form.setValue("generatedVariants", newGeneratedVariants);
     }
   }, [variantCombinations.length, hasVariants, form, variantCombinations]);
-
   async function onSubmit(values: z.infer<typeof addProductFormSchema>) {
     setIsAddingProduct(true);
     const processedData = {
@@ -100,26 +90,21 @@ export default function AddNewProductForm({
           })()
         : null,
     };
-
     const { message, errorMessage } = await addNewProductAction(processedData);
-
     if (errorMessage) {
       setIsAddingProduct(false);
       return toast.error(errorMessage, {
         position: "top-center",
       });
     }
-
     setIsAddingProduct(false);
     form.reset();
     toast.success(message, {
       position: "top-center",
     });
     router.refresh();
-
     return router.push("/account/products/all");
   }
-
   return (
     <Form {...form}>
       <div className="grid gap-5">

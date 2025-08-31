@@ -1,5 +1,4 @@
 "use client"
-
 import { memo } from "react"
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
@@ -7,12 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 import { IconButton } from "@/components/home/header/icon-button"
 import SolarMagniferOutline from "@/components/svgs/SolarMagniferOutline"
 import type { User } from "@/lib/server/user"
-
 interface DesktopActionsProps {
   user: User | null
   onSearchOpen: () => void
 }
-
 export const DesktopActions = memo(
   ({
     user,
@@ -22,7 +19,6 @@ export const DesktopActions = memo(
       <div className="hidden sm:flex items-center space-x-1 md:space-x-2">
         <TooltipProvider>
           <IconButton icon={SolarMagniferOutline} tooltip="Search (⌘K)" onClick={onSearchOpen} />
-
           <Link href="/products">
             <IconButton 
               icon={() => (
@@ -35,7 +31,6 @@ export const DesktopActions = memo(
           </Link>
         </TooltipProvider>
         <Separator orientation="vertical" className="h-4 mx-1 md:mx-2" />
-        
         {user && (
           <Link
             href="/account/dashboard"
@@ -48,5 +43,4 @@ export const DesktopActions = memo(
     )
   },
 )
-
 DesktopActions.displayName = "DesktopActions"

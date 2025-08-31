@@ -1,10 +1,8 @@
 "use client"
-
 import { memo } from "react"
 import { Button } from "@/components/ui/button"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 import type { IconButtonProps } from "@/types/header"
-
 export const IconButton = memo(({ icon: Icon, tooltip, onClick, badge }: IconButtonProps) => (
   <TooltipProvider>
     <Tooltip>
@@ -29,5 +27,4 @@ export const IconButton = memo(({ icon: Icon, tooltip, onClick, badge }: IconBut
     </Tooltip>
   </TooltipProvider>
 ))
-
 IconButton.displayName = "IconButton"

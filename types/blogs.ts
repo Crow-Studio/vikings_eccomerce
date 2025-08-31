@@ -22,17 +22,15 @@ export interface BlogPost {
   }>;
   published: boolean;
   featured: boolean;
-  reading_time: number; // in minutes
+  reading_time: number; 
   views: number;
   created_at: string;
   updated_at: string | null;
   published_at: string | null;
 }
-
 export interface BlogFilterState {
   categories: string[];
   tags: string[];
   authors: string[];
 }
-
 export type BlogSortBy = 'featured' | 'newest' | 'oldest' | 'most-viewed' | 'reading-time';

@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -16,12 +15,10 @@ const nextConfig: NextConfig = {
         pathname: "/dfa1yoc1v/**",
       },
     ],
-    
   },
    compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
   serverExternalPackages: ["@node-rs/argon2"],
 };
-
 export default nextConfig;

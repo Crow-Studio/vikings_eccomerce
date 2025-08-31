@@ -1,12 +1,10 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-
 interface BadgeProps {
   variant?: "default" | "primary" | "success" | "warning"
   className?: string
   children: React.ReactNode
 }
-
 export const Badge = React.memo(({ children, variant = "default", className = "" }: BadgeProps) => {
   const variants = {
     default: "bg-muted text-foreground",

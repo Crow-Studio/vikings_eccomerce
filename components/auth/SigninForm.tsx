@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,10 +21,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { redirect } from "next/navigation";
-
 export function SigninForm() {
   const [isAuthenticating, setIsAuthenticating] = useState(false);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,30 +30,24 @@ export function SigninForm() {
       password: "",
     },
   });
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsAuthenticating(true);
     try {
       const { message, errorMessage } = await signinAction(values);
-
       if (errorMessage) {
         return toast.error(errorMessage, {
           position: "top-center",
         });
       }
-
       form.reset();
-
       toast.success(message, {
         position: "top-center",
       });
-
       return redirect("/account/dashboard");
     } finally {
       setIsAuthenticating(false);
     }
   }
-
   return (
     <Card className="backdrop-blur">
       <CardHeader className="text-center">

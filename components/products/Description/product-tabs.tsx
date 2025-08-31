@@ -1,15 +1,12 @@
 "use client"
-
 import * as React from "react"
 import { TabButton } from "@/components/products/Description/tab-button"
 import type { Product } from "@/types/products"
-
 interface ProductTabsProps {
   product: Product
   selectedTab: string
   onTabChange: (tabId: string) => void
 }
-
 export const ProductTabs = React.memo(({ product, selectedTab, onTabChange }: ProductTabsProps) => (
   <div className="mb-12">
     <div className="border-b border-muted mb-6">

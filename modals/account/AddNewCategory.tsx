@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Dialog,
   DialogContent,
@@ -15,15 +14,12 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { createNewCategoryAction } from "@/app/account/products/add/action";
 import { useRouter } from "next/navigation";
-
 export default function AddNewCategory() {
   const { type, isOpen, onClose } = useModal();
   const [category, setCategory] = useState("");
   const [isAddingCategory, setIsAddingCategory] = useState(false);
   const router = useRouter();
-
   const isModalOpen = type === "newCategory" && isOpen;
-
   const onAddNewCategory = async () => {
     setIsAddingCategory(true);
     if (category.trim() === "") {
@@ -32,17 +28,13 @@ export default function AddNewCategory() {
         position: "top-center",
       });
     }
-
     const { message, errorMessage } = await createNewCategoryAction(category);
-
     if (errorMessage) {
       setIsAddingCategory(false);
-
       return toast.error(errorMessage, {
         position: "top-center",
       });
     }
-
     router.refresh();
     setCategory("");
     setIsAddingCategory(false);
@@ -51,7 +43,6 @@ export default function AddNewCategory() {
       position: "top-center",
     });
   };
-
   return (
     <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent>

@@ -1,5 +1,4 @@
 import { z } from "zod";
-
 export const addProductFormSchema = z.object({
   name: z
     .string()
@@ -46,7 +45,6 @@ export const addProductFormSchema = z.object({
     )
     .optional(),
 });
-
 export const editProductFormSchema = z.object({
   name: z
     .string()

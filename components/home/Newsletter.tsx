@@ -2,30 +2,23 @@
 import React, { useState } from 'react';
 import { MessageCircle, ArrowRight, CheckCircle, Gift, Zap, Bell, X } from 'lucide-react';
 import GrainOverlay from "@/components/global/GrainOverlay"
-
 const Newsletter = () => {
   const [, setPhoneNumber] = useState('');
   const [, setIsJoined] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-
   const handleJoinWhatsApp = async () => {
     setIsLoading(true);
-    
-    // Simulate joining process
     setTimeout(() => {
       setIsJoined(true);
       setShowSuccess(true);
       setIsLoading(false);
       setPhoneNumber('');
-      
-      // Hide success message after 5 seconds
       setTimeout(() => {
         setShowSuccess(false);
       }, 5000);
     }, 1000);
   };
-
   const benefits = [
     {
       icon: Gift,
@@ -43,22 +36,19 @@ const Newsletter = () => {
       description: "Get quick answers and professional advice from our team"
     }
   ];
-
   const stats = [
     { number: "2500+", label: "Members" },
     { number: "Daily", label: "Updates" },
     { number: "Instant", label: "Support" }
   ];
-
   return (
     <section className="relative py-16 lg:py-24 bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
-      {/* Grain Overlay */}
+      {}
       <GrainOverlay/>
       <div className="absolute inset-0 opacity-20 pointer-events-none">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent"></div>
       </div>
-      
-      {/* Success Toast */}
+      {}
       {showSuccess && (
         <div className="fixed top-4 right-4 z-50 bg-primary text-primary-foreground px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 animate-slide-in">
           <CheckCircle className="w-5 h-5" />
@@ -71,17 +61,15 @@ const Newsletter = () => {
           </button>
         </div>
       )}
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-          {/* Left Content */}
+          {}
           <div className="space-y-8">
             <div className="space-y-6">
               <div className="inline-flex items-center space-x-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium">
                 <MessageCircle className="w-4 h-4" />
                 <span>Join Our WhatsApp Community</span>
               </div>
-              
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight">
                 Get Instant Updates on{' '}
                 <span className="relative text-primary">
@@ -89,13 +77,11 @@ const Newsletter = () => {
                   <span className="absolute -bottom-2 left-0 w-full h-1 bg-primary/30 rounded-full"></span>
                 </span>
               </h2>
-              
               <p className="text-xl text-muted-foreground leading-relaxed">
                 Join over 2,500+ professionals in our WhatsApp community for instant deals, new arrivals, and expert advice from Vikings Kenya Power Traders.
               </p>
             </div>
-
-            {/* WhatsApp Join Section */}
+            {}
             <div className="bg-card/50 backdrop-blur-sm rounded-2xl p-8 border border-border">
               <div className="space-y-6">
                 <div className="text-center">
@@ -109,7 +95,6 @@ const Newsletter = () => {
                     Get instant updates, exclusive deals, and direct support
                   </p>
                 </div>
-                
                 <button
                   onClick={handleJoinWhatsApp}
                   disabled={isLoading}
@@ -125,7 +110,6 @@ const Newsletter = () => {
                     </>
                   )}
                 </button>
-                
                 <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
                   <div className="flex items-center space-x-1">
                     <CheckCircle className="w-4 h-4 text-primary" />
@@ -142,8 +126,7 @@ const Newsletter = () => {
                 </div>
               </div>
             </div>
-
-            {/* Stats */}
+            {}
             <div className="grid grid-cols-3 gap-6">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
@@ -157,8 +140,7 @@ const Newsletter = () => {
               ))}
             </div>
           </div>
-
-          {/* Right Content - Benefits */}
+          {}
           <div className="space-y-8">
             <div className="text-center lg:text-left">
               <h3 className="text-2xl lg:text-3xl font-bold text-foreground mb-4">
@@ -168,7 +150,6 @@ const Newsletter = () => {
                 Connect with thousands of professionals and get instant updates on your phone.
               </p>
             </div>
-
             <div className="space-y-6">
               {benefits.map((benefit, index) => (
                 <div 
@@ -191,8 +172,7 @@ const Newsletter = () => {
                 </div>
               ))}
             </div>
-
-            {/* Trust Badge */}
+            {}
             <div className="bg-gradient-to-r from-primary/20 to-primary/10 rounded-2xl p-6 border border-primary/30">
               <div className="flex items-center space-x-4">
                 <div className="p-3 bg-primary rounded-xl">
@@ -214,5 +194,4 @@ const Newsletter = () => {
     </section>
   );
 };
-
 export default Newsletter;

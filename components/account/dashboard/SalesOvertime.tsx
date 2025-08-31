@@ -1,7 +1,5 @@
 "use client";
-
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -15,9 +13,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
 export const description = "A line chart";
-
 const allMonths = [
   "January",
   "February",
@@ -32,23 +28,19 @@ const allMonths = [
   "November",
   "December",
 ];
-
 const chartConfig = {
   sales: {
     label: "Sales",
     color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
-
 type SalesData = {
   month: string;
   sales?: number;
 };
-
 interface SalesOvertimeProps {
   salesData: SalesData[];
 }
-
 export function SalesOvertime({ salesData }: SalesOvertimeProps) {
   const normalizedData = allMonths.map((month) => {
     const found = salesData.find((d) => d.month === month);
@@ -57,7 +49,6 @@ export function SalesOvertime({ salesData }: SalesOvertimeProps) {
       sales: found ? found.sales : null,
     };
   });
-
   return (
     <Card className="h-fit w-full">
       <CardHeader>
@@ -91,7 +82,7 @@ export function SalesOvertime({ salesData }: SalesOvertimeProps) {
               stroke="var(--color-sales)"
               strokeWidth={2}
               dot={false}
-              connectNulls={false} // ensures gaps for null months
+              connectNulls={false} 
             />
           </LineChart>
         </ChartContainer>

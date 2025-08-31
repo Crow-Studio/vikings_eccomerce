@@ -11,19 +11,15 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
 import { deleteProductAction } from "@/app/account/products/add/action";
-
 interface Props {
   product: DBProduct;
 }
-
 export default function DataTableActions({ product }: Props) {
   const router = useRouter();
   const [isDeletingProduct, setIsDeletingProduct] = useState(false);
-
   const onEditProduct = async () => {
     return router.push(`/account/products/${product.id}/edit`);
   };
-  
   const onDeleteProduct = async () => {
     toast.promise(
       (async () => {
@@ -47,7 +43,6 @@ export default function DataTableActions({ product }: Props) {
       }
     );
   };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

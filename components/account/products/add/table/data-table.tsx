@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import {
   ColumnDef,
@@ -30,12 +29,10 @@ import { toast } from "sonner";
 import { DBProduct } from "@/types";
 import { useRouter } from "next/navigation";
 import { deleteProductAction } from "@/app/account/products/add/action";
-
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -43,16 +40,12 @@ export function DataTable<TData, TValue>({
   const router = useRouter();
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [isDeletingProduct, setIsDeletingProduct] = React.useState(false);
-
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-
   const [rowSelection, setRowSelection] = React.useState({});
-
   const table = useReactTable({
     data,
     columns,
@@ -71,12 +64,9 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
   });
-
   const onDeleteProduct = async () => {
     const rows = table.getFilteredSelectedRowModel().rows;
-
     let selectedProductsIds: string[] = [];
-
     if (rows.length > 0) {
       selectedProductsIds = rows.map(({ original }) => {
         const product = original as DBProduct;
@@ -105,7 +95,6 @@ export function DataTable<TData, TValue>({
       }
     );
   };
-
   return (
     <div className="space-y-4">
       <div className="space-y-4">
@@ -118,7 +107,6 @@ export function DataTable<TData, TValue>({
             }
             className="max-w-sm"
           />
-
           <div className="flex items-center gap-x-3">
             {table.getFilteredSelectedRowModel().rows.length > 0 && (
               <Button

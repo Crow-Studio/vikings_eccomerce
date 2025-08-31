@@ -1,5 +1,4 @@
 "use server"
-
 import { db, eq, tables } from "@/database";
 import { UserRole, Visibility } from "@/database/schema";
 import { RefillingTokenBucket } from "@/lib/server/rate-limit";
@@ -9,15 +8,12 @@ import { ActionResult, EditedProcessedProductData, ProcessedProductData } from "
 import { headers } from "next/headers";
 import { v2 as cloudinary } from "cloudinary";
 import { inArray } from "drizzle-orm";
-
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
-
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
   api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
 })
-
 export async function createNewCategoryAction(category: string): Promise<ActionResult> {
   if (!(await globalPOSTRateLimit())) {
     return {
@@ -25,7 +21,6 @@ export async function createNewCategoryAction(category: string): Promise<ActionR
       message: null,
     };
   }
-
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return {
@@ -33,32 +28,26 @@ export async function createNewCategoryAction(category: string): Promise<ActionR
       message: null,
     };
   }
-
   if (!category || category.trim() === "") {
     return {
       errorMessage: "Category name cannot be empty",
       message: null,
     };
   }
-
   const { user } = await getCurrentSession();
-
   if (user?.role !== UserRole.ADMIN) {
     return {
       errorMessage: "Only admins can create categories",
       message: null,
     };
   }
-
   try {
     await db.insert(tables.category).values({
       name: category.trim(),
     });
-
     if (clientIP !== null) {
       ipBucket.consume(clientIP, 1);
     }
-
     return {
       message: 'Category added successfully',
       errorMessage: null,
@@ -70,14 +59,12 @@ export async function createNewCategoryAction(category: string): Promise<ActionR
         message: null,
       }
     }
-
     return {
       errorMessage: "Failed to create category",
       message: null,
     };
   }
 }
-
 export async function addNewProductAction(data: ProcessedProductData): Promise<ActionResult> {
   if (!(await globalPOSTRateLimit())) {
     return {
@@ -85,7 +72,6 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
       message: null,
     };
   }
-
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return {
@@ -93,7 +79,6 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
       message: null,
     };
   }
-
   const { user } = await getCurrentSession();
   if (user?.role !== UserRole.ADMIN) {
     return {
@@ -101,24 +86,18 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
       message: null,
     };
   }
-
   let createdProductId: string | null = null;
-
   try {
     if (clientIP !== null) {
       ipBucket.consume(clientIP, 1);
     }
-
     const price = data.price ? parseFloat(data.price.toString()) : 0;
-
     if (isNaN(price) || price < 0) {
       return {
         errorMessage: "Invalid price",
         message: null,
       };
     }
-
-    // add new product to the database
     const [product] = await db.insert(tables.product).values({
       name: data.name,
       price: "" + price.toFixed(2),
@@ -127,26 +106,19 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
       visibility: data.visibility === "active" ? Visibility.ACTIVE : Visibility.INACTIVE,
       has_variants: data.hasVariants
     }).returning();
-
     createdProductId = product.id;
-
-    // create variants and generated variants if they exist
     if (data.hasVariants && Array.isArray(data.variants)) {
       const variantsData = data.variants.map(variant => ({
         product_id: product.id,
         title: variant.title,
       }));
-
       const insertedVariants = await db
         .insert(tables.variants)
         .values(variantsData)
         .returning();
-
       const generatedVariantsData = insertedVariants.flatMap(variant => {
         const matchingInput = data.variants!.find(v => v.title === variant.title);
-
         if (!matchingInput || !Array.isArray(matchingInput.values)) return [];
-
         return matchingInput.values.map(value => ({
           variant_id: variant.id,
           name: value.name,
@@ -155,13 +127,10 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
           inventory: value.inventory ?? 0,
         }));
       });
-
       if (generatedVariantsData.length > 0) {
         await db.insert(tables.generatedVariants).values(generatedVariantsData);
       }
     }
-
-    // handle image uploads
     if (Array.isArray(data.images) && data.images.length > 0) {
       const imageUrls = await Promise.all(
         data.images.map(
@@ -176,7 +145,6 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
                   resolve(result.secure_url);
                 }
               );
-
               image.file.arrayBuffer()
                 .then((arrayBuffer) => {
                   const buffer = Buffer.from(arrayBuffer);
@@ -186,21 +154,17 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
             })
         )
       );
-
       const imageData = imageUrls.map((url) => ({
         product_id: product.id,
         url,
       }));
-
       await db.insert(tables.images).values(imageData);
     }
-
     return {
       message: 'Product added successfully',
       errorMessage: null,
     };
   } catch (error) {
-    // Delete the product if it was created
     if (createdProductId !== null) {
       try {
         await db.delete(tables.product).where(eq(tables.product.id, createdProductId));
@@ -208,45 +172,36 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
         console.error('Error during cleanup:', cleanupError);
       }
     }
-
     if (error instanceof Error) {
       return {
         errorMessage: error.message,
         message: null,
       };
     }
-
     return {
       errorMessage: "Failed to add product",
       message: null,
     };
   }
 }
-
 export async function editProductAction(data: EditedProcessedProductData): Promise<ActionResult> {
   if (!(await globalPOSTRateLimit())) {
     return { errorMessage: "Too many requests!", message: null }
   }
-
   const clientIP = (await headers()).get("X-Forwarded-For")
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return { errorMessage: "Too many requests!", message: null }
   }
-
   const { user } = await getCurrentSession()
   if (user?.role !== UserRole.ADMIN) {
     return { errorMessage: "Only admins can edit products", message: null }
   }
-
   try {
     if (clientIP !== null) ipBucket.consume(clientIP, 1)
-
     const priceNum = Number.isFinite(data.price) ? Number(data.price) : NaN
     if (isNaN(priceNum) || priceNum < 0) {
       return { errorMessage: "Invalid price", message: null }
     }
-
-    // upload helper
     const uploadCloudinaryBuffer = (file: File) =>
       new Promise<string>((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -260,7 +215,6 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
           .then(buf => stream.end(Buffer.from(buf)))
           .catch(reject)
       })
-
     await db.transaction(async tx => {
       await tx.update(tables.product)
         .set({
@@ -272,19 +226,14 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
           has_variants: data.hasVariants,
         })
         .where(eq(tables.product.id, data.id))
-
-      // variants
       if (data.hasVariants) {
         await tx.delete(tables.variants).where(eq(tables.variants.product_id, data.id))
-
         if (Array.isArray(data.variants) && data.variants.length > 0) {
           const toInsert = data.variants.map(v => ({
             product_id: data.id,
             title: v.title,
           }))
-
           const inserted = await tx.insert(tables.variants).values(toInsert).returning({ id: tables.variants.id, title: tables.variants.title })
-
           const genRows = inserted.flatMap(iv => {
             const src = data.variants!.find(v => v.title === iv.title)
             if (!src) return []
@@ -296,7 +245,6 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
               inventory: Number.isFinite(val.inventory) ? val.inventory : 0,
             }))
           })
-
           if (genRows.length > 0) {
             await tx.insert(tables.generatedVariants).values(genRows)
           }
@@ -304,16 +252,12 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
       } else {
         await tx.delete(tables.variants).where(eq(tables.variants.product_id, data.id))
       }
-
-      // images
       if (Array.isArray(data.images)) {
         const current = await tx.select({ id: tables.images.id, url: tables.images.url })
           .from(tables.images)
           .where(eq(tables.images.product_id, data.id))
-
         const currentById = new Map(current.map(i => [i.id, i]))
         const currentByUrl = new Map(current.map(i => [i.url, i]))
-
         const keepIds = new Set<string>()
         for (const img of data.images) {
           if (!img.file) {
@@ -324,14 +268,10 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
             }
           }
         }
-
-        // delete removed images only, do not blanket delete
         const toDelete = current.filter(i => !keepIds.has(i.id))
         if (toDelete.length > 0) {
           await tx.delete(tables.images).where(inArray(tables.images.id, toDelete.map(i => i.id)))
         }
-
-        // upload new ones, those with a File
         const newFiles = data.images.filter(i => i.file instanceof File)
         if (newFiles.length > 0) {
           const urls = await Promise.all(newFiles.map(i => uploadCloudinaryBuffer(i.file!)))
@@ -340,7 +280,6 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
         }
       }
     })
-
     return { message: "Product updated successfully", errorMessage: null }
   } catch (error) {
     if (error instanceof Error) {
@@ -349,36 +288,27 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
     return { errorMessage: "Failed to update product", message: null }
   }
 }
-
 export async function deleteProductAction(productIds: string[]): Promise<ActionResult> {
   if (!(await globalPOSTRateLimit())) {
     return { errorMessage: "Too many requests!", message: null }
   }
-
   const clientIP = (await headers()).get("X-Forwarded-For")
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return { errorMessage: "Too many requests!", message: null }
   }
-
   const { user } = await getCurrentSession()
   if (user?.role !== UserRole.ADMIN) {
     return { errorMessage: "Only admins can delete products", message: null }
   }
-
   try {
     if (clientIP !== null) ipBucket.consume(clientIP, 1)
-
-    // fetch image urls before deleting products
     const imagesToDelete = await db
       .select({ url: tables.images.url })
       .from(tables.images)
       .where(inArray(tables.images.product_id, productIds))
-
     await db.transaction(async tx => {
       await tx.delete(tables.product).where(inArray(tables.product.id, productIds))
     })
-
-    // remove from Cloudinary after db delete
     if (imagesToDelete.length > 0) {
       await Promise.all(
         imagesToDelete.map(async img => {
@@ -392,7 +322,6 @@ export async function deleteProductAction(productIds: string[]): Promise<ActionR
         })
       )
     }
-
     return { message: "Products deleted successfully", errorMessage: null }
   } catch (error) {
     if (error instanceof Error) {
@@ -401,13 +330,11 @@ export async function deleteProductAction(productIds: string[]): Promise<ActionR
     return { errorMessage: "Failed to delete products", message: null }
   }
 }
-
-// helper to get Cloudinary public_id from secure_url
 function extractPublicId(url: string): string | null {
   try {
     const parts = url.split("/")
     const filename = parts[parts.length - 1]
-    return filename.split(".")[0] // remove extension
+    return filename.split(".")[0] 
   } catch {
     return null
   }

@@ -1,6 +1,5 @@
 import { db, eq, tables } from "@/database";
 import { UserRole } from "@/database/schema";
-
 export async function createUser(
   email: string,
   username: string,
@@ -21,11 +20,9 @@ export async function createUser(
       password,
     })
     .returning();
-
   if (row === null) {
     throw new Error("Failed to create new user!");
   }
-
   const user: User = {
     id: row.id,
     avatar: row.avatar,
@@ -34,21 +31,17 @@ export async function createUser(
     username: row.username,
     email_verified: row.email_verified,
   };
-
   return user;
 }
-
 export async function getUserPasswordHash(user_id: string): Promise<string> {
   const user = await db.query.user.findFirst({
     where: (table) => eq(table.id, user_id),
   });
-
   if (!user) {
     throw new Error("Invalid user ID");
   }
   return user.password!;
 }
-
 export async function updateUserEmailAndSetEmailAsVerified(
   user_id: string
 ): Promise<void> {
@@ -60,7 +53,6 @@ export async function updateUserEmailAndSetEmailAsVerified(
     })
     .where(eq(tables.user.id, user_id));
 }
-
 export interface User {
   id: string;
   role: UserRole;

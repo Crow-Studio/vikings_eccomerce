@@ -1,15 +1,12 @@
 "use client"
-
 import * as React from "react"
 import { cn } from "@/lib/utils"
-
 interface TabButtonProps {
   id: string
   label: string
   isActive: boolean
   onClick: (id: string) => void
 }
-
 export const TabButton = React.memo(({ id, label, isActive, onClick }: TabButtonProps) => (
   <button
     onClick={() => onClick(id)}

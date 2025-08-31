@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/form";
 import { ProductImagesProps } from "@/types";
 import ImageUpload from "./ImageUpload";
-
 export default function ProductImages({ form, isAddingProduct }: ProductImagesProps) {
   return (
     <Card>

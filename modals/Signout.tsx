@@ -1,5 +1,4 @@
 "use client";
-
 import { useModal } from "@/hooks/use-modal-store";
 import React, { useState } from "react";
 import {
@@ -14,17 +13,14 @@ import { Button } from "@/components/ui/button";
 import { signoutAction } from "@/app/account/action";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-
 export default function Signout() {
   const { isOpen, onClose, type } = useModal();
   const [isSigningOut, setIsSigningout] = useState(false);
   const isModalOpen = isOpen && type === "signoutUser";
-
   const onSignoutUser = async () => {
     setIsSigningout(true);
     try {
       const { errorMessage } = await signoutAction();
-
       if (errorMessage) {
         return toast.error(errorMessage, {
           position: "top-center",
@@ -35,7 +31,6 @@ export default function Signout() {
       setIsSigningout(false);
     }
   };
-
   return (
     <Dialog
       open={isModalOpen}

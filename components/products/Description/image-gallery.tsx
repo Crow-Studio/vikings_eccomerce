@@ -1,23 +1,19 @@
 "use client"
-
 import * as React from "react"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
-
 interface ImageGalleryProps {
   images?: string[]
   currentIndex: number
   onImageChange: (index: number) => void
 }
-
 export const ImageGallery = React.memo(({ images = [], currentIndex, onImageChange }: ImageGalleryProps) => {
-  const imageArray = images.length > 0 ? images : ["/placeholder.svg?height=600&width=600"] // Fallback placeholder
-
+  const imageArray = images.length > 0 ? images : ["/placeholder.svg?height=600&width=600"] 
   return (
     <div className="space-y-4">
       <div className="relative w-full aspect-square bg-muted/30 rounded-xl overflow-hidden group">
-        {/* Main Image Display */}
+        {}
         <Image
           src={imageArray[currentIndex] || "/placeholder.svg"}
           alt="Product Image"

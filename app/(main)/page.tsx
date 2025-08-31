@@ -4,7 +4,6 @@ import WhyChooseUs from "@/components/home/WhyChooseUs";
 import Newsletter from "@/components/home/Newsletter";
 import { db } from "@/database";
 import { desc } from "drizzle-orm";
-
 export default async function Home() {
   const rawProducts = await db.query.product.findMany({
     with: {
@@ -18,13 +17,11 @@ export default async function Home() {
     },
     orderBy: table => desc(table.created_at)
   });
-
   const products = rawProducts.map(product => ({
     ...product,
     created_at: product.created_at.toISOString(),
     updated_at: product.updated_at?.toISOString() || null
   }));
-
   return (
     <main>
       <Hero products={products} />

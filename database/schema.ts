@@ -11,23 +11,17 @@ import {
   integer
 } from "drizzle-orm/pg-core"
 import { customAlphabet } from 'nanoid'
-
 export const generateNanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz-', 12)
-
 export function enumToPgEnum<T extends Record<string, string>>(myEnum: T): [T[keyof T], ...T[keyof T][]] {
   return Object.values(myEnum) as [T[keyof T], ...T[keyof T][]]
 }
-
-// Enums
 export enum UserRole {
   ADMIN = 'admin',
 }
-
 export enum Visibility {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
 }
-
 export enum OrderStatus {
   PENDING = 'pending',
   PROCESSING = 'processing',
@@ -35,12 +29,9 @@ export enum OrderStatus {
   DELIVERED = 'delivered',
   CANCELLED = 'cancelled',
 }
-
 export const userRoleEnum = pgEnum('user_role', enumToPgEnum(UserRole))
 export const visibilityEnum = pgEnum("visibility", enumToPgEnum(Visibility))
 export const orderStatusEnum = pgEnum("order_status", enumToPgEnum(OrderStatus))
-
-// Users (Admins / Staff)
 export const user = pgTable(
   "user",
   {
@@ -58,15 +49,11 @@ export const user = pgTable(
     emailIndex: index("email_index").on(table.email),
   })
 )
-
-// Categories
 export const category = pgTable('category', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   name: varchar('name', { length: 50 }).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
 })
-
-// Products
 export const product = pgTable('products', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   name: varchar('name', { length: 60 }).notNull(),
@@ -78,8 +65,6 @@ export const product = pgTable('products', {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// Product Images
 export const images = pgTable('images', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   product_id: text("product_id").notNull().references(() => product.id, { onDelete: "cascade" }),
@@ -87,8 +72,6 @@ export const images = pgTable('images', {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// Variants
 export const variants = pgTable('variants', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   product_id: text("product_id").notNull().references(() => product.id, { onDelete: "cascade" }),
@@ -96,7 +79,6 @@ export const variants = pgTable('variants', {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
 export const generatedVariants = pgTable('generated_variants', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   variant_id: text("variant_id").notNull().references(() => variants.id, { onDelete: "cascade" }),
@@ -107,8 +89,6 @@ export const generatedVariants = pgTable('generated_variants', {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// Customers
 export const customer = pgTable('customer', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   full_name: varchar("full_name", { length: 255 }).notNull(),
@@ -121,8 +101,6 @@ export const customer = pgTable('customer', {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// Orders
 export const order = pgTable('order', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   customer_id: text("customer_id").notNull().references(() => customer.id, { onDelete: "cascade" }),
@@ -131,8 +109,6 @@ export const order = pgTable('order', {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// Order Items
 export const orderItem = pgTable('order_item', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   order_id: text("order_id").notNull().references(() => order.id, { onDelete: "cascade" }),
@@ -142,8 +118,6 @@ export const orderItem = pgTable('order_item', {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// OAuth
 export const oauth_account = pgTable("oauth_account", {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   user_id: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
@@ -152,8 +126,6 @@ export const oauth_account = pgTable("oauth_account", {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// Email Verification
 export const email_verification_request_table = pgTable("email_verification_request", {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
   email: text("email").notNull(),
@@ -163,8 +135,6 @@ export const email_verification_request_table = pgTable("email_verification_requ
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-// Sessions
 export const session = pgTable("session", {
   id: varchar("id", { length: 255 }).primaryKey(),
   user_id: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
@@ -172,65 +142,50 @@ export const session = pgTable("session", {
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
 })
-
-/* ------------------- RELATIONS ------------------- */
 export const userRelations = relations(user, ({ many }) => ({
   oauth_accounts: many(oauth_account),
   email_verification_requests: many(email_verification_request_table),
   sessions: many(session),
 }))
-
 export const imageRelations = relations(images, ({ one }) => ({
   product: one(product, { fields: [images.product_id], references: [product.id] }),
 }))
-
 export const variantRelations = relations(variants, ({ one, many }) => ({
   product: one(product, { fields: [variants.product_id], references: [product.id] }),
   generatedVariants: many(generatedVariants),
 }))
-
 export const generatedVariantRelations = relations(generatedVariants, ({ one }) => ({
   variant: one(variants, { fields: [generatedVariants.variant_id], references: [variants.id] }),
 }))
-
 export const oauthAccountRelations = relations(oauth_account, ({ one }) => ({
   user: one(user, { fields: [oauth_account.user_id], references: [user.id] }),
 }))
-
 export const emailVerificationRequestRelations = relations(email_verification_request_table, ({ one }) => ({
   user: one(user, { fields: [email_verification_request_table.user_id], references: [user.id] }),
 }))
-
 export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, { fields: [session.user_id], references: [user.id] }),
 }))
-
 export const customerRelations = relations(customer, ({ many }) => ({
   orders: many(order)
 }))
-
 export const orderRelations = relations(order, ({ one, many }) => ({
   customer: one(customer, { fields: [order.customer_id], references: [customer.id] }),
   items: many(orderItem)
 }))
-
 export const orderItemRelations = relations(orderItem, ({ one }) => ({
   order: one(order, { fields: [orderItem.order_id], references: [order.id] }),
   product: one(product, { fields: [orderItem.product_id], references: [product.id] })
 }))
-
 export const categoryRelations = relations(category, ({ many }) => ({
   products: many(product),
 }))
-
 export const productRelations = relations(product, ({ one, many }) => ({
   category: one(category, { fields: [product.category_id], references: [category.id] }),
   images: many(images),
   variants: many(variants),
   order_items: many(orderItem)
 }))
-
-/* ------------------- TYPES ------------------- */
 export type User = InferSelectModel<typeof user>
 export type Customer = InferSelectModel<typeof customer>
 export type Order = InferSelectModel<typeof order>

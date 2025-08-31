@@ -3,15 +3,12 @@ import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { Product } from "@/types/products" // Updated import to use unified types
-
+import type { Product } from "@/types/products" 
 interface RelatedProductsSectionProps {
   relatedProducts: Product[]
 }
-
 export const RelatedProductsSection = React.memo(({ relatedProducts }: RelatedProductsSectionProps) => {
   if (relatedProducts.length === 0) return null
-
   return (
     <div>
       <div className="flex items-center justify-between mb-8">
@@ -53,5 +50,4 @@ export const RelatedProductsSection = React.memo(({ relatedProducts }: RelatedPr
     </div>
   )
 })
-
 RelatedProductsSection.displayName = "RelatedProductsSection"

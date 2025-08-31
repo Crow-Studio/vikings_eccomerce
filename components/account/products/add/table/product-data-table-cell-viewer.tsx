@@ -1,6 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DBProduct } from "@/types";
-
 interface ProductDataTableCellViewerProps {
   item: DBProduct;
 }

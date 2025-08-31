@@ -3,24 +3,20 @@ export interface ProductImage {
   url: string
   alt: string
 }
-
 export interface ProductCategory{
   id: string
   name: string
 }
-
 export interface ProductVariantGenerated {
   id: string
-  name: string // Human-readable name (e.g., "Small", "Red")
-  value: string // Actual value (e.g., "S", "#FF0000")
+  name: string 
+  value: string 
 }
-
 export interface ProductVariant {
   id: string
-  title: string // e.g., "Size", "Color"
+  title: string 
   generatedVariants: ProductVariantGenerated[]
 }
-
 export interface Product {
   id: string
   name: string

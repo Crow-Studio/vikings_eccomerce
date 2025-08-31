@@ -4,42 +4,32 @@ import { Search, X, Clock, ArrowRight, Loader2 } from "lucide-react";
 import { useSearch } from "@/hooks/use-search";
 import Link from "next/link";
 import Image from "next/image";
-
 interface MegaSearchProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const searchInputRef = useRef<HTMLInputElement>(null);
-  
   const { searchResults, isLoading, total, error, searchProducts, clearSearch } = useSearch();
-
   const popularCategories = [
     { name: "Power Tools", count: "150+ items", href: "/products?category=power-tools" },
     { name: "Garden Tools", count: "80+ items", href: "/products?category=garden-tools" },
     { name: "Generators", count: "25+ items", href: "/products?category=generators" },
     { name: "Safety Equipment", count: "40+ items", href: "/products?category=safety" },
   ];
-
-  // Load recent searches from localStorage
   useEffect(() => {
     const saved = localStorage.getItem('recentSearches');
     if (saved) {
       setRecentSearches(JSON.parse(saved).slice(0, 5));
     }
   }, []);
-
-  // Focus search input when opened
   useEffect(() => {
     if (isOpen && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [isOpen]);
-
-  // Handle search
   useEffect(() => {
     if (searchQuery.trim()) {
       searchProducts(searchQuery);
@@ -47,50 +37,40 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
       clearSearch();
     }
   }, [searchQuery, searchProducts, clearSearch]);
-
-  // Save search to recent searches
   const saveToRecentSearches = (query: string) => {
     const updated = [query, ...recentSearches.filter(s => s !== query)].slice(0, 5);
     setRecentSearches(updated);
     localStorage.setItem('recentSearches', JSON.stringify(updated));
   };
-
-  // Handle escape key and body scroll
   useEffect(() => {
     interface KeyboardEvent {
       key: string;
     }
-
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
       }
     };
-
     if (isOpen) {
       document.addEventListener("keydown", handleEscape);
       document.body.style.overflow = "hidden";
     }
-
     return () => {
       document.removeEventListener("keydown", handleEscape);
       document.body.style.overflow = "unset";
     };
   }, [isOpen, onClose]);
-
   if (!isOpen) return null;
-
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 sm:pt-20">
-      {/* Backdrop with blur */}
+      {}
       <div 
         className="absolute inset-0 bg-black/20 backdrop-blur-md transition-opacity duration-300"
         onClick={onClose}
       />
-      
-      {/* Search Container */}
+      {}
       <div className="relative w-full max-w-4xl mx-3 sm:mx-4 bg-background/95 backdrop-blur-md dark:bg-background/95 rounded-2xl shadow-2xl border border-border max-h-[85vh] sm:max-h-[80vh] overflow-hidden animate-in slide-in-from-top-4 duration-300">
-        {/* Search Header */}
+        {}
         <div className="p-4 sm:p-6 border-b border-border">
           <div className="flex items-center gap-3 sm:gap-4">
             <div className="relative flex-1">
@@ -120,11 +100,9 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
             </button>
           </div>
         </div>
-
-        {/* Search Content */}
+        {}
         <div className="overflow-y-auto max-h-[calc(85vh-100px)] sm:max-h-[calc(80vh-120px)]">
           {searchQuery.trim() ? (
-            // Search Results
             <div className="p-4 sm:p-6">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-lg font-semibold text-foreground">
@@ -134,13 +112,11 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
                   {total} results found
                 </span>
               </div>
-              
               {error && (
                 <div className="text-center py-4 mb-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
                   <p className="text-red-600 dark:text-red-400 text-sm">{error}</p>
                 </div>
               )}
-              
               {searchResults.length > 0 ? (
                 <div className="space-y-3">
                   {searchResults.map((product) => (
@@ -194,9 +170,8 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
               ) : null}
             </div>
           ) : (
-            // Default Content (Recent + Categories)
             <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
-              {/* Recent Searches */}
+              {}
               {recentSearches.length > 0 && (
                 <div>
                   <div className="flex items-center gap-2 mb-4">
@@ -218,8 +193,7 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
                   </div>
                 </div>
               )}
-
-              {/* Quick Categories */}
+              {}
               <div>
                 <h3 className="text-base sm:text-lg font-semibold text-foreground mb-4">
                   Browse Categories
@@ -247,5 +221,4 @@ const MegaSearch = ({ isOpen, onClose }: MegaSearchProps) => {
     </div>
   );
 };
-
 export default MegaSearch;

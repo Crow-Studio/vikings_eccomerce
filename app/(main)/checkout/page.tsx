@@ -1,21 +1,45 @@
-"use client"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { MessageCircle, Phone, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+"use client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MessageCircle, Phone, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
 export default function CheckoutPage() {
-  const whatsappNumber = "+254729016371"
+  const whatsappNumber = "+254729016371";
 
   const handleWhatsAppOrder = () => {
-    const message = "Hi! I'd like to place an order. Please send me your product catalog and pricing information."
-    const whatsappUrl = `https://wa.me/${whatsappNumber.replace('+', '')}?text=${encodeURIComponent(message)}`
-    window.open(whatsappUrl, '_blank')
-  }
+    const message =
+      "Hi! I'd like to place an order. Please send me your product catalog and pricing information.";
+    const phoneOnly = whatsappNumber.replace("+", "");
+
+    // Try multiple WhatsApp URL formats for better compatibility
+    const whatsappUrls = [
+      `whatsapp://send?phone=${phoneOnly}&text=${encodeURIComponent(message)}`, // Native app
+      `https://web.whatsapp.com/send?phone=${phoneOnly}&text=${encodeURIComponent(
+        message
+      )}`, // WhatsApp Web
+      `https://wa.me/${phoneOnly}?text=${encodeURIComponent(message)}`, // wa.me fallback
+    ];
+
+    // Try opening native app first, then fallback to web
+    const tryOpenWhatsApp = (urls: string | any[], index = 0) => {
+      if (index >= urls.length) return;
+
+      const url = urls[index];
+      const opened = window.open(url, "_blank");
+
+      // If native app fails (WhatsApp Desktop), try web version
+      if (!opened || opened.closed) {
+        setTimeout(() => tryOpenWhatsApp(urls, index + 1), 500);
+      }
+    };
+
+    tryOpenWhatsApp(whatsappUrls);
+  };
 
   const handlePhoneCall = () => {
-    window.open(`tel:${whatsappNumber}`, '_self')
-  }
+    window.open(`tel:${whatsappNumber}`, "_self");
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/5 to-primary/10 py-12 px-4">
@@ -26,7 +50,8 @@ export default function CheckoutPage() {
               Order via WhatsApp
             </CardTitle>
             <p className="text-muted-foreground mt-2">
-              For the fastest service and personalized assistance, place your order directly through WhatsApp
+              For the fastest service and personalized assistance, place your
+              order directly through WhatsApp
             </p>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -42,9 +67,8 @@ export default function CheckoutPage() {
                 <li>• Quick delivery arrangements</li>
               </ul>
             </div>
-
             <div className="space-y-4">
-              <Button 
+              <Button
                 onClick={handleWhatsAppOrder}
                 className="w-full bg-green-600 hover:bg-green-700 text-white py-6 text-lg"
                 size="lg"
@@ -52,8 +76,13 @@ export default function CheckoutPage() {
                 <MessageCircle className="w-6 h-6 mr-3" />
                 Start WhatsApp Order
               </Button>
-
-              <Button 
+              <p className="text-xs text-center text-muted-foreground">
+                If WhatsApp doesn&apos;t open automatically, copy this number:{" "}
+                <span className="font-mono bg-muted px-1 rounded">
+                  {whatsappNumber}
+                </span>
+              </p>
+              <Button
                 onClick={handlePhoneCall}
                 variant="outline"
                 className="w-full py-6 text-lg"
@@ -63,7 +92,6 @@ export default function CheckoutPage() {
                 Call {whatsappNumber}
               </Button>
             </div>
-
             <div className="text-center pt-4">
               <Link href="/products">
                 <Button variant="ghost" className="text-muted-foreground">
@@ -72,16 +100,15 @@ export default function CheckoutPage() {
                 </Button>
               </Link>
             </div>
-
             <div className="bg-muted p-4 rounded-lg text-center">
               <p className="text-sm text-muted-foreground">
-                <strong>Business Hours:</strong> Monday - Friday: 8:00 AM - 6:00 PM | Saturday: 9:00 AM - 4:00 PM
+                <strong>Business Hours:</strong> Monday - Friday: 8:00 AM - 6:00
+                PM | Saturday: 9:00 AM - 4:00 PM
               </p>
             </div>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }
-

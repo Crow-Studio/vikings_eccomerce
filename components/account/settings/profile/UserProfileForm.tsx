@@ -1,5 +1,4 @@
 "use client";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -20,11 +19,9 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-
 interface Props {
   user: User;
 }
-
 const formSchema = z.object({
   first_name: z
     .string()
@@ -45,7 +42,6 @@ const formSchema = z.object({
     )
     .transform((name) => name.trim()),
 });
-
 export function UserProfileForm({ user }: Props) {
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const username = user?.username?.split(" ") as string[];
@@ -54,7 +50,6 @@ export function UserProfileForm({ user }: Props) {
     string | null
   >(null);
   const router = useRouter();
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,28 +57,22 @@ export function UserProfileForm({ user }: Props) {
       first_name: "",
     },
   });
-
   const uploadImageToCloudinary = async (image: string): Promise<string> => {
     setIsUploadingImage(true);
-
     const res = await fetch("/api/image/upload", {
       method: "POST",
       body: JSON.stringify({
         image,
       }),
     });
-
     if (!res.ok) {
       setIsUploadingImage(false);
       throw new Error(res.statusText);
     }
-
     setIsUploadingImage(false);
-
     const result = await res.json();
     return result.url;
   };
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsUpdatingProfile(true);
     try {
@@ -91,7 +80,6 @@ export function UserProfileForm({ user }: Props) {
       if (selectedProfileImage) {
         avatar = await uploadImageToCloudinary(selectedProfileImage);
       }
-
       const res = await fetch(`/api/auth/admin/profile/update`, {
         method: "PATCH",
         body: JSON.stringify({
@@ -99,18 +87,14 @@ export function UserProfileForm({ user }: Props) {
           image: avatar,
         }),
       });
-
       if (!res.ok) {
         return toast(res.statusText, {
           position: "top-center",
         });
       }
-
       router.refresh();
-
       setIsUpdatingProfile(false);
       setSelectedProfileImage(null);
-
       return toast.success(res.statusText, {
         position: "top-center",
       });
@@ -119,14 +103,12 @@ export function UserProfileForm({ user }: Props) {
       console.log("error", error);
     }
   }
-
   useEffect(() => {
     if (user) {
       form.setValue("first_name", username[0]);
       form.setValue("last_name", username[1]);
     }
-  }, [user]);
-
+  }, [user, form, username]);
   return (
     <Form {...form}>
       <form

@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Toaster } from "@/components/ui/sonner";
 import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon";
 import GrainOverlay from "@/components/global/GrainOverlay";
-
 export default function AuthLayout({
   children,
 }: Readonly<{

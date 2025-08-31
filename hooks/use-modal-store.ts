@@ -1,7 +1,6 @@
 import { ModalStore } from "@/types";
 import { create } from "zustand";
 import { createJSONStorage, devtools, persist } from "zustand/middleware";
-
 export const useModal = create<ModalStore>()(
   devtools(
     persist(

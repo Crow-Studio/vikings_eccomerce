@@ -1,81 +1,64 @@
-// components/blogs/BlogFilters.tsx
 'use client'
-
 import React, { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
 import { BlogPost, BlogFilterState } from '@/types/blogs'
-
 interface BlogFiltersProps {
   onFilterChange: (filters: BlogFilterState) => void
   blogs: BlogPost[]
 }
-
 export default function BlogFilters({ onFilterChange, blogs }: BlogFiltersProps) {
   const [filters, setFilters] = useState<BlogFilterState>({
     categories: [],
     tags: [],
     authors: []
   })
-
   const [expandedSections, setExpandedSections] = useState({
     categories: true,
     tags: true,
     authors: true
   })
-
-  // Extract unique categories, tags, and authors from blogs
   const categories = Array.from(new Set(blogs.map(blog => blog.category.name)))
   const tags = Array.from(new Set(blogs.flatMap(blog => blog.tags.map(tag => tag.name))))
   const authors = Array.from(new Set(blogs.map(blog => blog.author.name)))
-
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections(prev => ({
       ...prev,
       [section]: !prev[section]
     }))
   }
-
   const handleCategoryChange = (category: string, checked: boolean) => {
     const newCategories = checked 
       ? [...filters.categories, category]
       : filters.categories.filter(c => c !== category)
-    
     const newFilters = { ...filters, categories: newCategories }
     setFilters(newFilters)
     onFilterChange(newFilters)
   }
-
   const handleTagChange = (tag: string, checked: boolean) => {
     const newTags = checked 
       ? [...filters.tags, tag]
       : filters.tags.filter(t => t !== tag)
-    
     const newFilters = { ...filters, tags: newTags }
     setFilters(newFilters)
     onFilterChange(newFilters)
   }
-
   const handleAuthorChange = (author: string, checked: boolean) => {
     const newAuthors = checked 
       ? [...filters.authors, author]
       : filters.authors.filter(a => a !== author)
-    
     const newFilters = { ...filters, authors: newAuthors }
     setFilters(newFilters)
     onFilterChange(newFilters)
   }
-
   const clearAllFilters = () => {
     const clearedFilters = { categories: [], tags: [], authors: [] }
     setFilters(clearedFilters)
     onFilterChange(clearedFilters)
   }
-
   const hasActiveFilters = filters.categories.length > 0 || filters.tags.length > 0 || filters.authors.length > 0
-
   return (
     <div className="space-y-6">
-      {/* Clear Filters */}
+      {}
       {hasActiveFilters && (
         <button
           onClick={clearAllFilters}
@@ -84,8 +67,7 @@ export default function BlogFilters({ onFilterChange, blogs }: BlogFiltersProps)
           Clear all filters
         </button>
       )}
-
-      {/* Categories */}
+      {}
       {categories.length > 0 && (
         <div className="space-y-3">
           <button
@@ -99,7 +81,6 @@ export default function BlogFilters({ onFilterChange, blogs }: BlogFiltersProps)
               <ChevronDown size={16} className="text-slate-400" />
             )}
           </button>
-          
           {expandedSections.categories && (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {categories.map(category => (
@@ -122,8 +103,7 @@ export default function BlogFilters({ onFilterChange, blogs }: BlogFiltersProps)
           )}
         </div>
       )}
-
-      {/* Tags */}
+      {}
       {tags.length > 0 && (
         <div className="space-y-3">
           <button
@@ -137,7 +117,6 @@ export default function BlogFilters({ onFilterChange, blogs }: BlogFiltersProps)
               <ChevronDown size={16} className="text-slate-400" />
             )}
           </button>
-          
           {expandedSections.tags && (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {tags.map(tag => (
@@ -160,8 +139,7 @@ export default function BlogFilters({ onFilterChange, blogs }: BlogFiltersProps)
           )}
         </div>
       )}
-
-      {/* Authors */}
+      {}
       {authors.length > 0 && (
         <div className="space-y-3">
           <button
@@ -175,7 +153,6 @@ export default function BlogFilters({ onFilterChange, blogs }: BlogFiltersProps)
               <ChevronDown size={16} className="text-slate-400" />
             )}
           </button>
-          
           {expandedSections.authors && (
             <div className="space-y-2 max-h-48 overflow-y-auto">
               {authors.map(author => (

@@ -8,21 +8,17 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import React from "react";
-
 export default async function AllProductsPage() {
   if (!(await globalGETRateLimit())) {
     return "Too many requests";
   }
-
   const { user } = await getCurrentSession();
-
   if (user === null) {
     return redirect("/auth/admin/signin");
   }
   if (!user.email_verified) {
     return redirect("/auth/admin/verify-email");
   }
-
   const products = await db.query.product.findMany({
     with: {
       category: true,
@@ -35,13 +31,11 @@ export default async function AllProductsPage() {
     },
     orderBy: (table) => desc(table.updated_at),
   });
-
   const transformedProducts = products.map((product) => ({
     ...product,
     created_at: product.created_at.toISOString(),
     updated_at: product.updated_at?.toISOString() || null,
   }));
-
   return (
     <div className="grid gap-y-5">
       <div className="flex items-center justify-between">

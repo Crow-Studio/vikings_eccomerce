@@ -1,7 +1,4 @@
-// pages/privacy.js or app/privacy/page.js (depending on your Next.js version)
-
 import Head from 'next/head';
-
 export default function Privacy() {
   return (
     <>
@@ -9,17 +6,15 @@ export default function Privacy() {
         <title>Privacy Policy - Vikings Kenya Power Traders</title>
         <meta name="description" content="Privacy policy for Vikings Kenya Power Traders - Kenya's trusted source for professional tools and equipment." />
       </Head>
-      
       <div className="min-h-screen bg-white text-black">
         <div className="max-w-4xl mx-auto px-4 py-12">
-          {/* Header */}
+          {}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4 text-black">Privacy Policy</h1>
             <p className="text-gray-600">Vikings Kenya Power Traders</p>
             <p className="text-sm text-gray-500 mt-2">Last updated: {new Date().toLocaleDateString()}</p>
           </div>
-
-          {/* Content */}
+          {}
           <div className="space-y-8">
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">1. Information We Collect</h2>
@@ -34,7 +29,6 @@ export default function Privacy() {
                 <li>Participate in surveys or promotional activities</li>
               </ul>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">2. Types of Personal Information</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
@@ -48,7 +42,6 @@ export default function Privacy() {
                 <li>Technical information (IP address, browser type, device information)</li>
               </ul>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">3. How We Use Your Information</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
@@ -64,7 +57,6 @@ export default function Privacy() {
                 <li>Prevent fraud and ensure security</li>
               </ul>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">4. Information Sharing</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
@@ -78,7 +70,6 @@ export default function Privacy() {
                 <li>With your explicit consent</li>
               </ul>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">5. Data Security</h2>
               <p className="text-gray-700 leading-relaxed">
@@ -87,7 +78,6 @@ export default function Privacy() {
                 and we cannot guarantee absolute security.
               </p>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">6. Data Retention</h2>
               <p className="text-gray-700 leading-relaxed">
@@ -96,7 +86,6 @@ export default function Privacy() {
                 When we no longer need your information, we will securely delete or anonymize it.
               </p>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">7. Your Rights</h2>
               <p className="text-gray-700 leading-relaxed mb-4">
@@ -111,7 +100,6 @@ export default function Privacy() {
                 <li>Request data portability</li>
               </ul>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">8. Cookies and Tracking</h2>
               <p className="text-gray-700 leading-relaxed">
@@ -120,7 +108,6 @@ export default function Privacy() {
                 but some features of our website may not function properly if cookies are disabled.
               </p>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">9. Third-Party Links</h2>
               <p className="text-gray-700 leading-relaxed">
@@ -128,7 +115,6 @@ export default function Privacy() {
                 or content of these external sites. We encourage you to review the privacy policies of any third-party sites you visit.
               </p>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">10. Changes to This Policy</h2>
               <p className="text-gray-700 leading-relaxed">
@@ -136,7 +122,6 @@ export default function Privacy() {
                 We will notify you of any significant changes by posting the updated policy on our website and updating the &quot;Last updated&quot; date.
               </p>
             </section>
-
             <section>
               <h2 className="text-2xl font-semibold mb-4 text-black border-b-2 border-gray-200 pb-2">11. Contact Us</h2>
               <p className="text-gray-700 leading-relaxed">

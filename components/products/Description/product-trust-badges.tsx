@@ -1,6 +1,5 @@
 import * as React from "react"
 import { Shield, Truck, RefreshCw } from "lucide-react"
-
 export const ProductTrustBadges = React.memo(() => (
   <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
     <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg">

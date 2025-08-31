@@ -9,7 +9,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { GeneralInformationProps } from "@/types";
-
 export default function GeneralInformation({
   form,
   isAddingProduct,
@@ -43,7 +42,6 @@ export default function GeneralInformation({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="price"
@@ -69,7 +67,6 @@ export default function GeneralInformation({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="description"

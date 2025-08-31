@@ -1,15 +1,13 @@
 import * as React from "react"
 import { Shield, Truck, MapPin } from "lucide-react"
-import type { CartItem } from "@/store/cart-store" // Import CartItem type
-
+import type { CartItem } from "@/store/cart-store" 
 interface OrderSummaryProps {
-  items: CartItem[] // Use CartItem type
+  items: CartItem[] 
   subtotal: number
   shipping: number
   total: number
   isFreeShipping: boolean
 }
-
 export const OrderSummary = React.memo(({ items, subtotal, shipping, total, isFreeShipping }: OrderSummaryProps) => (
   <div className="bg-muted/30 rounded-xl p-6 sticky top-8">
     <h2 className="text-xl font-semibold mb-6 text-foreground">Order Summary</h2>
@@ -50,7 +48,7 @@ export const OrderSummary = React.memo(({ items, subtotal, shipping, total, isFr
         </div>
       </div>
     </div>
-    {/* Trust Indicators */}
+    {}
     <div className="mt-6 pt-6 border-t border-muted">
       <div className="space-y-3">
         <div className="flex items-center gap-3 text-sm">

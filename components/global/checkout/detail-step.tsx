@@ -1,10 +1,8 @@
 "use client"
-
 import * as React from "react"
 import { ArrowRight, Truck } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/global/checkout/custom-input"
-
 interface DetailsStepProps {
   formData: {
     firstName: string
@@ -21,7 +19,6 @@ interface DetailsStepProps {
   setCurrentStep: (step: number) => void
   isFreeShipping: boolean
 }
-
 export const DetailsStep = React.memo(
   ({ formData, errors, handleInputChange, handleSubmit, setCurrentStep, isFreeShipping }: DetailsStepProps) => (
     <div className="space-y-6">

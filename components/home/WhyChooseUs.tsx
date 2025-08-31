@@ -2,13 +2,12 @@ import React from 'react';
 import { Phone } from 'lucide-react';
 import GrainOverlay from '@/components/global/GrainOverlay';
 import { mainFeatures, additionalBenefits, stats, contactInfo } from '@/data/WhyChooseUs';
-
 const WhyChooseUs = () => {
   return (
     <section className="relative py-16 lg:py-24 overflow-hidden">
       <GrainOverlay />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
+        {}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Why Choose{' '}
@@ -21,8 +20,7 @@ const WhyChooseUs = () => {
             Your trusted partner for professional tools and equipment. We&apos;ve been serving Kenya&apos;s professionals since 2005 with quality, reliability, and exceptional service.
             </p>
         </div>
-
-        {/* Main Features Grid */}
+        {}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {mainFeatures.map((feature, index) => (
             <div 
@@ -33,7 +31,6 @@ const WhyChooseUs = () => {
                 <div className="relative p-4 bg-primary/10 rounded-2xl group-hover:bg-primary/20 transition-colors">
                   <feature.icon className="w-8 h-8 text-primary" />
                 </div>
-                
                 <div className="space-y-2">
                   <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
                     {feature.title}
@@ -42,19 +39,16 @@ const WhyChooseUs = () => {
                     {feature.description}
                   </p>
                 </div>
-                
                 <div className="inline-flex items-center px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
                   {feature.highlight}
                 </div>
               </div>
-              
-              {/* Decorative element */}
+              {}
               <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/5 to-transparent rounded-2xl transform rotate-45 translate-x-10 -translate-y-10 group-hover:from-primary/10 transition-colors"></div>
             </div>
           ))}
         </div>
-
-        {/* Stats Section */}
+        {}
         <div className=" rounded-3xl p-8 lg:p-12 shadow-lg border border-gray-200 dark:border-slate-700 mb-16">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -74,8 +68,7 @@ const WhyChooseUs = () => {
             ))}
           </div>
         </div>
-
-        {/* Additional Benefits */}
+        {}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-6">
             <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
@@ -84,7 +77,6 @@ const WhyChooseUs = () => {
             <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
               From individual contractors to large construction companies, we provide the tools, support, and expertise you need to get the job done right.
             </p>
-            
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {additionalBenefits.map((benefit, index) => (
                 <div key={index} className="flex items-center space-x-3">
@@ -96,7 +88,6 @@ const WhyChooseUs = () => {
               ))}
             </div>
           </div>
-          
           <div className="relative">
             <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl p-8 lg:p-12">
               <div className="space-y-6">
@@ -109,7 +100,6 @@ const WhyChooseUs = () => {
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Our experts are here to help</p>
                   </div>
                 </div>
-                
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Call us:</span>
@@ -132,5 +122,4 @@ const WhyChooseUs = () => {
     </section>
   );
 };
-
 export default WhyChooseUs;

@@ -14,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import TagInput from "./TagInput";
 import { Badge } from "@/components/ui/badge";
 import { VariantsConfigurationsProps } from "@/types";
-
 export default function VariantsConfigurations({
   form,
   hasVariants,
@@ -51,7 +50,6 @@ export default function VariantsConfigurations({
             </FormItem>
           )}
         />
-
         {hasVariants && (
           <Accordion type="single" collapsible className="w-full">
             <AccordionItem value="variant-options">
@@ -64,7 +62,6 @@ export default function VariantsConfigurations({
                     Define options like color, size, material, etc. Each
                     combination will create a variant.
                   </p>
-
                   <div className="space-y-3">
                     {fields.map((field, index) => (
                       <div key={field.id} className="border rounded-lg p-3">
@@ -83,7 +80,6 @@ export default function VariantsConfigurations({
                             <Trash2 className="h-3 w-3" />
                           </Button>
                         </div>
-
                         <div className="space-y-2">
                           <div>
                             <Input
@@ -101,7 +97,6 @@ export default function VariantsConfigurations({
                               </p>
                             )}
                           </div>
-
                           <div>
                             <Controller
                               control={form.control}
@@ -128,7 +123,6 @@ export default function VariantsConfigurations({
                         </div>
                       </div>
                     ))}
-
                     <Button
                       type="button"
                       variant="outline"
@@ -143,7 +137,6 @@ export default function VariantsConfigurations({
                 </div>
               </AccordionContent>
             </AccordionItem>
-
             {variantCombinations.length > 0 && (
               <AccordionItem value="generated-variants">
                 <AccordionTrigger>
@@ -157,7 +150,6 @@ export default function VariantsConfigurations({
                       Configure pricing and inventory for each variant
                       combination.
                     </p>
-
                     <div className="max-h-96 overflow-y-auto space-y-3">
                       {variantCombinations.map((combo, index) => (
                         <div
@@ -182,7 +174,6 @@ export default function VariantsConfigurations({
                               )}
                             </div>
                           </div>
-
                           <div className="grid grid-cols-3 gap-2">
                             <div>
                               <label className="text-xs font-medium">
@@ -198,7 +189,6 @@ export default function VariantsConfigurations({
                                 type="number"
                               />
                             </div>
-
                             <div>
                               <label className="text-xs font-medium">SKU</label>
                               <Input
@@ -210,7 +200,6 @@ export default function VariantsConfigurations({
                                 className="text-sm"
                               />
                             </div>
-
                             <div>
                               <label className="text-xs font-medium">
                                 Stock

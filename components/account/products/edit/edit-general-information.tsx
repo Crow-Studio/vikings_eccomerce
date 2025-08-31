@@ -9,7 +9,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { EditGeneralInformationProps } from "@/types";
-
 export default function EditGeneralInformation({
   form,
   isUpdatingProduct,
@@ -43,7 +42,6 @@ export default function EditGeneralInformation({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="price"
@@ -69,7 +67,6 @@ export default function EditGeneralInformation({
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="description"

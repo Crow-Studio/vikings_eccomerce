@@ -10,14 +10,12 @@ import React, {
   useRef,
   useState,
 } from "react";
-
 interface Props {
   isUpdatingProfile: boolean;
   user: User;
   setSelectedProfileImage: Dispatch<SetStateAction<string | null>>;
   selectedProfileImage: string | null;
 }
-
 export default function ProfileAvatar({
   user,
   isUpdatingProfile,
@@ -27,13 +25,10 @@ export default function ProfileAvatar({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-
   useEffect(() => {
     if (!file) return;
-
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
-
     const reader = new FileReader();
     reader.onload = () => {
       if (typeof reader.result === "string") {
@@ -41,12 +36,10 @@ export default function ProfileAvatar({
       }
     };
     reader.readAsDataURL(file);
-
     return () => {
       URL.revokeObjectURL(url);
     };
-  }, [file]);
-
+  }, [file, setSelectedProfileImage]);
   const handleRemove = () => {
     setFile(null);
     setPreviewUrl(null);

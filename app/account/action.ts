@@ -1,5 +1,4 @@
 "use server";
-
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import {
   deleteSessionTokenCookie,
@@ -8,7 +7,6 @@ import {
 } from "@/lib/server/session";
 import { ActionResult } from "@/types";
 import { redirect } from "next/navigation";
-
 export async function signoutAction(): Promise<ActionResult> {
   if (!(await globalPOSTRateLimit())) {
     return {

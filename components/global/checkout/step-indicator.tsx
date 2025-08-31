@@ -1,13 +1,11 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
-
 interface StepIndicatorProps {
   step: number
   title: string
   isActive: boolean
   isCompleted: boolean
 }
-
 export const StepIndicator = React.memo(({ step, title, isActive, isCompleted }: StepIndicatorProps) => (
   <div
     className={cn(

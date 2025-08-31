@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,7 +30,6 @@ import {
   verifyEmailAction,
 } from "@/app/auth/admin/verify-email/action";
 import { redirect } from "next/navigation";
-
 export function VerifyEmailForm({ user }: { user: User }) {
   const [isSignout, setIsSignout] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState<number>(60);
@@ -39,21 +37,18 @@ export function VerifyEmailForm({ user }: { user: User }) {
   const [isStopTimer, setIsStopTimer] = useState<boolean>(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState<boolean>(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-
   const form = useForm<z.infer<typeof emailVerificationSchema>>({
     resolver: zodResolver(emailVerificationSchema),
     defaultValues: {
       code: "",
     },
   });
-
   const startTimer = () => {
     setIsStopTimer(true);
     if (timerRef.current) {
       setIsStopTimer(false);
       return;
     }
-
     timerRef.current = setInterval(() => {
       setTimeElapsed((prev) => {
         if (prev > 0) {
@@ -69,21 +64,17 @@ export function VerifyEmailForm({ user }: { user: User }) {
       });
     }, 1000);
   };
-
   const onResendCode = async () => {
     setIsResendCode(true);
     try {
       const { message, errorMessage } =
         await resendEmailVerificationCodeAction();
-
       if (errorMessage) {
         return toast.error(errorMessage, {
           position: "top-center",
         });
       }
-
       startTimer();
-
       return toast.success(message, {
         position: "top-center",
       });
@@ -91,35 +82,28 @@ export function VerifyEmailForm({ user }: { user: User }) {
       setIsResendCode(false);
     }
   };
-
   async function onSubmit(values: z.infer<typeof emailVerificationSchema>) {
     setIsVerifyingCode(true);
     try {
       const { message, errorMessage } = await verifyEmailAction(values);
-
       if (errorMessage) {
         return toast.error(errorMessage, {
           position: "top-center",
         });
       }
-
       form.reset();
-
       toast.success(message, {
         position: "top-center",
       });
-
       return redirect("/account/dashboard");
     } finally {
       setIsVerifyingCode(false);
     }
   }
-
   const onSignoutUser = async () => {
     setIsSignout(true);
     try {
       const { message } = await signoutAction();
-
       if (message) {
         return toast.error(message, {
           position: "top-center",
@@ -129,7 +113,6 @@ export function VerifyEmailForm({ user }: { user: User }) {
       setIsSignout(false);
     }
   };
-
   return (
     <div className="flex flex-col gap-1">
       <Card className="backdrop-blur w-full sm:min-w-sm">

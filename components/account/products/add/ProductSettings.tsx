@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import CategorySelector from "./CategorySelector";
-
 export default function ProductSettings({ form, categories, isAddingProduct }: ProductSettingsProps) {
   return (
     <Card>
@@ -68,7 +67,6 @@ export default function ProductSettings({ form, categories, isAddingProduct }: P
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="category"

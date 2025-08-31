@@ -1,5 +1,4 @@
 "use server";
-
 import { db, eq } from "@/database";
 import { verifyEmailInput } from "@/lib/server/email";
 import { verifyPasswordHash } from "@/lib/server/password";
@@ -13,10 +12,8 @@ import {
 import { getUserPasswordHash } from "@/lib/server/user";
 import { ActionResult } from "@/types";
 import { headers } from "next/headers";
-
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 const throttler = new Throttler<string>([1, 2, 4, 8, 16, 30, 60, 180, 300]);
-
 export async function signinAction({
   email,
   password,
@@ -30,7 +27,6 @@ export async function signinAction({
       message: null,
     };
   }
-  
   const clientIP = (await headers()).get("X-Forwarded-For");
   if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
     return {
@@ -38,7 +34,6 @@ export async function signinAction({
       message: null,
     };
   }
-
   if (typeof email !== "string" || typeof password !== "string") {
     return {
       errorMessage: "Invalid or missing fields!",
@@ -51,39 +46,33 @@ export async function signinAction({
       message: null,
     };
   }
-
   if (!verifyEmailInput(email)) {
     return {
       errorMessage: "Invalid email!",
       message: null,
     };
   }
-
   const user = await db.query.user.findFirst({
     where: (table) => eq(table.email, email),
   });
-
   if (!user) {
     return {
       errorMessage: "Account does not exist!",
       message: null,
     };
   }
-
   if (clientIP !== null && !ipBucket.consume(clientIP, 1)) {
     return {
       errorMessage: "Too many requests!",
       message: null,
     };
   }
-
   if (!throttler.consume(user.id)) {
     return {
       errorMessage: "Too many requests!",
       message: null,
     };
   }
-
   if (!user.password) {
     return {
       errorMessage:
@@ -91,7 +80,6 @@ export async function signinAction({
       message: null,
     };
   }
-
   const passwordHash = await getUserPasswordHash(user.id);
   const validPassword = await verifyPasswordHash(passwordHash, password);
   if (!validPassword) {
@@ -101,11 +89,9 @@ export async function signinAction({
     };
   }
   throttler.reset(user.id);
-
   const sessionToken = generateSessionToken();
   const session = await createSession(sessionToken, user.id);
   await setSessionTokenCookie(sessionToken, session.expires_at);
-
   return {
     errorMessage: null,
     message: "You've successfully signed in!",
