@@ -75,6 +75,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             url: "/account/settings/general",
             isShowInterface: true,
           },
+          {
+            title: "Users",
+            url: "/account/settings/users",
+            isShowInterface: true,
+          },
         ],
       },
     ],

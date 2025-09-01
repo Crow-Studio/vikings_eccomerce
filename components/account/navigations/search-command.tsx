@@ -85,6 +85,11 @@ export function SearchCommand({ user }: SearchCommandProps) {
             url: "/account/settings/general",
             isShowInterface: true,
           },
+          {
+            title: "Users",
+            url: "/account/settings/users",
+            isShowInterface: true,
+          },
         ],
       },
     ];

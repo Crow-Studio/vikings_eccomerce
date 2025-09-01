@@ -118,6 +118,11 @@ export function AppBreadcrumb({ user }: DynamicBreadcrumbProps) {
             url: "/account/settings/general",
             isShowInterface: true,
           },
+          {
+            title: "Users",
+            url: "/account/settings/users",
+            isShowInterface: true,
+          },
         ],
       },
     ];

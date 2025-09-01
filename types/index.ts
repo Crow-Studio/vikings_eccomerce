@@ -1,17 +1,18 @@
 import { FieldArrayWithId, UseFieldArrayAppend, UseFieldArrayRemove, UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 import { addProductFormSchema, editProductFormSchema } from "./products/form";
-import { Category, Customer as DBCustomer, GeneratedVariants, ProductImage, Visibility } from "@/database/schema";
+import { Category, Customer as DBCustomer, GeneratedVariants, ProductImage, User, Visibility } from "@/database/schema";
 import { Customer } from "./customers";
 import { Order } from "./orders";
 
-export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder" | "editOrder"
+export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder" | "editOrder" | "addNewUser" | "editUser"
 
 export interface ModalData {
   customer?: Customer
   customers?: DBCustomer[]
   products?: IProduct[]
   order?: Order
+  user?: User
 }
 export interface ActionResult {
   message: string | null;
@@ -31,7 +32,7 @@ export interface ModalStore {
   data: ModalData;
   onOpen: (type: ModalType, data?: ModalData) => void;
   onClose: () => void;
-  onPopulateData: (data?: ModalData) =>void
+  onPopulateData: (data?: ModalData) => void
 }
 export const formSchema = z.object({
   email: z.string().email({
