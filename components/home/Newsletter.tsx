@@ -12,13 +12,11 @@ const Newsletter = () => {
   const handleJoinWhatsApp = async () => {
     setIsLoading(true);
     
-    // WhatsApp group link or phone number
-    const whatsappNumber = "+254729016371";
-    const message = "Hi! I'd like to join your WhatsApp community for exclusive deals and updates.";
-    const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, "")}?text=${encodeURIComponent(message)}`;
+    // WhatsApp group link
+    const whatsappGroupUrl = "https://chat.whatsapp.com/KnRkGuspustFJoVP9dG8s7";
     
-    // Open WhatsApp
-    window.open(whatsappUrl, "_blank");
+    // Open WhatsApp group
+    window.open(whatsappGroupUrl, "_blank");
     
     setTimeout(() => {
       setIsJoined(true);
@@ -50,7 +48,7 @@ const Newsletter = () => {
   ];
 
   const stats = [
-    { number: "2500+", label: "Members" },
+    { number: "29+", label: "Members" },
     { number: "Daily", label: "Updates" },
     { number: "Instant", label: "Support" }
   ];
@@ -68,7 +66,7 @@ const Newsletter = () => {
       {showSuccess && (
         <div className="fixed top-4 right-4 z-50 bg-blue-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-3 animate-slide-in">
           <CheckCircle className="w-5 h-5" />
-          <span className="font-medium">Successfully joined our WhatsApp community!</span>
+          <span className="font-medium">Successfully joined our WhatsApp group!</span>
           <button 
             onClick={() => setShowSuccess(false)}
             className="ml-2 hover:bg-blue-700 rounded-full p-1"
@@ -87,7 +85,7 @@ const Newsletter = () => {
               {/* Badge - Yellow for attention */}
               <div className="inline-flex items-center space-x-2 bg-yellow-100 text-yellow-800 px-4 py-2 rounded-full text-sm font-medium">
                 <MessageCircle className="w-4 h-4" />
-                <span>Join Our WhatsApp Community</span>
+                <span>Join Our WhatsApp Group</span>
               </div>
               
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
@@ -99,7 +97,7 @@ const Newsletter = () => {
               </h2>
               
               <p className="text-xl text-gray-600 leading-relaxed">
-                Join over 2,500+ professionals in our WhatsApp community for instant deals, new arrivals, and expert advice from Vikings Kenya Power Traders.
+                Join our growing WhatsApp group for instant deals, new arrivals, and expert advice from Vikings Kenya Power Traders.
               </p>
             </div>
 
@@ -111,7 +109,7 @@ const Newsletter = () => {
                     <MessageCircle className="w-8 h-8 text-blue-600" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    Join Our WhatsApp Community
+                    Join Our WhatsApp Group
                   </h3>
                   <p className="text-gray-600 text-sm">
                     Get instant updates, exclusive deals, and direct support
@@ -129,7 +127,7 @@ const Newsletter = () => {
                   ) : (
                     <>
                       <MessageCircle className="w-5 h-5" />
-                      <span>Join WhatsApp Community</span>
+                      <span>Join WhatsApp Group</span>
                       <ArrowRight className="w-5 h-5 transform group-hover:translate-x-0.5 transition-transform" />
                     </>
                   )}
@@ -172,10 +170,10 @@ const Newsletter = () => {
           <div className="space-y-8">
             <div className="text-center lg:text-left">
               <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-4">
-                Why Join Our WhatsApp Community?
+                Why Join Our WhatsApp Group?
               </h3>
               <p className="text-gray-600">
-                Connect with thousands of professionals and get instant updates on your phone.
+                Connect with professionals and get instant updates on your phone.
               </p>
             </div>
             
@@ -210,7 +208,7 @@ const Newsletter = () => {
                 </div>
                 <div>
                   <h4 className="text-lg font-semibold text-gray-900">
-                    2500+ Members & Growing
+                    29+ Members & Growing
                   </h4>
                   <p className="text-gray-700 text-sm">
                     Join contractors, engineers, and professionals across Kenya
