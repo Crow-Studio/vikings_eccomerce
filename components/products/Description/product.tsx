@@ -53,7 +53,7 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
     setSelectedTab(tabId)
   }, [])
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-blue-25 relative overflow-hidden">
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-white relative overflow-hidden">
       <GrainOverlay/>
       <div className="max-w-7xl mx-auto">
         <ProductHeader product={product} />
@@ -68,7 +68,7 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
           </div>
           {}
           <div className="space-y-6">
-            <Card className="p-6 border border-blue-200 shadow-sm">
+            <Card className="p-6 bg-white border border-blue-100 rounded-2xl shadow-lg">
               <CardContent className="p-0 space-y-4">
                 <ProductPricing price={Number.parseFloat(product.price)} />
                 {product.has_variants && product.variants.length > 0 && (

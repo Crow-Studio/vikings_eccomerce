@@ -42,7 +42,7 @@ export const ProductActions = React.memo(
       <div className="space-y-4">
         <Button
           size="lg"
-          className="w-full bg-white text-black backdrop-blur-sm border border-gray-200 shadow-sm dark:text-white transition-colors duration-200"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white border border-blue-600 shadow-lg rounded-xl transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed disabled:transform-none"
           onClick={handleWhatsAppOrder}
           disabled={!inStock}
         >
