@@ -11,9 +11,9 @@ const WhyChooseUs = () => {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
             Why Choose{' '}
-            <span className="relative text-primary">
+            <span className="relative text-blue-600">
               Vikings 
-              <span className="absolute -bottom-2 left-0 w-full h-1 bg-primary/30 rounded-full"></span>
+              <span className="absolute -bottom-2 left-0 w-full h-1 bg-blue-600/30 rounded-full"></span>
             </span>
           </h2>
             <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
@@ -25,37 +25,37 @@ const WhyChooseUs = () => {
           {mainFeatures.map((feature, index) => (
             <div 
               key={index}
-              className="group relative  rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-slate-700 hover:border-primary/30 hover:-translate-y-1"
+              className="group relative bg-white rounded-2xl p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-slate-700 hover:border-blue-200 hover:-translate-y-1"
             >
               <div className="flex flex-col items-center text-center space-y-4">
-                <div className="relative p-4 bg-primary/10 rounded-2xl group-hover:bg-primary/20 transition-colors">
-                  <feature.icon className="w-8 h-8 text-primary" />
+                <div className="relative p-4 bg-blue-50 rounded-2xl group-hover:bg-blue-100 transition-colors">
+                  <feature.icon className="w-8 h-8 text-blue-600" />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-primary transition-colors">
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 transition-colors">
                     {feature.title}
                   </h3>
                   <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
-                <div className="inline-flex items-center px-3 py-1 bg-primary/10 text-primary rounded-full text-sm font-medium">
+                <div className="inline-flex items-center px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">
                   {feature.highlight}
                 </div>
               </div>
               {}
-              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-primary/5 to-transparent rounded-2xl transform rotate-45 translate-x-10 -translate-y-10 group-hover:from-primary/10 transition-colors"></div>
+              <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-blue-50 to-transparent rounded-2xl transform rotate-45 translate-x-10 -translate-y-10 group-hover:from-blue-100 transition-colors"></div>
             </div>
           ))}
         </div>
         {}
-        <div className=" rounded-3xl p-8 lg:p-12 shadow-lg border border-gray-200 dark:border-slate-700 mb-16">
+        <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-lg border border-gray-200 dark:border-slate-700 mb-16">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
               <div key={index} className="text-center group">
                 <div className="flex justify-center mb-4">
-                  <div className="p-3 bg-primary/10 rounded-2xl group-hover:bg-primary/20 transition-colors">
-                    <stat.icon className="w-6 h-6 text-primary" />
+                  <div className="p-3 bg-blue-50 rounded-2xl group-hover:bg-blue-100 transition-colors">
+                    <stat.icon className="w-6 h-6 text-blue-600" />
                   </div>
                 </div>
                 <div className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-2">
@@ -80,7 +80,7 @@ const WhyChooseUs = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {additionalBenefits.map((benefit, index) => (
                 <div key={index} className="flex items-center space-x-3">
-                  <benefit.icon className="w-5 h-5 text-primary flex-shrink-0" />
+                  <benefit.icon className="w-5 h-5 text-blue-600 flex-shrink-0" />
                   <span className="text-gray-700 dark:text-gray-300 text-sm">
                     {benefit.text}
                   </span>
@@ -89,11 +89,11 @@ const WhyChooseUs = () => {
             </div>
           </div>
           <div className="relative">
-            <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-3xl p-8 lg:p-12">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-25 rounded-3xl p-8 lg:p-12 border border-blue-100">
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
-                  <div className="p-3 bg-primary rounded-2xl">
-                    <Phone className="w-6 h-6 text-white dark:text-black" />
+                  <div className="p-3 bg-blue-600 rounded-2xl">
+                    <Phone className="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h4 className="font-bold text-gray-900 dark:text-white">Need Help Choosing?</h4>
@@ -103,11 +103,11 @@ const WhyChooseUs = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Call us:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{contactInfo.phone}</span>
+                    <span className="font-semibold text-blue-600">{contactInfo.phone}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Email:</span>
-                    <span className="font-semibold text-gray-900 dark:text-white">{contactInfo.email}</span>
+                    <span className="font-semibold text-blue-600">{contactInfo.email}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400">Hours:</span>
