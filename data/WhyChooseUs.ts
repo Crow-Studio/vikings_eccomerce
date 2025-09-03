@@ -40,7 +40,7 @@ export const stats = [
   { number: "24/7", label: "Support Available", icon: Phone }
 ];
 export const contactInfo = {
-  phone: "+254 700 000 000",
-  email: "info@vikings.co.ke",
+  phone: "+254721780466",
+  email: "Vikingskepower@gmail.com",
   hours: "Mon-Sat 8AM-6PM"
 };

@@ -32,7 +32,7 @@ function isNewProduct(createdAt: Date): boolean {
 
 function ProductCard({ product }: { product: DBProduct }) {
   const isNew = isNewProduct(new Date(product.created_at))
-  const whatsappNumber = "+254729016371"
+  const whatsappNumber = "+254721780466"
 
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
     e.preventDefault()
