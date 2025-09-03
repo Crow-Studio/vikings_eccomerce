@@ -58,12 +58,12 @@ export const ProductVariants = React.memo(({ variants, selectedVariants, onVaria
                     key={`${variant.id}-${option.id}`}
                     onClick={() => onVariantChange(variant.title, option.value)}
                     className={cn(
-                      "flex items-center justify-center rounded-md border text-sm font-medium transition-colors",
+                      "flex items-center justify-center rounded-xl border text-sm font-medium transition-colors",
                       "px-4 py-2 min-w-[60px]", 
                       isSelected
-                        ? "border-primary bg-primary text-primary-foreground ring-2 ring-primary ring-offset-2"
-                        : "border-input bg-background hover:bg-accent hover:text-accent-foreground",
-                      "focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                        ? "border-blue-200 bg-blue-600 text-white ring-2 ring-blue-500 ring-offset-2"
+                        : "border-blue-100 bg-white hover:bg-blue-50 hover:border-blue-200 text-foreground",
+                      "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
                       "disabled:opacity-50 disabled:cursor-not-allowed"
                     )}
                     aria-pressed={isSelected}

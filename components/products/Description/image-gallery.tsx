@@ -12,7 +12,7 @@ export const ImageGallery = React.memo(({ images = [], currentIndex, onImageChan
   const imageArray = images.length > 0 ? images : ["/placeholder.svg?height=600&width=600"] 
   return (
     <div className="space-y-4">
-      <div className="relative w-full aspect-square bg-muted/30 rounded-xl overflow-hidden group">
+      <div className="relative w-full aspect-square bg-white border border-blue-100 rounded-2xl overflow-hidden group shadow-lg">
         {}
         <Image
           src={imageArray[currentIndex] || "/placeholder.svg"}
@@ -26,17 +26,17 @@ export const ImageGallery = React.memo(({ images = [], currentIndex, onImageChan
           <>
             <button
               onClick={() => onImageChange(currentIndex > 0 ? currentIndex - 1 : imageArray.length - 1)}
-              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white border border-blue-100 shadow-md z-10"
               aria-label="Previous image"
             >
-              <ChevronLeft className="w-5 h-5" />
+              <ChevronLeft className="w-5 h-5 text-blue-600" />
             </button>
             <button
               onClick={() => onImageChange(currentIndex < imageArray.length - 1 ? currentIndex + 1 : 0)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-background/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-background z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white border border-blue-100 shadow-md z-10"
               aria-label="Next image"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-5 h-5 text-blue-600" />
             </button>
           </>
         )}
@@ -48,8 +48,8 @@ export const ImageGallery = React.memo(({ images = [], currentIndex, onImageChan
               key={index}
               onClick={() => onImageChange(index)}
               className={cn(
-                "relative aspect-square bg-muted/30 rounded-lg overflow-hidden transition-all duration-200",
-                index === currentIndex ? "ring-2 ring-primary" : "hover:bg-muted/50",
+                "relative aspect-square bg-white border border-blue-100 rounded-lg overflow-hidden transition-all duration-200 hover:border-blue-200 shadow-sm",
+                index === currentIndex ? "ring-2 ring-blue-600 border-blue-600" : "",
               )}
               aria-label={`View image ${index + 1}`}
             >
