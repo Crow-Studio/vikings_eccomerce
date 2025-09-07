@@ -25,7 +25,7 @@ import {
 import DataTablePagination from "./data-table-pagination";
 import { DataTableViewOptions } from "./data-table-view-options";
 import { Button } from "@/components/ui/button";
-import { Loader2, Trash2, User, CreditCard } from "lucide-react";
+import { Loader2, Trash2, Menu, X } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Order } from "@/types/orders";
@@ -50,6 +50,22 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
+  const [showMobileActions, setShowMobileActions] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  // Check if mobile on mount and resize
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setShowMobileActions(false);
+      }
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const table = useReactTable({
     data,
@@ -98,28 +114,37 @@ export function DataTable<TData, TValue>({
         finally() {
           setIsDeletingOrder(false);
           router.refresh();
+          setShowMobileActions(false);
         },
         position: "top-center",
       }
     );
   };
 
+  const selectedCount = table.getFilteredSelectedRowModel().rows.length;
+
   return (
-    <div className="w-full space-y-4">
+    <div className="space-y-4">
       <div className="space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <Input
-            placeholder="Search customers, IDs, status..."
-            value={table.getState().globalFilter ?? ""}
-            onChange={(event) => table.setGlobalFilter(event.target.value)}
-            className="w-full max-w-sm"
-          />
-          <div className="flex items-center gap-2 sm:gap-3">
-            {table.getFilteredSelectedRowModel().rows.length > 0 && (
+        {/* Mobile-first responsive header */}
+        <div className="space-y-3">
+          {/* Search bar - always visible */}
+          <div className="w-full">
+            <Input
+              placeholder="Search customers, IDs, status..."
+              value={table.getState().globalFilter ?? ""}
+              onChange={(event) => table.setGlobalFilter(event.target.value)}
+              className="w-full text-base md:text-sm"
+            />
+          </div>
+
+          {/* Desktop actions */}
+          <div className="hidden md:flex md:items-center md:justify-end md:gap-x-3">
+            {selectedCount > 0 && (
               <Button
                 aria-label="Delete Orders"
                 variant={"destructive"}
-                className="h-8 flex-shrink-0"
+                className="h-8"
                 onClick={() => onDeleteOrder()}
                 disabled={isDeletingOrder}
               >
@@ -128,119 +153,72 @@ export function DataTable<TData, TValue>({
                 ) : (
                   <Trash2 className="size-4" />
                 )}
-                <span className="hidden sm:inline">Remove</span>
-                <span className="ml-1">
-                  ({table.getFilteredSelectedRowModel().rows.length})
-                </span>
+                Remove ({selectedCount})
               </Button>
             )}
-            <div className="hidden md:block">
-              <DataTableViewOptions table={table} />
-            </div>
+            <DataTableViewOptions table={table} />
           </div>
-        </div>
 
-        {/* Mobile Card View */}
-        <div className="block md:hidden space-y-3">
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => {
-              const order = row.original as Order;
-              return (
-                <div 
-                  key={row.id} 
-                  className="rounded-lg border bg-card p-4 space-y-3"
-                  data-state={row.getIsSelected() && "selected"}
+          {/* Mobile actions toggle */}
+          <div className="flex items-center justify-between md:hidden">
+            <div className="text-sm text-muted-foreground">
+              {selectedCount > 0 && `${selectedCount} selected`}
+              {data.length > 0 && ` • ${data.length} total`}
+            </div>
+            
+            {(selectedCount > 0 || !isMobile) && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowMobileActions(!showMobileActions)}
+                className="h-8"
+              >
+                {showMobileActions ? (
+                  <X className="size-4" />
+                ) : (
+                  <Menu className="size-4" />
+                )}
+                <span className="ml-2">Actions</span>
+              </Button>
+            )}
+          </div>
+
+          {/* Mobile actions panel */}
+          {showMobileActions && (
+            <div className="flex flex-col space-y-2 rounded-lg border bg-card p-3 md:hidden">
+              {selectedCount > 0 && (
+                <Button
+                  aria-label="Delete Orders"
+                  variant={"destructive"}
+                  size="sm"
+                  onClick={() => onDeleteOrder()}
+                  disabled={isDeletingOrder}
+                  className="w-full justify-start"
                 >
-                  {/* Header with selection and order info */}
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      {/* Selection checkbox */}
-                      {row.getVisibleCells().find((cell: any) => cell.column.id === 'select') && (
-                        <div>
-                          {flexRender(
-                            row.getVisibleCells().find((cell: any) => cell.column.id === 'select')?.column.columnDef.cell,
-                            row.getVisibleCells().find((cell: any) => cell.column.id === 'select')?.getContext()
-                          )}
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="font-medium text-sm text-foreground">
-                          Order #{order.id?.slice(-8) || 'N/A'}
-                        </h3>
-                        <p className="text-xs text-muted-foreground">
-                          {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    {/* Actions */}
-                    {row.getVisibleCells().find((cell: any) => cell.column.id === 'actions') && (
-                      <div className="flex items-center">
-                        {flexRender(
-                          row.getVisibleCells().find((cell: any) => cell.column.id === 'actions')?.column.columnDef.cell,
-                          row.getVisibleCells().find((cell: any) => cell.column.id === 'actions')?.getContext()
-                        )}
-                      </div>
-                    )}
-                  </div>
-                  
-                  {/* Order details */}
-                  <div className="space-y-2">
-                    {order.customer_name && (
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                          <User className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">Customer</span>
-                        </div>
-                        <span className="text-xs text-foreground font-medium">{order.customer_name}</span>
-                      </div>
-                    )}
-                    
-                    {order.total_amount && (
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                          <CreditCard className="w-3 h-3 text-muted-foreground" />
-                          <span className="text-xs text-muted-foreground">Total</span>
-                        </div>
-                        <span className="text-xs text-foreground font-semibold">
-                          KES {typeof order.total_amount === 'number' ? order.total_amount.toLocaleString() : order.total_amount}
-                        </span>
-                      </div>
-                    )}
-                    
-                    {order.status && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted-foreground">Status</span>
-                        <span className="text-xs text-foreground">{order.status}</span>
-                      </div>
-                    )}
-                    
-                    {order.items_count && (
-                      <div className="flex justify-between items-center">
-                        <span className="text-xs text-muted-foreground">Items</span>
-                        <span className="text-xs text-foreground">{order.items_count} items</span>
-                      </div>
-                    )}
-                    
-                    {order.shipping_address && (
-                      <div className="flex justify-between items-start">
-                        <span className="text-xs text-muted-foreground mr-2">Shipping</span>
-                        <span className="text-xs text-foreground text-right flex-1">{order.shipping_address}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })
-          ) : (
-            <div className="rounded-lg border bg-card p-8 text-center">
-              <p className="text-muted-foreground">No results found.</p>
+                  {isDeletingOrder ? (
+                    <Loader2 className="size-4 animate-spin mr-2" />
+                  ) : (
+                    <Trash2 className="size-4 mr-2" />
+                  )}
+                  Delete Selected ({selectedCount})
+                </Button>
+              )}
+              <div className="pt-2">
+                <DataTableViewOptions table={table} />
+              </div>
             </div>
           )}
         </div>
 
-        {/* Desktop Table View */}
-        <div className="hidden md:block w-full overflow-hidden rounded-md border">
+        {/* Responsive table wrapper with enhanced mobile handling */}
+        <div className="rounded-md border overflow-hidden">
+          {/* Mobile: Show summary when data exists */}
+          {isMobile && data.length > 0 && (
+            <div className="bg-muted/50 px-4 py-2 text-xs text-muted-foreground border-b md:hidden">
+              Swipe horizontally to view all columns
+            </div>
+          )}
+          
           <div className="overflow-x-auto">
             <Table>
               <TableHeader className="bg-muted">
@@ -248,7 +226,10 @@ export function DataTable<TData, TValue>({
                   <TableRow key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                       return (
-                        <TableHead key={header.id} className="whitespace-nowrap">
+                        <TableHead 
+                          key={header.id} 
+                          className="whitespace-nowrap text-xs md:text-sm min-w-[100px] first:min-w-[50px]"
+                        >
                           {header.isPlaceholder
                             ? null
                             : flexRender(
@@ -267,13 +248,19 @@ export function DataTable<TData, TValue>({
                     <TableRow
                       key={row.id}
                       data-state={row.getIsSelected() && "selected"}
+                      className="group"
                     >
                       {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id} className="whitespace-nowrap">
-                          {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )}
+                        <TableCell 
+                          key={cell.id} 
+                          className="whitespace-nowrap text-xs md:text-sm min-w-[100px] first:min-w-[50px] py-3 md:py-4"
+                        >
+                          <div className="max-w-[150px] md:max-w-none truncate">
+                            {flexRender(
+                              cell.column.columnDef.cell,
+                              cell.getContext()
+                            )}
+                          </div>
                         </TableCell>
                       ))}
                     </TableRow>
@@ -282,9 +269,21 @@ export function DataTable<TData, TValue>({
                   <TableRow>
                     <TableCell
                       colSpan={columns.length}
-                      className="h-24 text-center"
+                      className="h-32 md:h-24 text-center text-sm md:text-base"
                     >
-                      No results.
+                      <div className="flex flex-col items-center justify-center space-y-2">
+                        <div>No results found.</div>
+                        {globalFilter && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => setGlobalFilter("")}
+                            className="text-xs"
+                          >
+                            Clear search
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 )}
@@ -293,7 +292,6 @@ export function DataTable<TData, TValue>({
           </div>
         </div>
       </div>
-      
       <DataTablePagination table={table} />
     </div>
   );

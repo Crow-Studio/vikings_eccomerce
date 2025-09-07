@@ -161,19 +161,8 @@ export function DataTable<TData, TValue>({
                   if (typeof header === 'string') {
                     headerText = header;
                   } else if (header && typeof header === 'function') {
-                    // Try to render the header to get its text content
-                    try {
-                      const renderedHeader = flexRender(header, cell.getContext());
-                      if (typeof renderedHeader === 'string') {
-                        headerText = renderedHeader;
-                      } else {
-                        // Fallback to formatted column ID
-                        headerText = cell.column.id.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                      }
-                    } catch {
-                      // Fallback to formatted column ID
-                      headerText = cell.column.id.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                    }
+                    // Fallback to formatted column ID since we can't render header in cell context
+                    headerText = cell.column.id.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                   }
                   
                   return (

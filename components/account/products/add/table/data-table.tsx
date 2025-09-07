@@ -163,17 +163,25 @@ export function DataTable<TData, TValue>({
                   if (typeof header === 'string') {
                     headerText = header;
                   } else if (header && typeof header === 'function') {
-                    // Try to render the header to get its text content
-                    try {
-                      const renderedHeader = flexRender(header, cell.getContext());
-                      if (typeof renderedHeader === 'string') {
-                        headerText = renderedHeader;
-                      } else {
-                        // Fallback to formatted column ID
+                    // Find the corresponding header from the table header groups
+                    const headerGroup = table.getHeaderGroups()[0];
+                    const correspondingHeader = headerGroup?.headers.find(h => h.column.id === cell.column.id);
+                    
+                    if (correspondingHeader) {
+                      try {
+                        const renderedHeader = flexRender(header, correspondingHeader.getContext());
+                        if (typeof renderedHeader === 'string') {
+                          headerText = renderedHeader;
+                        } else {
+                          // Fallback to formatted column ID
+                          headerText = cell.column.id.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                        }
+                      } catch {
+                       
                         headerText = cell.column.id.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                       }
-                    } catch {
-                      // Fallback to formatted column ID
+                    } else {
+                      
                       headerText = cell.column.id.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
                     }
                   }
