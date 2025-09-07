@@ -1,7 +1,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import ProductUI from "@/components/global/product";
+import ProductUI from "@/components/global/Product";
 import GrainOverlay from "@/components/global/GrainOverlay";
 import { DBProduct } from "@/types";
 
