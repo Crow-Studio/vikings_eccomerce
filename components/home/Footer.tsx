@@ -23,14 +23,14 @@ export default function Footer() {
   };
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-800 relative">
+    <div className="border-t border-gray-200 dark:border-gray-800 relative bg-[#1d62fb] text-white">
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
             <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform hover:scale-105" />
-            <span className="text-lg font-medium text-gray-900 dark:text-white">
+            <span className="text-lg font-medium text-white ">
               Vikings
             </span>
           </div>
@@ -41,7 +41,7 @@ export default function Footer() {
               href="https://wa.me/254721780466"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-green-500 transition-colors"
+              className="text-white hover:text-black transition-colors"
               aria-label="WhatsApp"
             >
               {/* WhatsApp */}
@@ -53,7 +53,7 @@ export default function Footer() {
 
             <a
               href="mailto:Vikingskepower@gmail.com"
-              className="text-gray-500 hover:text-red-500 transition-colors"
+              className="text-white hover:text-black transition-colors"
               aria-label="Email"
             >
               {/* Gmail */}
@@ -67,7 +67,7 @@ export default function Footer() {
               href="https://instagram.com/vikings_traders_"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-pink-500 transition-colors"
+              className="text-white hover:text-black transition-colors"
               aria-label="Instagram"
             >
               {/* Instagram */}
@@ -82,7 +82,7 @@ export default function Footer() {
               href="https://www.facebook.com/VikingsTraders"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-blue-600 transition-colors"
+              className="text-white hover:text-black transition-colors"
               aria-label="Facebook"
             >
               {/* Facebook */}
@@ -95,7 +95,7 @@ export default function Footer() {
               href="https://x.com/Vikings2308"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-black dark:hover:text-white transition-colors"
+              className="text-white hover:text-black dark:hover:text-white transition-colors"
               aria-label="X (Twitter)"
             >
               {/* X (Twitter) */}
@@ -108,7 +108,7 @@ export default function Footer() {
               href="https://www.tiktok.com/@vikingstraders"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-black dark:hover:text-white transition-colors"
+              className="text-white hover:text-black dark:hover:text-white transition-colors"
               aria-label="TikTok"
             >
               {/* TikTok */}
@@ -122,7 +122,7 @@ export default function Footer() {
               href="https://www.youtube.com/@vikingstraders4737"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-red-600 transition-colors"
+              className="text-white hover:text-black transition-colors"
               aria-label="YouTube"
             >
               {/* YouTube */}
@@ -136,7 +136,7 @@ export default function Footer() {
               href="https://www.linkedin.com/company/vikings-kepower"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-blue-700 transition-colors"
+              className="text-white hover:text-black transition-colors"
               aria-label="LinkedIn"
             >
               {/* LinkedIn */}
@@ -153,7 +153,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
           {/* Legal */}
           <div className="flex flex-col md:flex-row items-center gap-4 text-sm">
-            <span className="text-gray-500 dark:text-gray-400">
+            <span className="text-gray-300 ">
               © {new Date().getFullYear()} Vikings. All rights reserved.
             </span>
           </div>
@@ -163,7 +163,7 @@ export default function Footer() {
             href="https://crowstudios.tech"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="flex items-center gap-1 text-sm text-gray-50 hover:text-gray-300 transition-colors"
           >
             <span>Crafted by</span>
             <span>🐦‍⬛</span>

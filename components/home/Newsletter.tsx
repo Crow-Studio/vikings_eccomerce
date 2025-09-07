@@ -54,7 +54,7 @@ const Newsletter = () => {
   ];
 
   return (
-    <section className="relative py-16 lg:py-24 bg-gradient-to-br from-blue-50 to-white overflow-hidden">
+    <section className="relative py-16 lg:py-24  overflow-hidden">
       {/* Grain overlay */}
       <GrainOverlay/>
       

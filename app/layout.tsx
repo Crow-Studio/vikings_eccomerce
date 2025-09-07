@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/providers/theme-provider";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import NprogressProvider from "@/providers/nprogress-provider";
 const geistSans = Geist({
@@ -37,14 +36,7 @@ export default function RootLayout({
     			<ConsentManagerDialog />
     		</ConsentManagerProvider> */}
         <NprogressProvider />
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
           <NuqsAdapter>{children}</NuqsAdapter>
-        </ThemeProvider>
       </body>
     </html>
   );
