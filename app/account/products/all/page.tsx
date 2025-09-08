@@ -38,14 +38,14 @@ export default async function AllProductsPage() {
   }));
   return (
     <div className="grid gap-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-medium">Products</h2>
           <p className="text-sm text-muted-foreground">
             Overview of all your products
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="w-full sm:w-fit">
           <Link href="/account/products/add">
             <Plus />
             Add product

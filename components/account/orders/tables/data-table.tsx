@@ -102,9 +102,9 @@ export function DataTable<TData, TValue>({
     );
   };
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-w-sm sm:max-w-2xl md:max-w-2xl lg:max-w-full">
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-y-2 md:gap-y-0 md:flex-row md:items-center md:justify-between">
           <Input
             placeholder="Search customers, IDs, status..."
             value={table.getState().globalFilter ?? ""}
