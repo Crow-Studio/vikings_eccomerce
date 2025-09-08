@@ -32,7 +32,7 @@ function isNewProduct(createdAt: Date): boolean {
 
 function ProductCard({ product }: { product: DBProduct }) {
   const isNew = isNewProduct(new Date(product.created_at))
-  const whatsappNumber = "+254729016371"
+  const whatsappNumber = "+254721780466"
 
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -60,7 +60,7 @@ function ProductCard({ product }: { product: DBProduct }) {
           {/* New Badge */}
           {isNew && (
             <div className="absolute top-2 left-2 z-10">
-              <span className="bg-black text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
+              <span className="bg-yellow-400 text-black text-xs font-semibold px-2 py-1 rounded-full shadow-sm">
                 New
               </span>
             </div>
@@ -81,14 +81,14 @@ function ProductCard({ product }: { product: DBProduct }) {
           <div className="absolute bottom-0 left-0 right-0 z-10 p-3 grid sm:group-hover:grid gap-y-1.5 sm:hidden transition-all duration-200">
             <button
               onClick={handleWhatsAppOrder}
-              className="p-0.5 rounded-md w-full bg-white/90 backdrop-blur-sm border border-gray-200 group/whatsapp shadow-sm dark:text-black hover:bg-zinc-200 cursor-pointer transition-colors duration-200"
-              aria-label="Order via WhatsApp"
+              className="p-0.5 rounded-md w-full bg-white/95 backdrop-blur-sm border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium shadow-sm cursor-pointer transition-colors duration-200"
+              aria-label="Order Now"
             >
-              Order via WhatsApp
+              Order Now
             </button>
             <button
               onClick={handleViewDetails}
-              className="p-0.5 rounded-md w-full bg-white/90 backdrop-blur-sm border border-gray-200 group/wishlist shadow-sm dark:text-black hover:bg-zinc-200 cursor-pointer transition-colors duration-200"
+              className="p-0.5 rounded-md w-full bg-white/95 backdrop-blur-sm border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium shadow-sm cursor-pointer transition-colors duration-200"
               aria-label="View details"
             >
               View Details
@@ -97,10 +97,10 @@ function ProductCard({ product }: { product: DBProduct }) {
         </div>
 
         <div className="grid gap-y-1.5">
-          <div className="text-sm font-medium group-hover:text-primary transition-colors duration-200">
+          <div className="text-sm font-medium text-gray-800 group-hover:text-blue-600 transition-colors duration-200">
             {product.name}
           </div>
-          <p className="text-xs text-muted-foreground font-semibold opacity-70 group-hover:opacity-100 transition-opacity duration-200">
+          <p className="text-sm text-red-600 font-bold group-hover:text-red-700 transition-opacity duration-200">
             KSh {Number.parseFloat(product.price).toLocaleString()}
           </p>
         </div>
@@ -184,7 +184,7 @@ export default function ProductUI({
                 <PaginationPrevious
                   onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                   className={cn(
-                    "cursor-pointer",
+                    "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
                     currentPage === 1 && "pointer-events-none opacity-50"
                   )}
                 />
@@ -198,7 +198,10 @@ export default function ProductUI({
                     <PaginationLink
                       onClick={() => handlePageChange(page)}
                       isActive={currentPage === page}
-                      className="cursor-pointer"
+                      className={cn(
+                        "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
+                        currentPage === page && "bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
+                      )}
                     >
                       {page}
                     </PaginationLink>
@@ -212,7 +215,7 @@ export default function ProductUI({
                     handlePageChange(Math.min(totalPages, currentPage + 1))
                   }
                   className={cn(
-                    "cursor-pointer",
+                    "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
                     currentPage === totalPages && "pointer-events-none opacity-50"
                   )}
                 />
@@ -224,7 +227,7 @@ export default function ProductUI({
 
       {/* Pagination info */}
       {!isLoading && showPagination && products.length > 0 && (
-        <div className="text-center text-sm text-muted-foreground">
+        <div className="text-center text-sm text-blue-600">
           Showing {startIndex + 1} to {Math.min(endIndex, products.length)} of{" "}
           {products.length} products
         </div>

@@ -23,8 +23,8 @@ export const RelatedProductsSection = React.memo(({ relatedProducts }: RelatedPr
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {relatedProducts.map((relatedProduct) => (
           <Link key={relatedProduct.id} href={`/products/${relatedProduct.id}`}>
-            <div className="group bg-muted/30 rounded-xl p-4 hover:bg-muted/50 transition-all duration-300 cursor-pointer">
-              <div className="aspect-square bg-background rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+            <div className="group bg-white/70 backdrop-blur-sm rounded-2xl p-6 border border-blue-100 hover:border-blue-200 transition-all duration-300 cursor-pointer hover:-translate-y-1 hover:shadow-lg">
+              <div className="aspect-square bg-blue-50 rounded-xl mb-4 flex items-center justify-center overflow-hidden relative group-hover:bg-blue-100 transition-colors">
                 <Image
                   src={
                     relatedProduct.images?.[0]?.url ||
@@ -33,14 +33,14 @@ export const RelatedProductsSection = React.memo(({ relatedProducts }: RelatedPr
                   }
                   alt={`Image of ${relatedProduct.name}`}
                   fill
-                  className="object-cover rounded-lg"
+                  className="object-cover rounded-xl"
                   sizes="(max-width: 768px) 50vw, (max-width: 1200px) 25vw, 15vw"
                 />
               </div>
-              <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors line-clamp-2">
+              <h3 className="font-semibold text-foreground mb-2 group-hover:text-blue-600 transition-colors line-clamp-2">
                 {relatedProduct.name}
               </h3>
-              <div className="text-lg font-bold text-primary">
+              <div className="text-lg font-bold text-blue-600">
                 KSh {Number.parseFloat(relatedProduct.price).toLocaleString()}
               </div>
             </div>

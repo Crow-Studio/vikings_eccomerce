@@ -7,27 +7,37 @@ import { MobileMenu } from "./mobile-menu"
 import MegaSearch from "@/components/global/SearchComponent"
 import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon"
 import type { HeaderProps } from "@/types/header"
+
 export default function Header({ user }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
+
   const handleSearchOpen = useCallback(() => setIsSearchOpen(true), [])
   const handleSearchClose = useCallback(() => setIsSearchOpen(false), [])
   const handleMenuClose = useCallback(() => setIsMenuOpen(false), [])
+
   useHeaderEffects(isMenuOpen, false, setIsSearchOpen)
+
   return (
     <>
-      <header className="sticky top-0 right-0 left-0 backdrop-blur-md bg-background/80 border-b z-30 px-3 sm:px-4 md:px-5 xl:px-10 py-2 sm:py-3 transition-all duration-200">
+      <header className="sticky top-0 right-0 left-0 backdrop-blur-md bg-white/90 dark:bg-background/80 border-b border-gray-200 dark:border-border z-30 px-3 sm:px-4 md:px-5 xl:px-10 py-2 sm:py-3 transition-all duration-200">
         <div className="flex items-center justify-between">
-          {}
+          {/* Left side - Promo text */}
           <div className="hidden lg:block flex-1">
-            <h2 className="text-xs xl:text-sm text-muted-foreground">Free shipping in Nairobi and 30 days return</h2>
+            <h2 className="text-xs xl:text-sm text-gray-600 dark:text-muted-foreground">
+              Free shipping in Nairobi and 30 days return
+            </h2>
           </div>
-          {}
-          <Link href="/" className="flex items-center gap-1.5 sm:gap-2">
-            <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform hover:scale-105" />
-            <h1 className="text-xl sm:text-2xl font-semibold text-[#353535] dark:text-white">Vikings</h1>
+
+          {/* Center - Logo */}
+          <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group">
+            <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform group-hover:scale-105" />
+            <h1 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-white">
+              Vikings
+            </h1>
           </Link>
-          {}
+
+          {/* Right side - Actions */}
           <div className="flex items-center gap-1 sm:gap-2 flex-1 justify-end">
             <DesktopActions
               user={user}
