@@ -8,7 +8,7 @@ export const size = {
 }
 export const contentType = 'image/png'
 
-// Image generation  
+// Image generation
 export default async function Image() {
   return new ImageResponse(
     (
@@ -20,60 +20,63 @@ export default async function Image() {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#1da1f2',
-          backgroundImage: 'linear-gradient(135deg, #1da1f2 0%, #1d62fb 100%)',
+          backgroundColor: '#ffffff',
+          backgroundImage: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         }}
       >
-        {/* Main content */}
+        {/* Main content container */}
         <div
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            padding: '60px',
-            borderRadius: '24px',
-            backgroundColor: 'rgba(255, 255, 255, 0.98)',
-            margin: '40px',
-            boxShadow: '0 25px 80px rgba(0, 0, 0, 0.15)',
+            padding: '40px',
+            borderRadius: '20px',
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.1)',
           }}
         >
-          {/* Brand name */}
+          {/* Logo/Brand */}
           <div
             style={{
-              fontSize: '68px',
+              display: 'flex',
+              fontSize: '72px',
               fontWeight: 'bold',
               color: '#1d62fb',
-              marginBottom: '16px',
+              marginBottom: '20px',
               textAlign: 'center',
             }}
           >
             Vikings Kepower
           </div>
           
-          {/* Tagline */}
+          {/* Subtitle */}
           <div
             style={{
-              fontSize: '28px',
-              color: '#2d3748',
+              display: 'flex',
+              fontSize: '32px',
+              color: '#4a5568',
               textAlign: 'center',
-              marginBottom: '8px',
+              marginBottom: '10px',
             }}
           >
-            Professional Tools & Equipment
+            Quality Tools & Equipment
           </div>
           
-          {/* Call to action */}
+          {/* Location */}
           <div
             style={{
-              fontSize: '20px',
+              display: 'flex',
+              fontSize: '24px',
               color: '#718096',
               textAlign: 'center',
             }}
           >
-            🔧 Construction • 🌾 Agriculture • 🏭 Industrial
+            Trusted Supplier in Kenya
           </div>
         </div>
+
       </div>
     ),
     {

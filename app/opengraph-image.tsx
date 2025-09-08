@@ -40,6 +40,7 @@ export default async function Image() {
           {/* Logo/Brand */}
           <div
             style={{
+              display: 'flex',
               fontSize: '72px',
               fontWeight: 'bold',
               color: '#1d62fb',
@@ -53,6 +54,7 @@ export default async function Image() {
           {/* Subtitle */}
           <div
             style={{
+              display: 'flex',
               fontSize: '32px',
               color: '#4a5568',
               textAlign: 'center',
@@ -65,6 +67,7 @@ export default async function Image() {
           {/* Location */}
           <div
             style={{
+              display: 'flex',
               fontSize: '24px',
               color: '#718096',
               textAlign: 'center',
@@ -83,6 +86,7 @@ export default async function Image() {
             right: '0',
             height: '8px',
             background: 'linear-gradient(90deg, #1d62fb 0%, #667eea 100%)',
+            display: 'flex',
           }}
         />
       </div>
