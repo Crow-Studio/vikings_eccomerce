@@ -28,7 +28,7 @@ export default function OurCollections({ products = [] }: OurCollectionsProps) {
   };
 
   return (
-    <section className="min-h-screen relative bg-gradient-to-br from-blue-50 to-white overflow-hidden">
+    <section className="min-h-screen relative coverflow-hidden">
       <GrainOverlay/>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
