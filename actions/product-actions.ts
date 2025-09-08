@@ -1,6 +1,6 @@
 "use server"
 import { db } from "@/database"
-import { and, ne, eq } from "drizzle-orm"
+import { and, ne, eq, desc } from "drizzle-orm"
 import { Visibility } from "@/database/schema"
 import type { Product, DBProduct } from "@/types/products"
 import { transformDBProductToProduct } from "@/types/products"
@@ -50,5 +50,32 @@ export async function getProductById(id: string): Promise<Product | null> {
   } catch (error) {
     console.error('Error fetching product:', error)
     return null
+  }
+}
+
+export async function getMoreProducts(excludeProductId: string, limit: number = 8): Promise<Product[]> {
+  try {
+    const dbProducts = await db.query.product.findMany({
+      where: (table) => and(
+        ne(table.id, excludeProductId),
+        eq(table.visibility, Visibility.ACTIVE)
+      ),
+      with: {
+        category: true,
+        images: true,
+        variants: {
+          with: {
+            generatedVariants: true,
+          },
+        },
+      },
+      orderBy: (table) => desc(table.created_at),
+      limit,
+    }) as DBProduct[]
+    
+    return dbProducts.map(transformDBProductToProduct)
+  } catch (error) {
+    console.error('Error fetching more products:', error)
+    return []
   }
 }

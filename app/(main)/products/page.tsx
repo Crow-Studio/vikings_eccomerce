@@ -49,7 +49,7 @@ export default async function Page() {
     updated_at: product.updated_at?.toISOString() || null,
   }));
   return (
-    <div className="bg-gradient-to-br from-primary/10 to-primary/5 relative overflow-hidden ">
+    <div className="bg-gradient-to-br from-slate-50 via-white to-blue-50 relative overflow-hidden ">
       <GrainOverlay/>
       <OurCollections products={products} />
     </div>
