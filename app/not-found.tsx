@@ -1,6 +1,6 @@
 import { Home } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import Link from "next.link"
+import Link from "next/link"
 import Image from "next/image"
 import GrainOverlay from "@/components/global/GrainOverlay"
 
