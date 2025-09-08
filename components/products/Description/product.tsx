@@ -12,10 +12,15 @@ import { ProductVariants } from "@/components/products/Description/product-varia
 import { ProductTrustBadges } from "@/components/products/Description/product-trust-badges"
 import { Card, CardContent } from "@/components/ui/card"
 import GrainOverlay from "@/components/global/GrainOverlay"
+import ProductUI from "@/components/global/Product"
+import Link from "next/link"
+import { ArrowRight } from "lucide-react"
+
 interface ProductDetailsClientProps {
   product: Product
+  moreProducts?: Product[]
 }
-export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
+export function ProductDetailsClient({ product, moreProducts = [] }: ProductDetailsClientProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [quantity] = useState(1)
   const [selectedTab, setSelectedTab] = useState("description")
@@ -53,7 +58,7 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
     setSelectedTab(tabId)
   }, [])
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-white relative overflow-hidden">
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-white to-blue-50 relative overflow-hidden">
       <GrainOverlay/>
       <div className="max-w-7xl mx-auto">
         <ProductHeader product={product} />
@@ -98,6 +103,36 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
         <RelatedProductsSection 
           relatedProducts={relatedProducts} 
         />
+        
+        {/* More Products Section */}
+        {moreProducts.length > 0 && (
+          <div className="mt-16 space-y-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-2">
+                  More Products You Might Like
+                </h2>
+                <p className="text-gray-600 text-sm lg:text-base">
+                  Discover more quality items from our collection
+                </p>
+              </div>
+              <Link href="/products">
+                <button className="bg-white border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg px-6 py-2 font-medium text-sm flex items-center gap-2 group transition-all duration-300 shadow-md hover:shadow-lg">
+                  View All Products
+                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" />
+                </button>
+              </Link>
+            </div>
+            
+            <div className="relative">
+              <ProductUI 
+                products={moreProducts}
+                showPagination={false}
+                itemsPerPage={8}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
