@@ -22,7 +22,6 @@ export default function NotFoundPage() {
           />
         </div>
       </div>
-      
       {/* Right side - Content */}
       <div className="flex-1 flex flex-col">
         {/* Top section - Error message */}
