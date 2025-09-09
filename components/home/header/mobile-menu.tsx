@@ -46,7 +46,7 @@ export const MobileMenu = memo(
               <p className="text-xl font-semibold">Vikings</p>
             </SheetTitle>
           </SheetHeader>
-          <div className="mt-6 space-y-4">
+          <div className="space-y-4 p-2">
             <div className="text-xs text-muted-foreground border-b pb-4">
               Free shipping in Nairobi and 30 days return
             </div>
