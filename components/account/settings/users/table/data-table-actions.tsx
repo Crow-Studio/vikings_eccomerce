@@ -6,12 +6,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { useState } from "react";
 import { useModal } from "@/hooks/use-modal-store";
 import { User } from "@/database/schema";
-import { deleteUserAction } from "@/app/account/settings/action";
 
 interface Props {
   user: User;
@@ -19,33 +15,11 @@ interface Props {
 
 export default function DataTableActions({ user }: Props) {
   const { onOpen } = useModal();
-  const router = useRouter();
-  const [isDeletingUser, setIsDeletingUser] = useState(false);
-
-  const userIds: string[] = [];
 
   const onDeleteUser = async () => {
-    userIds.push(user.id);
-
-    toast.promise(
-      (async () => {
-        setIsDeletingUser(true);
-        const { message, errorMessage } = await deleteUserAction(userIds);
-        if (errorMessage) throw new Error(errorMessage);
-        return message;
-      })(),
-      {
-        loading: "Deleting user...",
-        success: "User deleted successfully!",
-        error: (error) =>
-          error instanceof Error ? error.message : "Failed to delete user",
-        finally() {
-          setIsDeletingUser(false);
-          router.refresh();
-        },
-        position: "top-center",
-      }
-    );
+    onOpen('deleteUser', {
+      user,
+    })
   };
 
   return (
@@ -60,14 +34,12 @@ export default function DataTableActions({ user }: Props) {
         <DropdownMenuItem
           onClick={() => onOpen("editUser")}
           className="cursor-pointer"
-          disabled={isDeletingUser}
         >
           <Edit />
           Edit User
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => onDeleteUser()}
-          disabled={isDeletingUser}
           className="cursor-pointer"
         >
           <Trash />

@@ -5,7 +5,7 @@ import { Category, Customer as DBCustomer, GeneratedVariants, ProductImage, User
 import { Customer } from "./customers";
 import { Order } from "./orders";
 
-export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder" | "editOrder" | "addNewUser" | "editUser"
+export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder" | "editOrder" | "addNewUser" | "editUser" | "deleteUser"
 
 export interface ModalData {
   customer?: Customer
