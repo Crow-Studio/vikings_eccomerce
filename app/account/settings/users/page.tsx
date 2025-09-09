@@ -27,7 +27,7 @@ export default async function GeneralSettingsPage() {
 
   return (
     <div className="grid gap-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-medium">Users</h2>
           <p className="text-sm text-muted-foreground">

@@ -135,7 +135,6 @@ export default function EditProductForm({
         : null,
       id: product.id,
     };
-    console.log("processedData", processedData);
     const { message, errorMessage } = await editProductAction(processedData);
     if (errorMessage) {
       setIsAddingProduct(false);

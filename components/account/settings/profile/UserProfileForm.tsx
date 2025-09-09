@@ -88,7 +88,8 @@ export function UserProfileForm({ user }: Props) {
         }),
       });
       if (!res.ok) {
-        return toast(res.statusText, {
+        setIsUpdatingProfile(false);
+        return toast.error(res.statusText, {
           position: "top-center",
         });
       }
@@ -98,9 +99,8 @@ export function UserProfileForm({ user }: Props) {
       return toast.success(res.statusText, {
         position: "top-center",
       });
-    } catch (error) {
+    } catch {
       setIsUpdatingProfile(false);
-      console.log("error", error);
     }
   }
   useEffect(() => {

@@ -34,7 +34,7 @@ export async function PATCH(request: NextRequest) {
         await db.update(tables.user).set({
             username,
             avatar: image
-        })
+        }).where(eq(tables.user.id, user.id))
         return NextResponse.json({
             message: "You've successfully update your profile info"
         }, {
