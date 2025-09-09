@@ -1,4 +1,3 @@
-import CreateOrderForm from "@/components/account/orders/create-order-form";
 import EditOrderForm from "@/components/account/orders/edit/edit-order.form";
 import {
   Sheet,
@@ -14,7 +13,7 @@ export default function EditOrder() {
     isOpen,
     onClose,
     type,
-    data: { order, customers, products },
+    data: { customers, products },
   } = useModal();
 
   const isModalOpen = isOpen && type === "editOrder";

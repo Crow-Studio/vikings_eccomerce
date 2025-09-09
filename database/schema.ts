@@ -15,9 +15,12 @@ export const generateNanoId = customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWX
 export function enumToPgEnum<T extends Record<string, string>>(myEnum: T): [T[keyof T], ...T[keyof T][]] {
   return Object.values(myEnum) as [T[keyof T], ...T[keyof T][]]
 }
+
 export enum UserRole {
   ADMIN = 'admin',
+  MODERATOR = 'moderator'
 }
+
 export enum Visibility {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
