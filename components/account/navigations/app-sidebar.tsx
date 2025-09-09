@@ -40,27 +40,29 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         title: "Customers",
         url: "/account/customers",
         icon: Users,
-        isShowInterface: user.role === UserRole.ADMIN ? true : false,
+        isShowInterface: true,
       },
       {
         title: "Orders",
         url: "/account/orders",
         icon: ShoppingBasket,
-        isShowInterface: user.role === UserRole.ADMIN ? true : false,
+        isShowInterface: true,
       },
       {
         title: "Products",
         url: "/account/products/all",
         icon: ShoppingBag,
-        isShowInterface: user.role === UserRole.ADMIN ? true : false,
+        isShowInterface: true,
         items: [
           {
             title: "All Products",
             url: "/account/products/all",
+            isShowInterface: true,
           },
           {
             title: "Add Product",
             url: "/account/products/add",
+            isShowInterface: true,
           },
         ],
       },
@@ -78,7 +80,7 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
           {
             title: "Users",
             url: "/account/settings/users",
-            isShowInterface: true,
+            isShowInterface: user.role === UserRole.ADMIN ? true : false,
           },
         ],
       },

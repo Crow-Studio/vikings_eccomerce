@@ -1,6 +1,7 @@
 import AddUserButton from "@/components/account/settings/users/add-user-button";
 import UsersDataTable from "@/components/account/settings/users/table/Users";
 import { db } from "@/database";
+import { UserRole } from "@/database/schema";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { desc } from "drizzle-orm";
@@ -19,6 +20,10 @@ export default async function GeneralSettingsPage() {
 
   if (!user.email_verified) {
     return redirect("/auth/admin/verify-email");
+  }
+
+  if (user.role !==  UserRole.ADMIN) {
+    return redirect("/account/dashboard")
   }
 
   const users = await db.query.user.findMany({
