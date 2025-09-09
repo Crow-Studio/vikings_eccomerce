@@ -61,4 +61,24 @@ export const createUserFormSchema = z.object({
         }),
 });
 
+export const editUserFormSchema = z.object({
+    first_name: z
+        .string()
+        .min(1, "Full name is required"),
+    last_name: z
+        .string()
+        .min(1, "Full name is required"),
+    email: z.string().email("Please enter a valid email address"),
+    avatar: z.union(
+        [
+            z.string().url("Please provide a valid image URL"),
+            z.instanceof(File, { message: "Please upload a valid image file" }),
+            z.null(),
+        ],
+        { required_error: "Avatar is required" }
+    ),
+    role: z.nativeEnum(UserRole),
+});
+
 export type CreateUserFormValues = z.infer<typeof createUserFormSchema>;
+export type EditUserFormValues = z.infer<typeof editUserFormSchema>;

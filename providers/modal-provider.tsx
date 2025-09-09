@@ -7,6 +7,7 @@ import CreateOrder from "@/modals/account/orders/CreateOrder";
 import EditOrder from "@/modals/account/orders/EditOrder";
 import CreateUser from "@/modals/account/settings/users/CreateUser";
 import DeleteUser from "@/modals/account/settings/users/DeleteUser";
+import EditUser from "@/modals/account/settings/users/EditUser";
 import Signout from "@/modals/Signout";
 import { useEffect, useState } from "react";
 
@@ -31,6 +32,7 @@ export default function ModalProvider() {
       <EditOrder />
       <DeleteUser />
       <CreateUser />
+      <EditUser />
     </div>
   );
 }

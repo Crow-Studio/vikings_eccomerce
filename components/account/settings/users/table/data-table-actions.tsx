@@ -17,9 +17,9 @@ export default function DataTableActions({ user }: Props) {
   const { onOpen } = useModal();
 
   const onDeleteUser = async () => {
-    onOpen('deleteUser', {
+    onOpen("deleteUser", {
       user,
-    })
+    });
   };
 
   return (
@@ -32,7 +32,11 @@ export default function DataTableActions({ user }: Props) {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem
-          onClick={() => onOpen("editUser")}
+          onClick={() =>
+            onOpen("editUser", {
+              user,
+            })
+          }
           className="cursor-pointer"
         >
           <Edit />
