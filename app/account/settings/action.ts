@@ -240,6 +240,13 @@ export async function deleteUserAction(userIds: string[]): Promise<ActionResult>
     const { user } = await getCurrentSession()
     if (user?.role !== UserRole.ADMIN) return { errorMessage: "Only admins can delete users", message: null }
 
+    if (user && userIds.includes(user.id)) {
+        return {
+            errorMessage: "You cannot delete your own account",
+            message: null
+        }
+    }
+
     try {
         if (clientIP !== null) ipBucket.consume(clientIP, 1)
 
