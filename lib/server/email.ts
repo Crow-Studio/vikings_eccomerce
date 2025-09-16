@@ -13,7 +13,7 @@ export async function sendVerificationCodeRequest({ code, email }: Props) {
     await resend.emails.send({
       from: "Team Vikings <noreply@thecodingmontana.com>",
       to: [email],
-      subject: `Your unique derilium verification code is ${code}`,
+      subject: `Your unique vikings traders verification code is ${code}`,
       react: await VerificationCodeRequestMail({ code }),
     });
   }

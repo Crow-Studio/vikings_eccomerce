@@ -103,7 +103,7 @@ jobs:
 
             # Start with PM2
             echo "🚀 Starting with PM2..."
-            pm2 start ecosystem.config.cjs --env production
+            pm2 reload ecosystem.config.cjs --env production || pm2 start ecosystem.config.cjs --env production
             pm2 save
 
             echo "✅ Deployment completed successfully"
