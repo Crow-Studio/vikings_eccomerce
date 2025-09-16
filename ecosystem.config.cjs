@@ -8,9 +8,9 @@ module.exports = {
       exec_mode: "cluster",
       watch: false,
       cwd: "/var/www/vikings",
-      env: {
+      env_production: {
         NODE_ENV: "production",
-        PORT: 3000,
+        PORT: 3003,
       },
       env_file: ".env.production",
       log_date_format: "YYYY-MM-DD HH:mm:ss",
@@ -20,9 +20,11 @@ module.exports = {
       combine_logs: true,
       time: true,
       max_memory_restart: "1G",
-      max_restarts: 3,
-      min_uptime: "10s",
-      restart_delay: 4000,
+      max_restarts: 10,
+      min_uptime: "30s",
+      restart_delay: 5000,
+      autorestart: true,
+      kill_timeout: 5000,
     },
   ],
 };

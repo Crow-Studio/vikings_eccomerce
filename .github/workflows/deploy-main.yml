@@ -15,6 +15,17 @@ jobs:
         with:
           fetch-depth: 1
 
+      # Cache dependencies and Next.js build
+      - name: Cache dependencies and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+
       # Sync code to VPS including dotfiles
       - name: Sync to VPS
         uses: appleboy/scp-action@v0.1.4
