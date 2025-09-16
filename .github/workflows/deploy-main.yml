@@ -42,7 +42,7 @@ jobs:
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-            cd /var/www/goodsncart-vikings
+            cd /var/www/vikings
 
             # Load environment variables from .env.production
             # This trims any spaces around '=' so even "KEY = value" works
