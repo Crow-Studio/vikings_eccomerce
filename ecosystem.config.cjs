@@ -10,7 +10,7 @@ module.exports = {
       cwd: "/var/www/vikings",
       env_production: {
         NODE_ENV: "production",
-        PORT: 3001
+        PORT: 3003
       },
       env_file: ".env.production",
       log_date_format: "YYYY-MM-DD HH:mm:ss",
