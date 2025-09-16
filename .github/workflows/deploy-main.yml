@@ -56,7 +56,7 @@ jobs:
             cd /var/www/vikings
 
             # Stop PM2 processes first to avoid conflicts
-            pm2 delete vikingstraders || echo "Process not running"
+            # pm2 delete vikingstraders || echo "Process not running"
 
             # Load environment variables from .env.production
             if [ -f /var/www/vikings/.env.production ]; then

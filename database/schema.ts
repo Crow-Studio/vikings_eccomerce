@@ -48,7 +48,10 @@ export const user = pgTable(
     password: text("password"),
     email_verified: boolean("email_verified").notNull().default(false),
     created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-    updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
   },
   (table) => ({
     emailIndex: index("email_index").on(table.email),
@@ -70,7 +73,10 @@ export const product = pgTable('products', {
   category_id: text("category_id").notNull().references(() => category.id),
   has_variants: boolean('has_variants').default(false).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const images = pgTable('images', {
@@ -78,7 +84,10 @@ export const images = pgTable('images', {
   product_id: text("product_id").notNull().references(() => product.id, { onDelete: "cascade" }),
   url: text('url').notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const variants = pgTable('variants', {
@@ -86,7 +95,10 @@ export const variants = pgTable('variants', {
   product_id: text("product_id").notNull().references(() => product.id, { onDelete: "cascade" }),
   title: varchar('title', { length: 50 }).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const generatedVariants = pgTable('generated_variants', {
@@ -97,7 +109,10 @@ export const generatedVariants = pgTable('generated_variants', {
   sku: varchar('sku', { length: 50 }).notNull(),
   inventory: integer('inventory').default(0).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const customer = pgTable('customer', {
@@ -110,7 +125,10 @@ export const customer = pgTable('customer', {
   city: varchar('city', { length: 100 }),
   country: varchar('country', { length: 100 }),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const order = pgTable('order', {
@@ -119,7 +137,10 @@ export const order = pgTable('order', {
   status: orderStatusEnum('status').default(OrderStatus.PENDING).notNull(),
   total_amount: decimal('total_amount', { precision: 10, scale: 2 }).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const orderItem = pgTable('order_item', {
@@ -130,7 +151,10 @@ export const orderItem = pgTable('order_item', {
   quantity: integer('quantity').default(1).notNull(),
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const oauth_account = pgTable("oauth_account", {
@@ -139,7 +163,10 @@ export const oauth_account = pgTable("oauth_account", {
   provider: text("provider").notNull(),
   provider_user_id: text("provider_user_id").notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const email_verification_request_table = pgTable("email_verification_request", {
@@ -149,7 +176,10 @@ export const email_verification_request_table = pgTable("email_verification_requ
   user_id: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   expires_at: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const session = pgTable("session", {
@@ -157,7 +187,10 @@ export const session = pgTable("session", {
   user_id: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   expires_at: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
-  updated_at: timestamp('updated_at', { mode: 'date', precision: 3 }).$onUpdate(() => new Date())
+ updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })
+      .notNull()
+      .defaultNow()
+      .$onUpdate(() => new Date())
 })
 
 export const userRelations = relations(user, ({ many }) => ({
