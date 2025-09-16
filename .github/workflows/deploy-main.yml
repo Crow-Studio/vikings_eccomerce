@@ -54,6 +54,7 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
             cd /var/www/vikings
+            rm -rf .next
 
             # Stop PM2 processes first to avoid conflicts
             # pm2 delete vikingstraders || echo "Process not running"
