@@ -11,6 +11,7 @@ import { CustomerEditInfo, CustomerFormValues } from "@/types/customers";
 import { inArray } from "drizzle-orm";
 import { extractPublicId } from "@/lib/server/utils";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
+
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
