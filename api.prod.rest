@@ -1,0 +1,18 @@
+# API Testing with REST Client
+# Save this as api-test.http or api-test.rest
+
+### Variables (optional)
+@baseUrl = https://vikingstraders.co.ke//api
+
+### Create new admin user
+POST {{baseUrl}}/auth/admin/signup
+Content-Type: application/json
+Origin: https://vikingstraders.co.ke
+Host: vikingstraders.co.ke
+User-Agent: REST Client
+Accept: application/json
+
+{
+  "email": "thecodingmontana@gmail.com",
+  "password": "@B3tterM0ntana."
+}
