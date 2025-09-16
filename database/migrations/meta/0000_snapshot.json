@@ -1,5 +1,5 @@
 {
-  "id": "4ae4db9f-8e71-4d60-8bea-afe669bd7f52",
+  "id": "72193f21-a2da-4dc8-9db3-4cb67b22b95b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -61,6 +61,12 @@
         "phone": {
           "name": "phone",
           "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avatar": {
+          "name": "avatar",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
@@ -461,6 +467,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "variant_id": {
+          "name": "variant_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "quantity": {
           "name": "quantity",
           "type": "integer",
@@ -509,6 +521,19 @@
           "tableTo": "products",
           "columnsFrom": [
             "product_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "order_item_variant_id_generated_variants_id_fk": {
+          "name": "order_item_variant_id_generated_variants_id_fk",
+          "tableFrom": "order_item",
+          "tableTo": "generated_variants",
+          "columnsFrom": [
+            "variant_id"
           ],
           "columnsTo": [
             "id"
@@ -836,7 +861,8 @@
       "name": "user_role",
       "schema": "public",
       "values": [
-        "admin"
+        "admin",
+        "moderator"
       ]
     },
     "public.visibility": {
