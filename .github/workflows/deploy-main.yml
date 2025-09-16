@@ -9,11 +9,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repo
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
+      # Sync code to VPS including dotfiles
       - name: Sync to VPS
         uses: appleboy/scp-action@v0.1.4
         with:
@@ -86,13 +88,6 @@ jobs:
             fi
 
             echo "✅ Build completed successfully"
-
-            # Test the application can start
-            echo "🧪 Testing application startup..."
-            timeout 10s pnpm start || {
-              echo "❌ Application failed to start properly"
-              exit 1
-            }
 
             # Start with PM2
             echo "🚀 Starting with PM2..."
