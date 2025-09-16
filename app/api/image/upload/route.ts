@@ -2,8 +2,8 @@ import { RefillingTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { v2 as cloudinary } from "cloudinary";
 import { getCurrentSession } from "@/lib/server/session";
+import { cloudinary } from "@/lib/server/cloudinary";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
@@ -11,12 +11,6 @@ export async function POST(request: NextRequest) {
   try {
     const { image } = (await request.json()) as { image: string };
     const { user } = await getCurrentSession();
-
-    cloudinary.config({
-      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-      api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-      api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-    });
 
     if (!(await globalPOSTRateLimit())) {
       return NextResponse.json(null, {

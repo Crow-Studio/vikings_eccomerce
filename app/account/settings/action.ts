@@ -9,20 +9,14 @@ import { ActionResult } from "@/types";
 import { eq, inArray } from "drizzle-orm";
 import { headers } from "next/headers";
 import { extractPublicId } from "@/lib/server/utils";
-import { v2 as cloudinary } from "cloudinary";
 import { CreateUserFormValues, EditUserFormValues } from "@/types/users";
 import { checkEmailAvailability, verifyEmailInput } from "@/lib/server/email";
 import { createUser } from "@/lib/server/user";
 import { capitalize } from "@/lib/server/username";
 import { hashPassword } from "@/lib/server/password";
+import { cloudinary } from "@/lib/server/cloudinary";
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
-
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-    api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-})
 
 export async function createUserAction(data: CreateUserFormValues): Promise<ActionResult> {
     const { email, password, first_name, last_name, role } = data

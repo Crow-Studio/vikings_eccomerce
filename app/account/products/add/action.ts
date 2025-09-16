@@ -6,9 +6,9 @@ import { globalPOSTRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { ActionResult, EditedProcessedProductData, ProcessedProductData } from "@/types";
 import { headers } from "next/headers";
-import { v2 as cloudinary } from "cloudinary";
 import { inArray } from "drizzle-orm";
 import { extractPublicId } from "@/lib/server/utils";
+import { cloudinary } from "@/lib/server/cloudinary";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
 export async function createNewCategoryAction(category: string): Promise<ActionResult> {
@@ -64,12 +64,6 @@ export async function createNewCategoryAction(category: string): Promise<ActionR
 }
 
 export async function addNewProductAction(data: ProcessedProductData): Promise<ActionResult> {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-    api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-  })
-
   if (!(await globalPOSTRateLimit())) {
     return {
       errorMessage: "Too many requests!",
@@ -189,12 +183,6 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
   }
 }
 export async function editProductAction(data: EditedProcessedProductData): Promise<ActionResult> {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-    api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-  })
-
   if (!(await globalPOSTRateLimit())) {
     return { errorMessage: "Too many requests!", message: null }
   }
@@ -299,11 +287,6 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
   }
 }
 export async function deleteProductAction(productIds: string[]): Promise<ActionResult> {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-    api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-  })
   if (!(await globalPOSTRateLimit())) {
     return { errorMessage: "Too many requests!", message: null }
   }
