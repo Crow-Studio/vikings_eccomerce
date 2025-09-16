@@ -6,10 +6,10 @@ import { globalPOSTRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { ActionResult } from "@/types";
 import { headers } from "next/headers";
-import { v2 as cloudinary } from "cloudinary";
 import { CustomerEditInfo, CustomerFormValues } from "@/types/customers";
 import { inArray } from "drizzle-orm";
 import { extractPublicId } from "@/lib/server/utils";
+import { cloudinary } from "@/lib/server/cloudinary";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
 export async function createNewCustomerAction(
@@ -95,11 +95,6 @@ export async function updateCustomerAction(
 export async function deleteCustomersAction(
     customers: CustomerEditInfo[]
 ): Promise<ActionResult> {
-    cloudinary.config({
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-        api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-    });
     if (!(await globalPOSTRateLimit())) {
         return { errorMessage: "Too many requests!", message: null }
     }
@@ -141,11 +136,6 @@ export async function deleteCustomersAction(
 }
 
 async function uploadFileToCloudinary(file: File): Promise<string> {
-    cloudinary.config({
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-        api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-    });
     return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
             { resource_type: "image" },
