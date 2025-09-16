@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "vikingstraders",
-      script: "node_modules/.bin/next",
+      script: "./node_modules/next/dist/bin/next",
       args: "start",
       instances: 2,
       exec_mode: "cluster",
@@ -10,7 +10,7 @@ module.exports = {
       cwd: "/var/www/vikings",
       env_production: {
         NODE_ENV: "production",
-        PORT: 3003,
+        PORT: 3001
       },
       env_file: ".env.production",
       log_date_format: "YYYY-MM-DD HH:mm:ss",
