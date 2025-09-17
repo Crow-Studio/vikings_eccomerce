@@ -21,3 +21,12 @@ export const getCustomerAvatar = (customer: Customer) => {
     .substring(0, 2);
   return initials;
 };
+
+export function generateSrcSet(urls: { thumbnail: string; medium: string; large: string; original: string }): string {
+  return [
+    `${urls.thumbnail} 300w`,
+    `${urls.medium} 600w`,
+    `${urls.large} 1200w`,
+    `${urls.original} 2000w`,
+  ].join(', ');
+}

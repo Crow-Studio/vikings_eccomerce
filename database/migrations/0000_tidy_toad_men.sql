@@ -17,7 +17,7 @@ CREATE TABLE "customer" (
 	"city" varchar(100),
 	"country" varchar(100),
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "email_verification_request" (
@@ -27,7 +27,7 @@ CREATE TABLE "email_verification_request" (
 	"user_id" text NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "generated_variants" (
@@ -38,15 +38,17 @@ CREATE TABLE "generated_variants" (
 	"sku" varchar(50) NOT NULL,
 	"inventory" integer DEFAULT 0 NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "images" (
 	"id" varchar(12) PRIMARY KEY NOT NULL,
 	"product_id" text NOT NULL,
 	"url" text NOT NULL,
+	"urls" jsonb,
+	"alt_text" text,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "oauth_account" (
@@ -55,7 +57,7 @@ CREATE TABLE "oauth_account" (
 	"provider" text NOT NULL,
 	"provider_user_id" text NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "order" (
@@ -64,7 +66,7 @@ CREATE TABLE "order" (
 	"status" "order_status" DEFAULT 'pending' NOT NULL,
 	"total_amount" numeric(10, 2) NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "order_item" (
@@ -75,7 +77,7 @@ CREATE TABLE "order_item" (
 	"quantity" integer DEFAULT 1 NOT NULL,
 	"price" numeric(10, 2) NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "products" (
@@ -87,7 +89,7 @@ CREATE TABLE "products" (
 	"category_id" text NOT NULL,
 	"has_variants" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "session" (
@@ -95,7 +97,7 @@ CREATE TABLE "session" (
 	"user_id" text NOT NULL,
 	"expires_at" timestamp with time zone NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "user" (
@@ -107,7 +109,7 @@ CREATE TABLE "user" (
 	"password" text,
 	"email_verified" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3),
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL,
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -116,7 +118,7 @@ CREATE TABLE "variants" (
 	"product_id" text NOT NULL,
 	"title" varchar(50) NOT NULL,
 	"created_at" timestamp (3) DEFAULT now() NOT NULL,
-	"updated_at" timestamp (3)
+	"updated_at" timestamp (3) DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 ALTER TABLE "email_verification_request" ADD CONSTRAINT "email_verification_request_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

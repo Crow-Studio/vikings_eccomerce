@@ -1,12 +1,6 @@
 import type { NextConfig } from "next";
+
 const nextConfig: NextConfig = {
-  webpack(config) {
-    config.module.rules.push({
-      test: /cloudinary/,
-      sideEffects: true,
-    });
-    return config;
-  },
   images: {
     remotePatterns: [
       {
@@ -17,9 +11,9 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "res.cloudinary.com",
+        hostname: "images.vikingstraders.co.ke",
         port: "",
-        pathname: "/dfa1yoc1v/**",
+        pathname: "/vikings/**",
       },
       {
         protocol: "https",
@@ -36,4 +30,5 @@ const nextConfig: NextConfig = {
   },
   serverExternalPackages: ["@node-rs/argon2"],
 };
+
 export default nextConfig;

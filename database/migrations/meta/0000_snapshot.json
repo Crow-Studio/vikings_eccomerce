@@ -1,5 +1,5 @@
 {
-  "id": "72193f21-a2da-4dc8-9db3-4cb67b22b95b",
+  "id": "e109173a-36b2-465a-a4bf-628f2f2b11e7",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -99,7 +99,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -155,7 +156,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -232,7 +234,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -279,6 +282,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "urls": {
+          "name": "urls",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "alt_text": {
+          "name": "alt_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp (3)",
@@ -290,7 +305,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -354,7 +370,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -420,7 +437,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -497,7 +515,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -608,7 +627,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -666,7 +686,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},
@@ -751,7 +772,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {
@@ -819,7 +841,8 @@
           "name": "updated_at",
           "type": "timestamp (3)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         }
       },
       "indexes": {},

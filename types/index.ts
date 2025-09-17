@@ -224,12 +224,13 @@ export interface EditedProcessedProductData {
     inventory?: string | undefined;
   }[] | undefined;
 }
+
 export interface DBProduct {
+  created_at: string;
+  updated_at: string | null;
   visibility: Visibility;
   id: string;
   name: string;
-  created_at: string;
-  updated_at: string | null;
   price: string;
   description: string;
   category_id: string;
@@ -238,11 +239,14 @@ export interface DBProduct {
   images: ProductImage[];
   variants: {
     id: string;
+    created_at: Date;
+    updated_at: Date;
     product_id: string;
     title: string;
     generatedVariants: GeneratedVariants[];
   }[];
-}
+}[]
+
 export interface Product {
   id: string;
   name: string;
