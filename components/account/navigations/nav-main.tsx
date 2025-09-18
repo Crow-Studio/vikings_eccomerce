@@ -1,4 +1,5 @@
 "use client";
+
 import { ChevronRight, type LucideIcon } from "lucide-react";
 import {
   Collapsible,
@@ -17,7 +18,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 export function NavMain({
   items,
 }: {
@@ -30,10 +31,17 @@ export function NavMain({
     isShowInterface: boolean;
     items?: {
       title: string;
+      isShowInterface: boolean;
       url: string;
     }[];
   }[];
 }) {
+  const router = useRouter();
+
+  const onNavigateToPage = (href: string) => {
+    router.push(href);
+  };
+  
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Application</SidebarGroupLabel>
@@ -47,10 +55,13 @@ export function NavMain({
           >
             <SidebarMenuItem>
               <SidebarMenuButton asChild tooltip={item.title}>
-                <Link href={item.url}>
+                <button
+                  onClick={() => onNavigateToPage(item.url)}
+                  className="cursor-pointer w-full"
+                >
                   <item.icon />
                   <span>{item.title}</span>
-                </Link>
+                </button>
               </SidebarMenuButton>
               {item.items?.length ? (
                 <>
@@ -63,11 +74,17 @@ export function NavMain({
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {item.items?.map((subItem) => (
-                        <SidebarMenuSubItem key={subItem.title}>
+                        <SidebarMenuSubItem
+                          key={subItem.title}
+                          className={cn(!subItem.isShowInterface && "hidden")}
+                        >
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.url}>
+                            <button
+                              onClick={() => onNavigateToPage(subItem.url)}
+                              className="cursor-pointer w-full"
+                            >
                               <span>{subItem.title}</span>
-                            </Link>
+                            </button>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

@@ -29,7 +29,6 @@ export default function CustomerAvatarUpload({
   const [randomAvatar, setRandomAvatar] = useState<string | null>(null);
 
   useEffect(() => {
-    console.log(getRandomDicebearAvatar())
     setRandomAvatar(getRandomDicebearAvatar());
   }, []);
 

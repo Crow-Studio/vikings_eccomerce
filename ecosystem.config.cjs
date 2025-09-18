@@ -1,0 +1,30 @@
+module.exports = {
+  apps: [
+    {
+      name: "vikingstraders",
+      script: "./node_modules/next/dist/bin/next",
+      args: "start",
+      instances: 2,
+      exec_mode: "cluster",
+      watch: false,
+      cwd: "/var/www/vikings",
+      env_production: {
+        NODE_ENV: "production",
+        PORT: 3003
+      },
+      env_file: ".env.production",
+      log_date_format: "YYYY-MM-DD HH:mm:ss",
+      error_file: "/var/log/pm2/vikingstraders-error.log",
+      out_file: "/var/log/pm2/vikingstraders-out.log",
+      log_file: "/var/log/pm2/vikingstraders.log",
+      combine_logs: true,
+      time: true,
+      max_memory_restart: "1G",
+      max_restarts: 10,
+      min_uptime: "30s",
+      restart_delay: 5000,
+      autorestart: true,
+      kill_timeout: 5000,
+    },
+  ],
+};

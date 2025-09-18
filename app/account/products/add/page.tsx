@@ -4,6 +4,7 @@ import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { redirect } from "next/navigation";
 import React from "react";
+import { testMinIOConnection } from "./action";
 export default async function AddProductsPage() {
   if (!(await globalGETRateLimit())) {
     return "Too many requests";
@@ -16,5 +17,6 @@ export default async function AddProductsPage() {
     return redirect("/auth/admin/verify-email");
   }
   const categories = await db.query.category.findMany();
+  await testMinIOConnection()
   return <AddNewProductForm categories={categories} />;
 }

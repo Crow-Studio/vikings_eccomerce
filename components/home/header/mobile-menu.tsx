@@ -9,6 +9,7 @@ import { MobileMenuItem } from "./mobile-menu-item"
 import SolarMagniferOutline from "@/components/svgs/SolarMagniferOutline"
 import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon"
 import type { User } from "@/lib/server/user"
+
 interface MobileMenuProps {
   user: User | null
   isOpen: boolean
@@ -16,6 +17,7 @@ interface MobileMenuProps {
   onSearchOpen: () => void
   onMenuClose: () => void
 }
+
 export const MobileMenu = memo(
   ({
     user,
@@ -44,17 +46,11 @@ export const MobileMenu = memo(
               <p className="text-xl font-semibold">Vikings</p>
             </SheetTitle>
           </SheetHeader>
-          <div className="mt-6 space-y-4">
+          <div className="space-y-4 p-2">
             <div className="text-xs text-muted-foreground border-b pb-4">
               Free shipping in Nairobi and 30 days return
             </div>
-            <div className="space-y-3">
-              <MobileMenuItem
-                icon={SolarMagniferOutline}
-                label="Search"
-                onClick={onSearchOpen}
-                onMenuClose={onMenuClose}
-              />
+            <div className="space-y-2">
               <MobileMenuItem 
                 icon={() => (
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -64,6 +60,22 @@ export const MobileMenu = memo(
                 label="Shop" 
                 href="/products" 
                 onMenuClose={onMenuClose} 
+              />
+              <MobileMenuItem 
+                icon={() => (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                )} 
+                label="About Us" 
+                href="/about-us" 
+                onMenuClose={onMenuClose} 
+              />
+              <MobileMenuItem
+                icon={SolarMagniferOutline}
+                label="Search"
+                onClick={onSearchOpen}
+                onMenuClose={onMenuClose}
               />
             </div>
             <Separator />
@@ -85,4 +97,5 @@ export const MobileMenu = memo(
     )
   },
 )
+
 MobileMenu.displayName = "MobileMenu"

@@ -1,6 +1,7 @@
 import AddUserButton from "@/components/account/settings/users/add-user-button";
 import UsersDataTable from "@/components/account/settings/users/table/Users";
 import { db } from "@/database";
+import { UserRole } from "@/database/schema";
 import { globalGETRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { desc } from "drizzle-orm";
@@ -21,13 +22,17 @@ export default async function GeneralSettingsPage() {
     return redirect("/auth/admin/verify-email");
   }
 
+  if (user.role !==  UserRole.ADMIN) {
+    return redirect("/account/dashboard")
+  }
+
   const users = await db.query.user.findMany({
     orderBy: (table) => desc(table.updated_at),
   });
 
   return (
     <div className="grid gap-y-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-y-2 sm:gap-y-0 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-2xl font-medium">Users</h2>
           <p className="text-sm text-muted-foreground">

@@ -1,5 +1,4 @@
 import EditCustomerForm from "@/components/account/customer/edit-customer-form";
-import NewCustomerForm from "@/components/account/customer/new-customer-form";
 import {
   Sheet,
   SheetContent,

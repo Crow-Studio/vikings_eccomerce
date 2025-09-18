@@ -6,16 +6,11 @@ import { globalPOSTRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { ActionResult } from "@/types";
 import { headers } from "next/headers";
-import { v2 as cloudinary } from "cloudinary";
 import { CustomerEditInfo, CustomerFormValues } from "@/types/customers";
 import { inArray } from "drizzle-orm";
 import { extractPublicId } from "@/lib/server/utils";
+import { cloudinary } from "@/lib/server/cloudinary";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
-cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_CLOUD_API_KEY,
-    api_secret: process.env.CLOUDINARY_CLOUD_API_SECRET,
-});
 
 export async function createNewCustomerAction(
     data: CustomerFormValues
@@ -98,46 +93,46 @@ export async function updateCustomerAction(
 }
 
 export async function deleteCustomersAction(
-  customers: CustomerEditInfo[]
+    customers: CustomerEditInfo[]
 ): Promise<ActionResult> {
-  if (!(await globalPOSTRateLimit())) {
-    return { errorMessage: "Too many requests!", message: null }
-  }
+    if (!(await globalPOSTRateLimit())) {
+        return { errorMessage: "Too many requests!", message: null }
+    }
 
-  const clientIP = (await headers()).get("X-Forwarded-For")
+    const clientIP = (await headers()).get("X-Forwarded-For")
 
-  if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
-    return { errorMessage: "Too many requests!", message: null }
-  }
+    if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
+        return { errorMessage: "Too many requests!", message: null }
+    }
 
-  const { user } = await getCurrentSession()
-  if (user?.role !== UserRole.ADMIN) {
-    return { errorMessage: "Only admins can delete customers info", message: null }
-  }
+    const { user } = await getCurrentSession()
+    if (user?.role !== UserRole.ADMIN) {
+        return { errorMessage: "Only admins can delete customers info", message: null }
+    }
 
-  try {
-    if (clientIP !== null) ipBucket.consume(clientIP, 1)
+    try {
+        if (clientIP !== null) ipBucket.consume(clientIP, 1)
 
-    for (const customer of customers) {
-      if (customer.avatar && typeof customer.avatar === "string") {
-        const publicId = extractPublicId(customer.avatar)
-        if (publicId) {
-          await cloudinary.uploader.destroy(publicId)
+        for (const customer of customers) {
+            if (customer.avatar && typeof customer.avatar === "string") {
+                const publicId = extractPublicId(customer.avatar)
+                if (publicId) {
+                    await cloudinary.uploader.destroy(publicId)
+                }
+            }
         }
-      }
+
+        const ids = customers.map((c) => c.id)
+
+        await db.delete(tables.customer).where(inArray(tables.customer.id, ids))
+
+        return { message: "Customers deleted successfully", errorMessage: null }
+    } catch (error) {
+        if (error instanceof Error) {
+            return { errorMessage: error.message, message: null }
+        }
+        return { errorMessage: "Failed to delete customers", message: null }
     }
-
-    const ids = customers.map((c) => c.id)
-
-    await db.delete(tables.customer).where(inArray(tables.customer.id, ids))
-
-    return { message: "Customers deleted successfully", errorMessage: null }
-  } catch (error) {
-    if (error instanceof Error) {
-      return { errorMessage: error.message, message: null }
-    }
-    return { errorMessage: "Failed to delete customers", message: null }
-  }
 }
 
 async function uploadFileToCloudinary(file: File): Promise<string> {

@@ -5,7 +5,7 @@ export interface FilterState {
   priceRange: { min: number; max: number } | null;
 }
 export interface ProductVariantGenerated extends GeneratedVariants {
-  value: string; 
+  value: string;
 }
 export interface ProductVariant {
   id: string;
@@ -21,8 +21,8 @@ export interface Product {
   visibility: Visibility;
   category_id: string;
   has_variants: boolean;
-  created_at: string;
-  updated_at: string; 
+  created_at: Date;
+  updated_at: Date;
   category: Category;
   images: ProductImage[];
   variants: ProductVariant[];
@@ -31,8 +31,8 @@ export interface DBProduct {
   visibility: Visibility;
   id: string;
   name: string;
-  created_at: Date; 
-  updated_at: Date | null; 
+  created_at: Date;
+  updated_at: Date | null;
   price: string;
   description: string;
   category_id: string;
@@ -47,16 +47,14 @@ export interface DBProduct {
   }[];
 }
 export type RawDBProduct = DBProduct;
-export function transformDBProductToProduct(dbProduct: DBProduct): Product {
+export function transformDBProductToProduct(dbProduct: DBProduct): DBProduct {
   return {
     ...dbProduct,
-    created_at: dbProduct.created_at.toISOString(),
-    updated_at: dbProduct.updated_at ? dbProduct.updated_at.toISOString() : dbProduct.created_at.toISOString(),
     variants: dbProduct.variants.map(variant => ({
       ...variant,
       generatedVariants: variant.generatedVariants.map(gv => ({
         ...gv,
-        value: gv.name 
+        value: gv.name
       }))
     }))
   };

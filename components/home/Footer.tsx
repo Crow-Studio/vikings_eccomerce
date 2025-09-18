@@ -4,7 +4,7 @@ import VikingsSvgIcon from "../svgs/VikingsSvgIcon";
 
 
 export default function Footer() {
-  const [isLegalOpen, setIsLegalOpen] = useState(false);
+  // const [isLegalOpen, setIsLegalOpen] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -23,25 +23,26 @@ export default function Footer() {
   };
 
   return (
-    <div className="border-t border-gray-200 dark:border-gray-800 relative">
+    <div className="border-t border-gray-200 dark:border-gray-800 relative bg-[#1d62fb] text-white">
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Top Section */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
             <VikingsSvgIcon className="w-12 sm:w-16 h-auto transition-transform hover:scale-105" />
-            <span className="text-lg font-medium text-gray-900 dark:text-white">
+            <span className="text-lg font-medium text-white ">
               Vikings
             </span>
           </div>
 
           {/* Socials */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap justify-center">
             <a
-              href="https://wa.me/254729016371"
+              href="https://wa.me/254721780466"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-green-500 transition-colors"
+              className="text-white hover:text-black transition-colors"
+              aria-label="WhatsApp"
             >
               {/* WhatsApp */}
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -51,8 +52,9 @@ export default function Footer() {
             </a>
 
             <a
-              href="mailto:hello@delirium.com"
-              className="text-gray-500 hover:text-red-500 transition-colors"
+              href="mailto:Vikingskepower@gmail.com"
+              className="text-white hover:text-black transition-colors"
+              aria-label="Email"
             >
               {/* Gmail */}
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -62,10 +64,11 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://instagram.com/"
+              href="https://instagram.com/vikings_traders_"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-pink-500 transition-colors"
+              className="text-white hover:text-black transition-colors"
+              aria-label="Instagram"
             >
               {/* Instagram */}
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1} viewBox="0 0 24 24">
@@ -76,10 +79,11 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://facebook.com/"
+              href="https://www.facebook.com/VikingsTraders"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-blue-600 transition-colors"
+              className="text-white hover:text-black transition-colors"
+              aria-label="Facebook"
             >
               {/* Facebook */}
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth={1.5} viewBox="0 0 24 24">
@@ -88,14 +92,58 @@ export default function Footer() {
             </a>
 
             <a
-              href="https://x.com/"
+              href="https://x.com/Vikings2308"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-500 hover:text-black dark:hover:text-white transition-colors"
+              className="text-white hover:text-black dark:hover:text-white transition-colors"
+              aria-label="X (Twitter)"
             >
               {/* X (Twitter) */}
               <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} viewBox="0 0 24 24">
                 <path d="m3 21l7.548-7.548M21 3l-7.548 7.548m0 0L8 3H3l7.548 10.452m2.904-2.904L21 21h-5l-5.452-7.548"></path>
+              </svg>
+            </a>
+
+            <a
+              href="https://www.tiktok.com/@vikingstraders"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-black dark:hover:text-white transition-colors"
+              aria-label="TikTok"
+            >
+              {/* TikTok */}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"></path>
+                <path strokeLinecap="round" d="M10.536 11.008c-.82-.116-2.69.075-3.606 1.77s.007 3.459.584 4.129c.569.627 2.378 1.814 4.297.655c.476-.287 1.069-.502 1.741-2.747l-.078-8.834c-.13.973.945 3.255 4.004 3.525"></path>
+              </svg>
+            </a>
+
+            <a
+              href="https://www.youtube.com/@vikingstraders4737"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-black transition-colors"
+              aria-label="YouTube"
+            >
+              {/* YouTube */}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth={1.5} viewBox="0 0 24 24">
+                <path d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"></path>
+                <path d="M9.5 15.584V8.416a.5.5 0 0 1 .77-.42l5.576 3.584a.5.5 0 0 1 0 .84l-5.576 3.584a.5.5 0 0 1-.77-.42Z"></path>
+              </svg>
+            </a>
+
+            <a
+              href="https://www.linkedin.com/company/vikings-kepower"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white hover:text-black transition-colors"
+              aria-label="LinkedIn"
+            >
+              {/* LinkedIn */}
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeLinejoin="round" strokeWidth={1} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeWidth={1.5} d="M7 10v7m4-4v4m0-4a3 3 0 1 1 6 0v4m-6-4v-3"></path>
+                <path strokeLinecap="round" strokeWidth={2} d="M7.008 7h-.009"></path>
+                <path strokeWidth={1.5} d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12Z"></path>
               </svg>
             </a>
           </div>
@@ -105,57 +153,17 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-gray-100 dark:border-gray-800">
           {/* Legal */}
           <div className="flex flex-col md:flex-row items-center gap-4 text-sm">
-            <span className="text-gray-500 dark:text-gray-400">
+            <span className="text-gray-300 ">
               © {new Date().getFullYear()} Vikings. All rights reserved.
             </span>
-            <div className="relative">
-              <button
-                onClick={() => setIsLegalOpen(!isLegalOpen)}
-                className="flex items-center gap-1 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-              >
-                <span>Legal</span>
-                <svg
-                  className={`w-4 h-4 transition-transform ${
-                    isLegalOpen ? "rotate-180" : ""
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </button>
-
-              {isLegalOpen && (
-                <div className="absolute bottom-full left-0 mb-2 w-40 bg-white dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-lg shadow-lg py-2 z-10">
-                  <a
-                    href="/terms"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                  >
-                    Terms of Service
-                  </a>
-                  <a
-                    href="/privacy"
-                    className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-gray-700 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
-                  >
-                    Privacy Policy
-                  </a>
-                </div>
-              )}
-            </div>
           </div>
 
           {/* Crafted By */}
           <a
-            href="https://crowstudios.com"
+            href="https://crowstudios.tech"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+            className="flex items-center gap-1 text-sm text-gray-50 hover:text-gray-300 transition-colors"
           >
             <span>Crafted by</span>
             <span>🐦‍⬛</span>
@@ -168,7 +176,7 @@ export default function Footer() {
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 right-6 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-110 z-50"
+          className="fixed bottom-6 right-6 bg-black text-white p-3 rounded-full shadow-lg hover:bg-gray-900 transition-all duration-300 transform hover:scale-110 z-50"
           aria-label="Scroll to top"
         >
           <svg
