@@ -45,8 +45,6 @@ export default async function Page() {
   });
   const products = rawProducts.map(product => ({
     ...product,
-    created_at: product.created_at.toISOString(),
-    updated_at: product.updated_at?.toISOString() || null,
   }));
   return (
     <div className="bg-gradient-to-br from-slate-50 via-white to-blue-50 relative overflow-hidden ">

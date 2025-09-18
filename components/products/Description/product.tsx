@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useCallback, useEffect } from "react"
-import type { Product } from "@/types/products"
+import type { DBProduct, Product } from "@/types/products"
 import { getRelatedProducts } from "@/actions/product-actions" 
 import { ImageGallery } from "@/components/products/Description/image-gallery"
 import { ProductHeader } from "@/components/products/Description/product-header"
@@ -24,7 +24,7 @@ export function ProductDetailsClient({ product, moreProducts = [] }: ProductDeta
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [quantity] = useState(1)
   const [selectedTab, setSelectedTab] = useState("description")
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+  const [relatedProducts, setRelatedProducts] = useState<DBProduct[]>([])
   const [, setIsLoadingRelated] = useState(true)
   const initialSelectedVariants = product.variants.reduce(
     (acc, variant) => {
@@ -66,7 +66,7 @@ export function ProductDetailsClient({ product, moreProducts = [] }: ProductDeta
           {}
           <div className="lg:sticky lg:top-8 self-start">
             <ImageGallery
-              images={product.images.map((img) => img.url)}
+              images={product.images}
               currentIndex={currentImageIndex}
               onImageChange={setCurrentImageIndex}
             />

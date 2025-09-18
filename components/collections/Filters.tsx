@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from "react";
-import { DBProduct } from "@/types";
+import { DBProduct } from "@/types/products";
 
 interface PriceRange {
   label: string;

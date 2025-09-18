@@ -2,7 +2,7 @@
 import type React from "react"
 import ShoppingBagIcon from "../svgs/shoppingBag"
 import ProductUI from "../global/Product"
-import { DBProduct } from "@/types"
+import { DBProduct } from "@/types/products"
 
 interface ProductsComponentProps {
   products?: DBProduct[]; 

@@ -87,6 +87,8 @@ jobs:
 
             # Run Migrations
             echo "🗃️ Running migrations..."
+            pnpm run db:clear
+            pnpm run db:generate
             pnpm run db:migrate
 
             # Build Application

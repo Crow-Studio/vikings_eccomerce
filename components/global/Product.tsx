@@ -1,10 +1,9 @@
-"use client"
-import { cn } from "@/lib/utils"
-import { useState } from "react"
-import type * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import ProductSkeleton from "./ProductSkeleton"
+"use client";
+import { cn, generateSrcSet } from "@/lib/utils";
+import { useState } from "react";
+import type * as React from "react";
+import Link from "next/link";
+import ProductSkeleton from "./ProductSkeleton";
 import {
   Pagination,
   PaginationContent,
@@ -13,48 +12,55 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "@/components/ui/pagination"
-import type { DBProduct } from "@/types"
+} from "@/components/ui/pagination";
+import type { DBProduct } from "@/types/products";
 
 interface ProductUIProps {
-  products?: DBProduct[]
-  product?: DBProduct
-  isLoading?: boolean
-  itemsPerPage?: number
-  showPagination?: boolean
+  products?: DBProduct[];
+  product?: DBProduct;
+  isLoading?: boolean;
+  itemsPerPage?: number;
+  showPagination?: boolean;
 }
 
 function isNewProduct(createdAt: Date): boolean {
-  const now = new Date()
-  const oneDayAgo = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000)
-  return createdAt > oneDayAgo
+  const now = new Date();
+  const oneDayAgo = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000);
+  return createdAt > oneDayAgo;
 }
 
 function ProductCard({ product }: { product: DBProduct }) {
-  const isNew = isNewProduct(new Date(product.created_at))
-  const whatsappNumber = "+254721780466"
+  const isNew = isNewProduct(new Date(product.created_at));
+  const whatsappNumber = "+254721780466";
+
+  const image = product.images[0];
+
+  const srcSet = generateSrcSet({
+    large: image.urls?.large as string,
+    medium: image.urls?.medium as string,
+    original: image.urls?.original as string,
+    thumbnail: image.urls?.thumbnail as string,
+  });
 
   const handleWhatsAppOrder = (e: React.MouseEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
+    e.preventDefault();
+    e.stopPropagation();
 
-    const message = `Hi! I'm interested in ordering:\n\n*${product.name}*\nPrice: KSh ${Number.parseFloat(
+    const message = `Hi! I'm interested in ordering:\n\n*${
+      product.name
+    }*\nPrice: KSh ${Number.parseFloat(
       product.price
-    ).toLocaleString()}\n\nPlease let me know about availability and delivery details.`
+    ).toLocaleString()}\n\nPlease let me know about availability and delivery details.`;
 
     const whatsappUrl = `https://wa.me/${whatsappNumber.replace(
       /[^0-9]/g,
       ""
-    )}?text=${encodeURIComponent(message)}`
-    window.open(whatsappUrl, "_blank")
-  }
-
-  const handleViewDetails = (e: React.MouseEvent) => {
-    e.stopPropagation()
-  }
+    )}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, "_blank");
+  };
 
   return (
-    <Link href={`/products/${product.id}`} className="block">
+    <div>
       <div className="grid gap-1.5 group cursor-pointer">
         <div className="h-[15rem] rounded-lg overflow-hidden relative transition-shadow duration-300 bg-white shadow shadow-white border border-gray-200 dark:border-slate-700">
           {/* New Badge */}
@@ -65,16 +71,15 @@ function ProductCard({ product }: { product: DBProduct }) {
               </span>
             </div>
           )}
-
-          <Image
-            src={
-              product.images[0]?.url ||
-              "/placeholder.svg?height=240&width=240&text=Product Image"
-            }
-            alt={`${product.name.toLowerCase()}_${product.images[0]?.id ?? "img"}`}
-            fill
+          <img
+            src={image.urls?.medium as string}
+            srcSet={srcSet}
+            sizes="(max-width: 300px) 300px, (max-width: 600px) 600px,
+         (max-width: 1200px) 1200px, 2000px"
+            alt={product.name}
+            loading="lazy"
+            decoding="async"
             className="object-contain transition-transform duration-300 group-hover:scale-110"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           />
 
           {/* Hover actions */}
@@ -86,13 +91,12 @@ function ProductCard({ product }: { product: DBProduct }) {
             >
               Order Now
             </button>
-            <button
-              onClick={handleViewDetails}
-              className="p-0.5 rounded-md w-full bg-white/95 backdrop-blur-sm border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium shadow-sm cursor-pointer transition-colors duration-200"
+            <Link href={`/products/${product.id}`}
+              className="p-0.5 flex items-center justify-center rounded-md w-full bg-white/95 backdrop-blur-sm border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium shadow-sm cursor-pointer transition-colors duration-200"
               aria-label="View details"
             >
               View Details
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -105,8 +109,8 @@ function ProductCard({ product }: { product: DBProduct }) {
           </p>
         </div>
       </div>
-    </Link>
-  )
+    </div>
+  );
 }
 
 export default function ProductUI({
@@ -116,51 +120,59 @@ export default function ProductUI({
   itemsPerPage = 12,
   showPagination = true,
 }: ProductUIProps) {
-  const [currentPage, setCurrentPage] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1);
 
   if (product && !products) {
     if (isLoading) {
-      return <ProductSkeleton />
+      return <ProductSkeleton />;
     }
-    return <ProductCard product={product} />
+    return <ProductCard product={product} />;
   }
 
   if (!products) {
-    return <ProductSkeleton />
+    return <ProductSkeleton />;
   }
 
-  const totalPages = Math.ceil(products.length / itemsPerPage)
-  const startIndex = (currentPage - 1) * itemsPerPage
-  const endIndex = startIndex + itemsPerPage
-  const currentProducts = products.slice(startIndex, endIndex)
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentProducts = products.slice(startIndex, endIndex);
 
   const getPageNumbers = () => {
-    const pages: (number | "ellipsis")[] = []
-    const maxVisiblePages = 2
+    const pages: (number | "ellipsis")[] = [];
+    const maxVisiblePages = 2;
 
     if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) pages.push(i)
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
     } else {
       if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i)
-        pages.push("ellipsis", totalPages)
+        for (let i = 1; i <= 4; i++) pages.push(i);
+        pages.push("ellipsis", totalPages);
       } else if (currentPage >= totalPages - 2) {
-        pages.push(1, "ellipsis")
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i)
+        pages.push(1, "ellipsis");
+        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
       } else {
-        pages.push(1, "ellipsis", currentPage - 1, currentPage, currentPage + 1, "ellipsis", totalPages)
+        pages.push(
+          1,
+          "ellipsis",
+          currentPage - 1,
+          currentPage,
+          currentPage + 1,
+          "ellipsis",
+          totalPages
+        );
       }
     }
 
-    return pages
-  }
+    return pages;
+  };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: "smooth" })
-  }
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
-  const pageNumbers = getPageNumbers()
+  const pageNumbers = getPageNumbers();
 
   return (
     <div className="space-y-8">
@@ -176,54 +188,61 @@ export default function ProductUI({
       </div>
 
       {/* Pagination */}
-      {!isLoading && showPagination && products.length > 0 && totalPages > 1 && (
-        <div className="flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                  className={cn(
-                    "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
-                    currentPage === 1 && "pointer-events-none opacity-50"
-                  )}
-                />
-              </PaginationItem>
-
-              {pageNumbers.map((page, index) => (
-                <PaginationItem key={index}>
-                  {page === "ellipsis" ? (
-                    <PaginationEllipsis />
-                  ) : (
-                    <PaginationLink
-                      onClick={() => handlePageChange(page)}
-                      isActive={currentPage === page}
-                      className={cn(
-                        "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
-                        currentPage === page && "bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
-                      )}
-                    >
-                      {page}
-                    </PaginationLink>
-                  )}
+      {!isLoading &&
+        showPagination &&
+        products.length > 0 &&
+        totalPages > 1 && (
+          <div className="flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() =>
+                      handlePageChange(Math.max(1, currentPage - 1))
+                    }
+                    className={cn(
+                      "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
+                      currentPage === 1 && "pointer-events-none opacity-50"
+                    )}
+                  />
                 </PaginationItem>
-              ))}
 
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() =>
-                    handlePageChange(Math.min(totalPages, currentPage + 1))
-                  }
-                  className={cn(
-                    "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
-                    currentPage === totalPages && "pointer-events-none opacity-50"
-                  )}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
-      )}
+                {pageNumbers.map((page, index) => (
+                  <PaginationItem key={index}>
+                    {page === "ellipsis" ? (
+                      <PaginationEllipsis />
+                    ) : (
+                      <PaginationLink
+                        onClick={() => handlePageChange(page)}
+                        isActive={currentPage === page}
+                        className={cn(
+                          "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
+                          currentPage === page &&
+                            "bg-blue-600 text-white hover:bg-blue-700 hover:text-white"
+                        )}
+                      >
+                        {page}
+                      </PaginationLink>
+                    )}
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() =>
+                      handlePageChange(Math.min(totalPages, currentPage + 1))
+                    }
+                    className={cn(
+                      "cursor-pointer hover:bg-blue-50 hover:text-blue-600",
+                      currentPage === totalPages &&
+                        "pointer-events-none opacity-50"
+                    )}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
 
       {/* Pagination info */}
       {!isLoading && showPagination && products.length > 0 && (
@@ -240,5 +259,5 @@ export default function ProductUI({
         </div>
       )}
     </div>
-  )
+  );
 }
