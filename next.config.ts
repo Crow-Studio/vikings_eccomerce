@@ -25,9 +25,9 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
-  },
+  // compiler: {
+  //   removeConsole: process.env.NODE_ENV === "production",
+  // },
   serverExternalPackages: ["@node-rs/argon2"],
 };
 
