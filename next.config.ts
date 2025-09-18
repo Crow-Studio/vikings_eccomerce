@@ -29,6 +29,11 @@ const nextConfig: NextConfig = {
   //   removeConsole: process.env.NODE_ENV === "production",
   // },
   serverExternalPackages: ["@node-rs/argon2"],
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '50mb',
+    },
+  },
 };
 
 export default nextConfig;
