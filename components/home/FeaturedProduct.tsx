@@ -1,8 +1,8 @@
 import React from "react";
-import { DBProduct } from "@/types";
+import { Product } from "@/types/products";
 import ProductUI from "../global/Product";
 interface FeaturedProductsProps {
-  featuredProducts: DBProduct[];
+  featuredProducts: Product[];
 }
 const FeaturedProducts = ({ featuredProducts }: FeaturedProductsProps) => {
   return (

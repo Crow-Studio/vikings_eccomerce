@@ -6,10 +6,10 @@ import Filters from "./Filters";
 import Products from "./Products";
 import GrainOverlay from '@/components/global/GrainOverlay';
 import { FilterState, SortBy } from "@/types/products";
-import { DBProduct } from "@/types/products"; 
+import { Product } from "@/types/products"; 
 
 interface OurCollectionsProps {
-  products?: DBProduct[]; 
+  products?: Product[]; 
 }
 
 export default function OurCollections({ products = [] }: OurCollectionsProps) {

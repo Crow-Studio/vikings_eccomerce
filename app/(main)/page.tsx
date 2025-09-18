@@ -13,13 +13,20 @@ export default async function Home() {
         },
       },
     },
-    orderBy: table => desc(table.created_at)
+    orderBy: (table) => desc(table.created_at),
   });
-  const products = rawProducts.map(product => ({
+
+  const products = rawProducts.map((product) => ({
     ...product,
-    created_at: product.created_at.toISOString(),
-    updated_at: product.updated_at?.toISOString() || null
+    variants: product.variants.map((variant) => ({
+      ...variant,
+      generatedVariants: variant.generatedVariants.map((gv) => ({
+        ...gv,
+        value: gv.name,
+      })),
+    })),
   }));
+
   return (
     <main>
       <Hero products={products} />

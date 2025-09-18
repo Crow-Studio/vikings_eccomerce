@@ -3,10 +3,10 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import ProductUI from "@/components/global/Product";
 import GrainOverlay from "@/components/global/GrainOverlay";
-import { DBProduct } from "@/types";
+import { Product } from "@/types/products";
 
 interface VikingsHeroProps {
-  products: DBProduct[];
+  products: Product[];
 }
 
 
