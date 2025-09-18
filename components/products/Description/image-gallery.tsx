@@ -35,13 +35,13 @@ export const ImageGallery = React.memo(
               alt={imageArray[currentIndex].alt_text ?? "Product Image"}
               loading="lazy"
               decoding="async"
-              className="object-contain w-full h-full"
+              className="object-cover w-full h-full"
             />
           ) : (
             <img
               src="/placeholder.svg"
               alt="Placeholder"
-              className="object-contain w-full h-full"
+              className="object-cover w-full h-full"
             />
           )}
 
