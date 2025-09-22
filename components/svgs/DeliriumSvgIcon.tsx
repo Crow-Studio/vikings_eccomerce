@@ -2,11 +2,9 @@ import { cn } from "@/lib/utils";
 interface Props {
   className?: string;
 }
-
 export default function DeliriumSvgIcon({ className }: Props) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
       width="657"
       height="653"
       fill="none"

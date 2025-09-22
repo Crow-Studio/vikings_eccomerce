@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import { cache } from "react";
 import { and, db, eq, tables } from "@/database";
 import { User } from "./user";
-
 export async function validateSessionToken(
   token: string
 ): Promise<SessionValidationResult> {
@@ -24,20 +23,15 @@ export async function validateSessionToken(
     .from(tables.session)
     .innerJoin(tables.user, eq(tables.session.user_id, tables.user.id))
     .where(eq(tables.session.id, sessionId));
-
-  // Check if no session found
   if (!result || result.length === 0) {
     return { session: null, user: null };
   }
-
   const row = result[0];
-
   const session: Session = {
     id: row.sessionId,
     user_id: row.user_id,
     expires_at: new Date(Number(row.expires_at) * 1000),
   };
-
   const user: User = {
     id: row.user_id,
     email: row.email,
@@ -46,12 +40,8 @@ export async function validateSessionToken(
     role: row.role,
     email_verified: row.email_verified,
   };
-
-  // Check if session is expired
   const now = Date.now();
-
   if (now >= session.expires_at.getTime()) {
-    // Delete expired session
     await db
       .delete(tables.session)
       .where(
@@ -62,28 +52,20 @@ export async function validateSessionToken(
       );
     return { session: null, user: null };
   }
-
-  // Check if session needs to be extended (within 15 days of expiry)
   const fifteenDaysInMs = 1000 * 60 * 60 * 24 * 15;
   const thirtyDaysInMs = 1000 * 60 * 60 * 24 * 30;
-
   if (now >= session.expires_at.getTime() - fifteenDaysInMs) {
     const newExpiresAt = new Date(now + thirtyDaysInMs);
-
     await db
       .update(tables.session)
       .set({
         expires_at: newExpiresAt,
       })
       .where(eq(tables.session.id, row.sessionId));
-
-    // Update the session object with new expiry time
     session.expires_at = newExpiresAt;
   }
-
   return { session, user };
 }
-
 export const getCurrentSession = cache(
   async (): Promise<SessionValidationResult> => {
     const cookieStore = await cookies();
@@ -95,15 +77,12 @@ export const getCurrentSession = cache(
     return result;
   }
 );
-
 export async function invalidateSession(sessionId: string): Promise<void> {
   await db.delete(tables.session).where(eq(tables.session.id, sessionId));
 }
-
 export async function invalidateUserSessions(user_id: string): Promise<void> {
   await db.delete(tables.session).where(eq(tables.session.user_id, user_id));
 }
-
 export async function setSessionTokenCookie(
   token: string,
   expires_at: Date
@@ -117,7 +96,6 @@ export async function setSessionTokenCookie(
     expires: expires_at,
   });
 }
-
 export async function deleteSessionTokenCookie(): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.set("session", "", {
@@ -128,14 +106,12 @@ export async function deleteSessionTokenCookie(): Promise<void> {
     maxAge: 0,
   });
 }
-
 export function generateSessionToken(): string {
   const tokenBytes = new Uint8Array(20);
   crypto.getRandomValues(tokenBytes);
   const token = encodeBase32(tokenBytes).toLowerCase();
   return token;
 }
-
 export async function createSession(
   token: string,
   user_id: string
@@ -146,7 +122,6 @@ export async function createSession(
     user_id,
     expires_at: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   };
-
   await db.insert(tables.session).values({
     id: sessionId,
     expires_at: session.expires_at,
@@ -154,13 +129,11 @@ export async function createSession(
   });
   return session;
 }
-
 export interface Session {
   id: string;
   expires_at: Date;
   user_id: string;
 }
-
 type SessionValidationResult =
   | { session: Session; user: User }
   | { session: null; user: null };

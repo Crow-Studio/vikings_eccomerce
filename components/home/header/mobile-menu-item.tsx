@@ -1,16 +1,13 @@
 "use client"
-
 import { memo, useCallback } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import type { MobileMenuItemProps } from "@/types/header"
-
 export const MobileMenuItem = memo(({ icon: Icon, label, href, onClick, badge, onMenuClose }: MobileMenuItemProps) => {
   const handleClick = useCallback(() => {
     onMenuClose()
     onClick?.()
   }, [onMenuClose, onClick])
-
   const content = (
     <Button
       variant="ghost"
@@ -26,7 +23,6 @@ export const MobileMenuItem = memo(({ icon: Icon, label, href, onClick, badge, o
       )}
     </Button>
   )
-
   return href ? (
     <Link href={href} onClick={onMenuClose}>
       {content}
@@ -35,5 +31,4 @@ export const MobileMenuItem = memo(({ icon: Icon, label, href, onClick, badge, o
     content
   )
 })
-
 MobileMenuItem.displayName = "MobileMenuItem"

@@ -13,6 +13,6 @@ User-Agent: REST Client
 Accept: application/json
 
 {
-  "email": "thecodingmontana@gmail.com",
-  "password": "dummypassword"
+  "email": "vickymisiko.2308@gmail.com",
+  "password": "@dummypassword"
 }

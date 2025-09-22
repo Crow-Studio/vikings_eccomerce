@@ -1,6 +1,5 @@
 import React from 'react'
 import Privacy from '@/components/home/legal/privacyComponent';
-
 function page() {
   return (
     <div>
@@ -8,5 +7,4 @@ function page() {
     </div>
   )
 }
-
 export default page

@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/command";
 import { CategorySelectorProps } from "@/types";
 import { useModal } from "@/hooks/use-modal-store";
-
 export default function CategorySelector({
   value,
   onChange,
@@ -24,11 +23,9 @@ export default function CategorySelector({
 }: CategorySelectorProps) {
   const [open, setOpen] = useState(false);
   const { onOpen } = useModal();
-
   const onAddNewCategory = () => {
     onOpen("newCategory");
   };
-
   return (
     <div className="flex gap-2">
       <Popover open={open} onOpenChange={setOpen}>

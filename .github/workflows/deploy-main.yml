@@ -1,0 +1,109 @@
+name: Deploy Main App
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout the repo
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Cache dependencies and Next.js build
+      - name: Cache dependencies and build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pnpm-store
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+
+      # Sync code to VPS including dotfiles
+      - name: Sync to VPS
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          source: "./"
+          target: "/var/www/vikings"
+          strip_components: 0
+
+      # Run deployment scripts on VPS
+      - name: Run deployment scripts on VPS
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_KEY }}
+          port: ${{ secrets.VPS_PORT }}
+          script_stop: true
+          script: |
+            set -e
+
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+            cd /var/www/vikings
+            rm -rf .next
+
+            # Stop PM2 processes first to avoid conflicts
+            # pm2 delete vikingstraders || echo "Process not running"
+
+            # Load environment variables from .env.production
+            if [ -f /var/www/vikings/.env.production ]; then
+              export $(grep -v '^#' /var/www/vikings/.env.production \
+                       | sed 's/ *= */=/' \
+                       | xargs)
+              echo "✅ Environment variables loaded"
+            else
+              echo "❌ .env.production not found in /var/www/vikings"
+              exit 1
+            fi
+
+            # Set NODE_ENV to production
+            export NODE_ENV=production
+
+            # Install pnpm & pm2 if not installed
+            for pkg in pnpm pm2; do
+              command -v $pkg &> /dev/null || npm install -g $pkg
+            done
+
+            # Clear any existing build
+            rm -rf .next
+
+            # Install dependencies
+            echo "📦 Installing dependencies..."
+            pnpm install --frozen-lockfile
+
+            # Run Migrations
+            echo "🗃️ Running migrations..."
+            pnpm run db:migrate
+
+            # Build Application
+            echo "🏗️ Building application..."
+            pnpm run build
+
+            # Verify build was successful
+            if [ ! -d ".next" ]; then
+              echo "❌ Build failed - .next directory not found"
+              exit 1
+            fi
+
+            echo "✅ Build completed successfully"
+
+            # Start with PM2
+            echo "🚀 Starting with PM2..."
+            pm2 reload ecosystem.config.cjs --env production || pm2 start ecosystem.config.cjs --env production
+            pm2 save
+
+            echo "✅ Deployment completed successfully"

@@ -1,7 +1,5 @@
 "use client";
-
 import { ChevronsUpDown, LogOut } from "lucide-react";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -19,11 +17,9 @@ import {
 } from "@/components/ui/sidebar";
 import { User } from "@/lib/server/user";
 import { useModal } from "@/hooks/use-modal-store";
-
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
   const { onOpen } = useModal();
-
   return (
     <SidebarMenu>
       <SidebarMenuItem>

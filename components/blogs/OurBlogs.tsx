@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useState } from "react";
 import { Filter, X, Search, ChevronDown } from "lucide-react";
 import { usePathname } from "next/navigation";
@@ -7,11 +6,9 @@ import BlogFilters from "./BlogFilters";
 import BlogPosts from "./BlogPost";
 import GrainOverlay from '@/components/global/GrainOverlay';
 import { BlogFilterState, BlogSortBy, BlogPost } from "@/types/blogs";
-
 interface OurBlogsProps {
   blogs?: BlogPost[];
 }
-
 export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
   const [showFilters, setShowFilters] = useState(false);
   const [sortBy, setSortBy] = useState<BlogSortBy>('featured');
@@ -21,23 +18,19 @@ export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
     tags: [],
     authors: []
   });
-
   const pathname = usePathname();
   const isBlogsPage = pathname === '/blogs';
   const title = isBlogsPage ? 'Our Blogs' : 'Latest Articles';
-
-  // Convert BlogFilterState to the format expected by BlogPosts component
   const normalizedFilters = {
     categories: filters.categories,
     tags: filters.tags,
     authors: filters.authors,
   };
-
   return (
     <section className="min-h-screen relative bg-gradient-to-br from-primary/10 to-primary/5 overflow-hidden">
       <GrainOverlay/>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
+        {}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent dark:text-white">
             {title}
@@ -46,11 +39,10 @@ export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
             Insights, tips, and updates from Vikings Kenya Power Traders
           </p>
         </div>
-
-        {/* Search and Controls */}
+        {}
         <div className="rounded-2xl border border-primary/10 p-6 mb-6">
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-            {/* Search */}
+            {}
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={20} />
               <input
@@ -61,10 +53,9 @@ export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
                 className="w-full pl-10 pr-4 py-2 border border-primary/10 rounded-lg focus:ring-2 outline-none dark:text-white"
               />
             </div>
-
-            {/* Controls */}
+            {}
             <div className="flex items-center gap-4">
-              {/* Sort */}
+              {}
               <div className="relative">
                 <select
                   value={sortBy}
@@ -79,8 +70,7 @@ export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
                 </select>
                 <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
               </div>
-
-              {/* Mobile Filter Toggle */}
+              {}
               <button
                 onClick={() => setShowFilters(true)}
                 className="lg:hidden flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors dark:bg-slate-700 dark:hover:bg-slate-600"
@@ -91,9 +81,8 @@ export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
             </div>
           </div>
         </div>
-
         <div className="flex gap-6">
-          {/* Desktop Filters */}
+          {}
           <div className="hidden lg:block w-80 flex-shrink-0">
             <div className="bg-white dark:bg-background rounded-2xl shadow-lg border border-slate-200/60 dark:border-zinc-700 p-6 sticky top-6">
               <div className="mb-4">
@@ -103,8 +92,7 @@ export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
               <BlogFilters onFilterChange={setFilters} blogs={blogs} />
             </div>
           </div>
-
-          {/* Mobile Filters Overlay */}
+          {}
           {showFilters && (
             <div className="lg:hidden fixed inset-0 bg-black/50 z-50" onClick={() => setShowFilters(false)}>
               <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-white dark:bg-background shadow-xl transform transition-transform" onClick={(e) => e.stopPropagation()}>
@@ -126,8 +114,7 @@ export default function OurBlogs({ blogs = [] }: OurBlogsProps) {
               </div>
             </div>
           )}
-
-          {/* Blog Posts */}
+          {}
           <div className="flex-1 min-w-0">
             <BlogPosts 
               blogs={blogs}

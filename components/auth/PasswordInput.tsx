@@ -1,16 +1,13 @@
 "use client";
-
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input, type InputProps } from "@/components/ui/input";
-
 import { cn } from "@/lib/utils";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 const PasswordInputComponent = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, ...props }, ref) => {
     const [showPassword, setShowPassword] = React.useState(false);
-
     return (
       <div className="relative">
         <Input
@@ -42,5 +39,4 @@ const PasswordInputComponent = React.forwardRef<HTMLInputElement, InputProps>(
   }
 );
 PasswordInputComponent.displayName = "PasswordInput";
-
 export const PasswordInput = PasswordInputComponent;

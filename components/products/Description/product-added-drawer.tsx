@@ -1,20 +1,17 @@
 "use client"
-
 import * as React from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, Check, ShoppingCart, Shield, Truck, RefreshCw, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import type { Product } from "@/types/products"
-
 interface ProductAddedDrawerProps {
   isOpen: boolean
   onClose: () => void
   product: Product
   quantity: number
-  selectedVariants: Record<string, string> // Added selectedVariants
+  selectedVariants: Record<string, string> 
 }
-
 export const ProductAddedDrawer = React.memo(
   ({ isOpen, onClose, product, quantity, selectedVariants }: ProductAddedDrawerProps) => {
     React.useEffect(() => {
@@ -27,22 +24,19 @@ export const ProductAddedDrawer = React.memo(
         document.body.style.overflow = "unset"
       }
     }, [isOpen])
-
     if (!isOpen) return null
-
     const variantDisplay = Object.entries(selectedVariants)
       .map(([key, value]) => `${key}: ${value}`)
       .join(", ")
-
     return (
       <>
-        {/* Overlay */}
+        {}
         <div
           className="fixed inset-0 bg-black/50 z-40 transition-opacity duration-300"
           onClick={onClose}
           aria-hidden="true"
         />
-        {/* Drawer */}
+        {}
         <div
           className={`fixed top-0 right-0 h-full w-full sm:w-96 bg-background shadow-xl z-50 transform transition-transform duration-300 ${
             isOpen ? "translate-x-0" : "translate-x-full"
@@ -52,7 +46,7 @@ export const ProductAddedDrawer = React.memo(
           aria-labelledby="drawer-title"
         >
           <div className="flex flex-col h-full">
-            {/* Header */}
+            {}
             <div className="flex items-center justify-between p-4 border-b border-muted">
               <h3 id="drawer-title" className="text-lg font-semibold text-foreground">
                 Added to Cart
@@ -65,9 +59,9 @@ export const ProductAddedDrawer = React.memo(
                 <X className="w-5 h-5" />
               </button>
             </div>
-            {/* Content */}
+            {}
             <div className="flex-1 p-4 space-y-6 overflow-y-auto">
-              {/* Success Message */}
+              {}
               <div className="flex items-center gap-3 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
                 <div className="w-8 h-8 bg-green-100 dark:bg-green-800 rounded-full flex items-center justify-center">
                   <Check className="w-4 h-4 text-green-600 dark:text-green-400" />
@@ -77,7 +71,7 @@ export const ProductAddedDrawer = React.memo(
                   <p className="text-sm text-green-600 dark:text-green-400">Ready for checkout</p>
                 </div>
               </div>
-              {/* Product Details */}
+              {}
               <div className="flex items-center gap-4 p-4 bg-muted/30 rounded-lg">
                 <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
                   <Image
@@ -100,7 +94,7 @@ export const ProductAddedDrawer = React.memo(
                   </p>
                 </div>
               </div>
-              {/* Quick Actions */}
+              {}
               <div className="space-y-3">
                 <Link href="/checkout" className="block" onClick={onClose}>
                   <Button className="w-full" size="lg">
@@ -113,7 +107,7 @@ export const ProductAddedDrawer = React.memo(
                   Continue Shopping
                 </Button>
               </div>
-              {/* Trust Indicators */}
+              {}
               <div className="space-y-3 pt-4 border-t border-muted">
                 <div className="flex items-center gap-3 text-sm">
                   <Shield className="w-4 h-4 text-primary" />

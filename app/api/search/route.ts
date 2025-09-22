@@ -2,26 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/database';
 import { product, category, images } from '@/database/schema';
 import {  or, ilike, eq } from 'drizzle-orm';
-
-// Simple in-memory cache for search results
 const searchCache = new Map<string, { results: any[], timestamp: number }>();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-
+const CACHE_DURATION = 5 * 60 * 1000; 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const query = searchParams.get('q');
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
-
     if (!query || query.trim().length === 0) {
       return NextResponse.json({ results: [], total: 0, page, limit });
     }
-
     const searchKey = `${query.toLowerCase()}-${page}-${limit}`;
     const cached = searchCache.get(searchKey);
-    
-    // Check cache first
     if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
       return NextResponse.json({
         results: cached.results,
@@ -31,11 +24,8 @@ export async function GET(request: NextRequest) {
         cached: true
       });
     }
-
     const searchTerm = `%${query.toLowerCase()}%`;
     const offset = (page - 1) * limit;
-
-    // Search products by name, description, or category
     const searchResults = await db
       .select({
         id: product.id,
@@ -62,8 +52,6 @@ export async function GET(request: NextRequest) {
       .orderBy(product.created_at)
       .limit(limit)
       .offset(offset);
-
-    // Transform results
     const results = searchResults.map(item => ({
       id: item.id,
       name: item.name,
@@ -74,13 +62,10 @@ export async function GET(request: NextRequest) {
       image_url: item.image_url,
       has_variants: item.has_variants
     }));
-
-    // Cache the results
     searchCache.set(searchKey, {
       results,
       timestamp: Date.now()
     });
-
     return NextResponse.json({
       results,
       total: results.length,
@@ -88,7 +73,6 @@ export async function GET(request: NextRequest) {
       limit,
       cached: false
     });
-
   } catch (error) {
     console.error('Search error:', error);
     return NextResponse.json(

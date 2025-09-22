@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,18 +20,15 @@ import {
   editProductAction,
 } from "@/app/account/products/add/action";
 import { toast } from "sonner";
-
 interface EditProductFormProps {
   categories: Category[];
   product: Product;
 }
-
 export default function EditProductForm({
   categories,
   product,
 }: EditProductFormProps) {
   const router = useRouter();
-
   const form = useForm<z.infer<typeof editProductFormSchema>>({
     resolver: zodResolver(editProductFormSchema),
     defaultValues: {
@@ -52,9 +48,7 @@ export default function EditProductForm({
       generatedVariants: [],
     },
   });
-
   const [isUpdatingProduct, setIsAddingProduct] = useState(false);
-
   useEffect(() => {
     if (
       product.has_variants &&
@@ -65,10 +59,8 @@ export default function EditProductForm({
         title: variant.title,
         values: variant.generatedVariants.map((value) => value.name),
       }));
-
       form.setValue("variants", existingVariants);
       form.setValue("hasVariants", true);
-
       const existingGeneratedVariants = product.variants.flatMap((variant) =>
         variant.generatedVariants.map((value) => ({
           name: value.name,
@@ -78,21 +70,16 @@ export default function EditProductForm({
           attributes: { [variant.title]: value.name },
         }))
       );
-
       form.setValue("generatedVariants", existingGeneratedVariants);
     }
   }, [product, form]);
-
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "variants",
   });
-
   const hasVariants = form.watch("hasVariants");
   const variants = form.watch("variants") || [];
-
   const variantCombinations = generateVariantCombinations(variants);
-
   useEffect(() => {
     if (hasVariants) {
       const newGeneratedVariants = variantCombinations.map((combo) => {
@@ -102,7 +89,6 @@ export default function EditProductForm({
             (gv) =>
               JSON.stringify(gv.attributes) === JSON.stringify(combo.attributes)
           );
-
         return {
           name: combo.name,
           price: existing?.price || "",
@@ -115,7 +101,6 @@ export default function EditProductForm({
       form.setValue("generatedVariants", newGeneratedVariants);
     }
   }, [variantCombinations.length, hasVariants, form, variantCombinations]);
-
   async function onSubmit(values: z.infer<typeof editProductFormSchema>) {
     setIsAddingProduct(true);
     const processedData = {
@@ -150,28 +135,21 @@ export default function EditProductForm({
         : null,
       id: product.id,
     };
-
-    console.log("processedData", processedData);
-
     const { message, errorMessage } = await editProductAction(processedData);
-
     if (errorMessage) {
       setIsAddingProduct(false);
       return toast.error(errorMessage, {
         position: "top-center",
       });
     }
-
     setIsAddingProduct(false);
     form.reset();
     toast.success(message, {
       position: "top-center",
     });
     router.refresh();
-
     return router.push("/account/products/all");
   }
-
   return (
     <Form {...form}>
       <div className="grid gap-5">

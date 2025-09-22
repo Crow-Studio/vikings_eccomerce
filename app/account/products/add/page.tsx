@@ -16,8 +16,6 @@ export default async function AddProductsPage() {
   if (!user.email_verified) {
     return redirect("/auth/admin/verify-email");
   }
-
   const categories = await db.query.category.findMany();
-
   return <AddNewProductForm categories={categories} />;
 }

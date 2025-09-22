@@ -1,37 +1,25 @@
 "use client"
-
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { CheckCircle, ArrowRight, Package, Truck } from "lucide-react"
 import Link from "next/link"
 import { useCartStore } from "@/store/cart-store"
 import GrainOverlay from "@/components/global/GrainOverlay"
-
 export default function OrderSuccessPage() {
   const router = useRouter()
   const { items, clearCart } = useCartStore()
-
-  // Generate a random order number
   const orderNumber = `VKG-${Math.floor(100000 + Math.random() * 900000)}`
-
-  // Calculate order total
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
   const shipping = 500
   const total = subtotal + shipping
-
-  // Clear cart on component mount
   useEffect(() => {
-    // If no items in cart, redirect to home
     if (items.length === 0) {
       router.push("/")
     }
-
-    // Clear cart after showing the success page
     return () => {
       clearCart()
     }
   }, [items.length, router, clearCart])
-
   return (
     <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8  relative">
       <GrainOverlay />
@@ -45,7 +33,6 @@ export default function OrderSuccessPage() {
             Thank you for your purchase. Your order has been received and is being processed.
           </p>
         </div>
-
         <div className="bg-muted/30 rounded-xl p-6 mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-6 border-b border-muted">
             <div>
@@ -61,10 +48,8 @@ export default function OrderSuccessPage() {
               <p className="font-semibold text-foreground">KSh {total.toLocaleString()}</p>
             </div>
           </div>
-
           <div className="space-y-6">
             <h2 className="text-lg font-semibold text-foreground mb-4">Order Summary</h2>
-
             <div className="space-y-4">
               {items.map((item) => (
                 <div key={item.id} className="flex gap-4 p-4 bg-background rounded-lg">
@@ -79,7 +64,6 @@ export default function OrderSuccessPage() {
                 </div>
               ))}
             </div>
-
             <div className="border-t border-muted pt-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Subtotal</span>
@@ -96,10 +80,8 @@ export default function OrderSuccessPage() {
             </div>
           </div>
         </div>
-
         <div className="bg-muted/30 rounded-xl p-6 mb-8">
           <h2 className="text-lg font-semibold text-foreground mb-4">What&apos;s Next?</h2>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex gap-4">
               <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
@@ -112,7 +94,6 @@ export default function OrderSuccessPage() {
                 </p>
               </div>
             </div>
-
             <div className="flex gap-4">
               <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
                 <Truck className="w-5 h-5 text-primary" />
@@ -126,7 +107,6 @@ export default function OrderSuccessPage() {
             </div>
           </div>
         </div>
-
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link href="/products">
             <button className="px-6 py-3 rounded-md border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors w-full sm:w-auto">

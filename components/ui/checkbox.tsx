@@ -1,10 +1,7 @@
 "use client"
-
 import * as React from "react"
 import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
-
 import { cn } from "@/lib/utils"
-
 function Checkbox({
   className,
   ...props
@@ -28,7 +25,6 @@ function Checkbox({
             height="9"
             viewBox="0 0 9 9"
             fill="currentcolor"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               fillRule="evenodd"
@@ -42,7 +38,6 @@ function Checkbox({
             height="9"
             viewBox="0 0 9 9"
             fill="currentcolor"
-            xmlns="http://www.w3.org/2000/svg"
           >
             <path
               fillRule="evenodd"
@@ -55,5 +50,4 @@ function Checkbox({
     </CheckboxPrimitive.Root>
   )
 }
-
 export { Checkbox }

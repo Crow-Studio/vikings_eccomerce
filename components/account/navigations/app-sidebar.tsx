@@ -1,5 +1,4 @@
 "use client";
-
 import * as React from "react";
 import {
   House,
@@ -9,7 +8,6 @@ import {
   ShoppingBasket,
   Users,
 } from "lucide-react";
-
 import { NavMain } from "@/components/account/navigations/nav-main";
 import { NavSecondary } from "@/components/account/navigations/nav-secondary";
 import { NavUser } from "@/components/account/navigations/nav-user";
@@ -26,12 +24,9 @@ import Link from "next/link";
 import { User } from "@/lib/server/user";
 import VikingsSvgIcon from "@/components/svgs/VikingsSvgIcon";
 import { UserRole } from "@/database/schema";
-
-// Extend the Sidebar props to include user
 interface AppSidebarProps extends React.ComponentProps<typeof Sidebar> {
   user: User;
 }
-
 export function AppSidebar({ user, ...props }: AppSidebarProps) {
   const data = {
     navMain: [
@@ -45,27 +40,29 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         title: "Customers",
         url: "/account/customers",
         icon: Users,
-        isShowInterface: user.role === UserRole.ADMIN ? true : false,
+        isShowInterface: true,
       },
       {
         title: "Orders",
         url: "/account/orders",
         icon: ShoppingBasket,
-        isShowInterface: user.role === UserRole.ADMIN ? true : false,
+        isShowInterface: true,
       },
       {
         title: "Products",
         url: "/account/products/all",
         icon: ShoppingBag,
-        isShowInterface: user.role === UserRole.ADMIN ? true : false,
+        isShowInterface: true,
         items: [
           {
             title: "All Products",
             url: "/account/products/all",
+            isShowInterface: true,
           },
           {
             title: "Add Product",
             url: "/account/products/add",
+            isShowInterface: true,
           },
         ],
       },
@@ -80,6 +77,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
             url: "/account/settings/general",
             isShowInterface: true,
           },
+          {
+            title: "Users",
+            url: "/account/settings/users",
+            isShowInterface: user.role === UserRole.ADMIN ? true : false,
+          },
         ],
       },
     ],
@@ -91,7 +93,6 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
       },
     ],
   };
-
   return (
     <Sidebar
       className="top-(--header-height) h-[calc(100svh-var(--header-height))]!"

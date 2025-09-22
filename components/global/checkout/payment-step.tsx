@@ -1,9 +1,7 @@
 "use client"
-
 import * as React from "react"
 import { CreditCard, Phone, Shield } from "lucide-react"
 import { Button } from "@/components/ui/button"
-
 interface PaymentStepProps {
   formData: {
     paymentMethod: string
@@ -13,7 +11,6 @@ interface PaymentStepProps {
   isProcessing: boolean
   setCurrentStep: (step: number) => void
 }
-
 export const PaymentStep = React.memo(
   ({ formData, handleInputChange, handleCompleteOrder, isProcessing, setCurrentStep }: PaymentStepProps) => (
     <div className="space-y-6">

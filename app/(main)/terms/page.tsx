@@ -1,7 +1,5 @@
 import React from 'react'
 import Terms from '@/components/home/legal/termsComponent';
-
-
 function page() {
   return (
     <div>
@@ -9,5 +7,4 @@ function page() {
     </div>
   )
 }
-
 export default page

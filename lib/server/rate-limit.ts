@@ -1,14 +1,11 @@
 export class TokenBucket<_Key> {
   public max: number;
   public refillIntervalSeconds: number;
-
   constructor(max: number, refillIntervalSeconds: number) {
     this.max = max;
     this.refillIntervalSeconds = refillIntervalSeconds;
   }
-
   private storage = new Map<_Key, Bucket>();
-
   public check(key: _Key, cost: number): boolean {
     const bucket = this.storage.get(key) ?? null;
     if (bucket === null) {
@@ -23,7 +20,6 @@ export class TokenBucket<_Key> {
     }
     return bucket.count >= cost;
   }
-
   public consume(key: _Key, cost: number): boolean {
     let bucket = this.storage.get(key) ?? null;
     const now = Date.now();
@@ -51,18 +47,14 @@ export class TokenBucket<_Key> {
     return true;
   }
 }
-
 export class RefillingTokenBucket<_Key> {
   public max: number;
   public refillIntervalSeconds: number;
-
   constructor(max: number, refillIntervalSeconds: number) {
     this.max = max;
     this.refillIntervalSeconds = refillIntervalSeconds;
   }
-
   private storage = new Map<_Key, RefillBucket>();
-
   public check(key: _Key, cost: number): boolean {
     const bucket = this.storage.get(key) ?? null;
     if (bucket === null) {
@@ -77,7 +69,6 @@ export class RefillingTokenBucket<_Key> {
     }
     return bucket.count >= cost;
   }
-
   public consume(key: _Key, cost: number): boolean {
     let bucket = this.storage.get(key) ?? null;
     const now = Date.now();
@@ -102,16 +93,12 @@ export class RefillingTokenBucket<_Key> {
     return true;
   }
 }
-
 export class Throttler<_Key> {
   public timeoutSeconds: number[];
-
   private storage = new Map<_Key, ThrottlingCounter>();
-
   constructor(timeoutSeconds: number[]) {
     this.timeoutSeconds = timeoutSeconds;
   }
-
   public consume(key: _Key): boolean {
     let counter = this.storage.get(key) ?? null;
     const now = Date.now();
@@ -136,23 +123,18 @@ export class Throttler<_Key> {
     this.storage.set(key, counter);
     return true;
   }
-
   public reset(key: _Key): void {
     this.storage.delete(key);
   }
 }
-
 export class ExpiringTokenBucket<_Key> {
   public max: number;
   public expiresInSeconds: number;
-
   private storage = new Map<_Key, ExpiringBucket>();
-
   constructor(max: number, expiresInSeconds: number) {
     this.max = max;
     this.expiresInSeconds = expiresInSeconds;
   }
-
   public check(key: _Key, cost: number): boolean {
     const bucket = this.storage.get(key) ?? null;
     const now = Date.now();
@@ -164,7 +146,6 @@ export class ExpiringTokenBucket<_Key> {
     }
     return bucket.count >= cost;
   }
-
   public consume(key: _Key, cost: number): boolean {
     let bucket = this.storage.get(key) ?? null;
     const now = Date.now();
@@ -186,22 +167,18 @@ export class ExpiringTokenBucket<_Key> {
     this.storage.set(key, bucket);
     return true;
   }
-
   public reset(key: _Key): void {
     this.storage.delete(key);
   }
 }
-
 interface RefillBucket {
   count: number;
   refilledAt: number;
 }
-
 interface ExpiringBucket {
   count: number;
   createdAt: number;
 }
-
 interface ThrottlingCounter {
   timeout: number;
   updatedAt: number;

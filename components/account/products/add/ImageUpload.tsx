@@ -4,7 +4,6 @@ import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { toast } from "sonner";
-
 interface ImageUploadProps {
   images: Array<{
     id: string;
@@ -21,7 +20,6 @@ interface ImageUploadProps {
   error?: string;
   isAddingProduct: boolean;
 }
-
 export default function ImageUpload({
   images,
   onChange,
@@ -30,55 +28,41 @@ export default function ImageUpload({
 }: ImageUploadProps) {
   const [isDragging, setIsDragging] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
-
   const maxSizeMB = 5;
   const maxSize = maxSizeMB * 1024 * 1024;
   const maxFiles = 6;
-
   const handleFiles = (files: FileList | null) => {
     if (!files) return;
-
     const validFiles: Array<{ id: string; file: File; preview: string }> = [];
     const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
-
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-
-      // validate type
       if (!allowedTypes.includes(file.type)) {
         toast.error(`Unsupported file type: ${file.name}`, {
           position: "top-center",
         });
         return;
       }
-
-      // validate size
       if (file.size > maxSize) {
         toast.error(`File too large (max ${maxSizeMB}MB): ${file.name}`, {
           position: "top-center",
         });
         return;
       }
-
-      // validate max count
       if (images.length + validFiles.length >= maxFiles) {
         toast.error(`Maximum of ${maxFiles} images allowed`, {
           position: "top-center",
         });
         return;
       }
-
       const id = `${file.name}-${Date.now()}-${Math.random()}`;
       const preview = URL.createObjectURL(file);
-
       validFiles.push({ id, file, preview });
     }
-
     if (validFiles.length) {
       onChange([...images, ...validFiles]);
     }
   };
-
   const handleDragEnter = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -87,7 +71,6 @@ export default function ImageUpload({
       setIsDragging(true);
     }
   };
-
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -97,25 +80,20 @@ export default function ImageUpload({
       setIsDragging(false);
     }
   };
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
   };
-
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
     setDragCounter(0);
-
     if (isAddingProduct) return;
-
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       handleFiles(e.dataTransfer.files);
     }
   };
-
   const openFileDialog = () => {
     const input = document.createElement("input");
     input.type = "file";
@@ -127,12 +105,10 @@ export default function ImageUpload({
     };
     input.click();
   };
-
   const removeFile = (id: string) => {
     const updatedImages = images.filter((img) => img.id !== id);
     onChange(updatedImages);
   };
-
   return (
     <div className="flex flex-col gap-2">
       <div
@@ -166,7 +142,6 @@ export default function ImageUpload({
                 Add more
               </Button>
             </div>
-
             <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
               {images.map((image, index) => (
                 <div
@@ -225,7 +200,6 @@ export default function ImageUpload({
           </div>
         )}
       </div>
-
       {error && (
         <div
           className="text-destructive flex items-center gap-1 text-xs"

@@ -1,1 +1,0 @@
-ALTER TABLE "customer" ADD COLUMN "avatar" text;

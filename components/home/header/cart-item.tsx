@@ -2,26 +2,22 @@
 import { memo, useCallback } from "react"
 import { Plus, Minus, X } from "lucide-react"
 import type { CartItemProps } from "@/types/header"
-import Image from "next/image" // Import Image component
-
+import Image from "next/image" 
 export const CartItem = memo(({ item, onUpdateQuantity, onRemove }: CartItemProps) => {
   const handleDecrease = useCallback(() => {
     onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))
   }, [item.id, item.quantity, onUpdateQuantity])
-
   const handleIncrease = useCallback(() => {
     onUpdateQuantity(item.id, item.quantity + 1)
   }, [item.id, item.quantity, onUpdateQuantity])
-
   const handleRemove = useCallback(() => {
     onRemove(item.id)
   }, [item.id, onRemove])
-
   return (
     <div className="flex gap-4 p-3 bg-muted/30 rounded-lg">
       <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
         <Image
-          src={item.image || "/placeholder.svg?height=64&width=64&query=cart item"} // Use item.image
+          src={item.image || "/placeholder.svg?height=64&width=64&query=cart item"} 
           alt={item.name}
           width={64}
           height={64}

@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import EditCategorySelector from "./edit-category-selector";
-
 export default function EditProductSettings({ form, categories, isUpdatingProduct }: EditProductSettingsProps) {
   return (
     <Card>
@@ -68,7 +67,6 @@ export default function EditProductSettings({ form, categories, isUpdatingProduc
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="category"

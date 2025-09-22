@@ -1,19 +1,15 @@
 "use client"
-
 import * as React from "react"
 import Link from "next/link"
-import Image from "next/image" // Import Image
+import Image from "next/image" 
 import { ArrowRight, Minus, Plus, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useCartStore } from "@/store/cart-store"
-
 interface CartStepProps {
   setCurrentStep: (step: number) => void
 }
-
 export const CartStep = React.memo(({ setCurrentStep }: CartStepProps) => {
   const { items, increaseQuantity, decreaseQuantity, removeItem } = useCartStore()
-
   return (
     <div className="space-y-6">
       <div className="bg-muted/30 rounded-xl p-6">
@@ -38,7 +34,7 @@ export const CartStep = React.memo(({ setCurrentStep }: CartStepProps) => {
         ) : (
           items.map((item) => (
             <div
-              key={item.id + JSON.stringify(item.selectedVariants)} // Use a combined key for unique items with variants
+              key={item.id + JSON.stringify(item.selectedVariants)} 
               className="flex items-center gap-4 p-4 bg-background rounded-lg mb-4 hover:bg-muted/20 transition-colors"
             >
               <div className="w-16 h-16 bg-muted rounded-lg flex items-center justify-center overflow-hidden">

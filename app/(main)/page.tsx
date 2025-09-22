@@ -1,10 +1,7 @@
 import OurCollections from "@/components/collections/OurCollections";
 import Hero from "@/components/home/Hero";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
-import Newsletter from "@/components/home/Newsletter";
 import { db } from "@/database";
 import { desc } from "drizzle-orm";
-
 export default async function Home() {
   const rawProducts = await db.query.product.findMany({
     with: {
@@ -16,21 +13,24 @@ export default async function Home() {
         },
       },
     },
-    orderBy: table => desc(table.created_at)
+    orderBy: (table) => desc(table.created_at),
   });
 
-  const products = rawProducts.map(product => ({
+  const products = rawProducts.map((product) => ({
     ...product,
-    created_at: product.created_at.toISOString(),
-    updated_at: product.updated_at?.toISOString() || null
+    variants: product.variants.map((variant) => ({
+      ...variant,
+      generatedVariants: variant.generatedVariants.map((gv) => ({
+        ...gv,
+        value: gv.name,
+      })),
+    })),
   }));
 
   return (
     <main>
       <Hero products={products} />
       <OurCollections products={products} />
-      <WhyChooseUs />
-      <Newsletter />
     </main>
   );
 }

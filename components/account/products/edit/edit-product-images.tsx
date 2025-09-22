@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/form";
 import { EditProductImagesProps } from "@/types";
 import EditImageUpload from "./edit-image-upload";
-
 export default function EditProductImages({ form, isUpdatingProduct }: EditProductImagesProps) {
   return (
     <Card>

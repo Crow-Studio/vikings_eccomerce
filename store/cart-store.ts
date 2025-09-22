@@ -1,15 +1,13 @@
 import { create } from "zustand"
 import { persist } from "zustand/middleware"
-
 export interface CartItem {
-  id: string // Changed from number to string to match your database schema
+  id: string 
   name: string
   price: number
   quantity: number
   image: string
-  selectedVariants?: Record<string, string> // Added to support product variants
+  selectedVariants?: Record<string, string> 
 }
-
 interface CartStore {
   items: CartItem[]
   addItem: (item: CartItem) => void
@@ -21,7 +19,6 @@ interface CartStore {
   getTotalItems: () => number
   getTotalPrice: () => number
 }
-
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
@@ -32,9 +29,7 @@ export const useCartStore = create<CartStore>()(
           i.id === item.id && 
           JSON.stringify(i.selectedVariants) === JSON.stringify(item.selectedVariants)
         )
-
         if (existingItemIndex !== -1) {
-          // Update existing item quantity
           const updatedItems = [...items]
           updatedItems[existingItemIndex] = {
             ...updatedItems[existingItemIndex],
@@ -42,7 +37,6 @@ export const useCartStore = create<CartStore>()(
           }
           set({ items: updatedItems })
         } else {
-          // Add new item
           set({ items: [...items, item] })
         }
       },
@@ -55,7 +49,6 @@ export const useCartStore = create<CartStore>()(
       updateQuantity: (id, quantity) => {
         const { items } = get()
         if (quantity <= 0) {
-          // Remove item if quantity is 0 or less
           set({
             items: items.filter((i) => i.id !== id)
           })
@@ -83,7 +76,6 @@ export const useCartStore = create<CartStore>()(
             )
           })
         } else {
-          // Remove item if quantity would become 0
           set({
             items: items.filter((i) => i.id !== id)
           })

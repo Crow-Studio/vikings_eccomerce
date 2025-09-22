@@ -1,5 +1,5 @@
 {
-  "name": "delirium",
+  "name": "vikings-ecommerce",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "prepare": "husky",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
+    "db:clear": "tsx ./lib/db/clear.ts",
     "email": "email dev"
   },
   "dependencies": {
@@ -25,6 +26,7 @@
     "@oslojs/encoding": "^1.1.0",
     "@pilcrowjs/object-parser": "^0.0.4",
     "@radix-ui/react-accordion": "^1.2.11",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-collapsible": "^1.1.11",
@@ -51,9 +53,12 @@
     "cloudinary": "^2.7.0",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
     "drizzle-orm": "^0.44.2",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.513.0",
+    "minio": "^8.0.6",
     "motion": "^12.23.0",
     "nanoid": "^5.1.5",
     "next": "15.3.4",
@@ -65,8 +70,10 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.57.0",
+    "react-phone-number-input": "^3.4.12",
     "recharts": "2.15.4",
     "resend": "^4.5.2",
+    "sharp": "^0.34.4",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.0",
     "uuid": "^11.1.0",
@@ -79,6 +86,7 @@
     "@commitlint/config-conventional": "^19.8.1",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/lodash": "^4.17.20",
     "@types/node": "^20",
     "@types/nprogress": "^0.2.3",
     "@types/pg": "^8.15.4",
@@ -93,5 +101,27 @@
     "tsx": "^4.19.4",
     "tw-animate-css": "^1.3.4",
     "typescript": "^5"
-  }
+  },
+  "description": "Kenya's trusted source for professional tools & equipment",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Crow-Studio/vikings_eccomerce.git"
+  },
+  "keywords": [
+    "e-commerce",
+    "nextjs",
+    "tailwindcss",
+    "drizzle-orm",
+    "shadcn-ui"
+  ],
+  "author": "Crow Studios",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Crow-Studio/vikings_eccomerce/issues"
+  },
+  "homepage": "https://github.com/Crow-Studio/vikings_eccomerce#readme"
 }

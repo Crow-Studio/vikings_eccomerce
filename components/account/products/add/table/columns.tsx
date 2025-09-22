@@ -1,5 +1,4 @@
 "use client";
-
 import { DBProduct } from "@/types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -9,7 +8,6 @@ import { Visibility } from "@/database/schema";
 import { IconCircleCheckFilled, IconLoader } from "@tabler/icons-react";
 import ProductDataTableCellViewer from "./product-data-table-cell-viewer";
 import DataTableActions from "./data-table-actions";
-
 export const columns: ColumnDef<DBProduct>[] = [
   {
     id: "select",
@@ -88,7 +86,6 @@ export const columns: ColumnDef<DBProduct>[] = [
         style: "currency",
         currency: "KES",
       }).format(amount);
-
       return <p>{formatted}</p>;
     },
   },

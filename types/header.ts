@@ -1,24 +1,20 @@
 import type React from "react"
 import type { User } from "@/lib/server/user"
-import type { CartItem } from "@/store/cart-store" // Import CartItem from your store
-
+import type { CartItem } from "@/store/cart-store" 
 export interface HeaderProps {
   user: User | null
 }
-
 export interface IconButtonProps {
   icon: React.ComponentType<{ className?: string }>
   tooltip: string
   onClick?: () => void
   badge?: string | number
 }
-
 export interface CartItemProps {
-  item: CartItem // Use the CartItem type from the store
+  item: CartItem 
   onUpdateQuantity: (id: string, quantity: number) => void
   onRemove: (id: string) => void
 }
-
 export interface MobileMenuItemProps {
   icon: React.ComponentType<{ className?: string }>
   label: string
@@ -27,8 +23,6 @@ export interface MobileMenuItemProps {
   badge?: string | number
   onMenuClose: () => void
 }
-
-// New type for Wishlist Item
 export interface WishlistItem {
   id: string
   name: string

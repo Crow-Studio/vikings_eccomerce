@@ -1,5 +1,4 @@
 "use client"
-
 import React, { memo } from "react"
 import Image from "next/image"
 import { X, Heart, ShoppingCart } from "lucide-react"
@@ -15,10 +14,9 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { IconButton } from "@/components/home/header/icon-button"
 import WishListIcon from "@/components/svgs/Wishlist"
-import { useCartStore } from "@/store/cart-store" // Import the cart store
-import { toast } from "sonner" // Import toast from sonner
+import { useCartStore } from "@/store/cart-store" 
+import { toast } from "sonner" 
 import type { WishlistItem } from "@/types/header"
-
 interface WishlistSheetProps {
   isOpen: boolean
   onOpenChange: (open: boolean) => void
@@ -26,13 +24,11 @@ interface WishlistSheetProps {
   itemCount: number
   onRemoveItem: (id: string) => void
 }
-
 interface WishlistItemComponentProps {
   item: WishlistItem
   onRemove: (id: string) => void
   onAddToCart: (item: WishlistItem) => void
 }
-
 const WishlistItemComponent = memo(({ item, onRemove, onAddToCart }: WishlistItemComponentProps) => (
   <div className="flex items-center space-x-4 py-4">
     <div className="relative w-16 h-16 flex-shrink-0">
@@ -79,50 +75,33 @@ const WishlistItemComponent = memo(({ item, onRemove, onAddToCart }: WishlistIte
     </div>
   </div>
 ))
-
 WishlistItemComponent.displayName = "WishlistItemComponent"
-
 export const WishlistSheet = memo(
   ({ isOpen, onOpenChange, items = [], itemCount, onRemoveItem }: WishlistSheetProps) => {
-    const { addItem } = useCartStore() // Get addItem function from cart store
-    
-    // Ensure items is always an array
+    const { addItem } = useCartStore() 
     const safeItems = items || []
-    
-    // Function to add single item to cart
     const handleAddToCart = (wishlistItem: WishlistItem) => {
-      // Add to cart
       addItem({
         id: wishlistItem.id,
         name: wishlistItem.name,
         price: wishlistItem.price,
-        quantity: 1, // Default quantity when adding from wishlist
+        quantity: 1, 
         image: wishlistItem.image,
         selectedVariants: wishlistItem.selectedVariants,
       })
-      
-      // Remove from wishlist
       onRemoveItem(wishlistItem.id)
-      
-      // Show success toast
       toast.success(`${wishlistItem.name} added to cart`, {
         description: `Moved from wishlist to cart successfully`,
-
         action: {
           label: "View Cart",
           onClick: () => {
-            // You can add logic here to open cart or navigate to cart page
             console.log("View cart clicked")
           },
         },
       })
     }
-    
-    // Function to add all items to cart
     const handleAddAllToCart = () => {
       const itemCount = safeItems.length
-      
-      // Add all items to cart
       safeItems.forEach((item) => {
         addItem({
           id: item.id,
@@ -133,25 +112,19 @@ export const WishlistSheet = memo(
           selectedVariants: item.selectedVariants,
         })
       })
-      
-      // Remove all items from wishlist
       safeItems.forEach((item) => {
         onRemoveItem(item.id)
       })
-      
-      // Show success toast
       toast.success(`All items added to cart`, {
         description: `${itemCount} ${itemCount === 1 ? 'item' : 'items'} moved from wishlist to cart`,
         action: {
           label: "View Cart",
           onClick: () => {
-            // You can add logic here to open cart or navigate to cart page
             console.log("View cart clicked")
           },
         },
       })
     }
-    
     return (
       <Sheet open={isOpen} onOpenChange={onOpenChange}>
         <SheetTrigger asChild>
@@ -212,5 +185,4 @@ export const WishlistSheet = memo(
     )
   },
 )
-
 WishlistSheet.displayName = "WishlistSheet"
