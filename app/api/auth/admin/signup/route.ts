@@ -4,7 +4,7 @@ import { hashPassword, verifyPasswordStrength } from "@/lib/server/password";
 import { RefillingTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import { createUser } from "@/lib/server/user";
-import { generateRandomUsername } from "@/lib/server/username";
+import { capitalize, generateRandomUsername } from "@/lib/server/username";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 const ipBucket = new RefillingTokenBucket<string>(3, 10);
@@ -39,10 +39,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json(null, { status: 429, statusText: 'Too many registration attempts. Please wait a few minutes before trying again!' });
         }
         const username = generateRandomUsername();
-        const avatar = `https:
-            .split(" ")[0]
-            .charAt(0)
-            .toUpperCase()}`;
+        const avatar = `https://avatar.vercel.sh/vercel.svg?text=${capitalize(username).split(" ")[0].charAt(0).toUpperCase()}}`;
         const role: UserRole = UserRole.ADMIN;
         const email_verified = false;
         const passwordHash = await hashPassword(password);
