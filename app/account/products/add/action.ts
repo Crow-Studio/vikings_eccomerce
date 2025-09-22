@@ -16,8 +16,6 @@ const minioEndpoint = process.env.MINIO_ENDPOINT as string;
 const bucket = process.env.MINIO_BUCKET as string
 
 console.log(minioEndpoint, bucket)
-console.log('minio-access-key', process.env.MINIO_ACCESS_KEY)
-console.log('minio-secret-key', process.env.MINIO_SECRET_KEY)
 
 const minioClient = new Minio.Client({
   endPoint: minioEndpoint,
@@ -26,7 +24,7 @@ const minioClient = new Minio.Client({
   secretKey: process.env.MINIO_SECRET_KEY,
 });
 
-// Enhanced image optimization configuration
+// Optimized image configuration to reduce payload sizes
 interface SizeConfig {
   width?: number;
   height?: number;
@@ -38,23 +36,25 @@ interface SizeConfig {
 
 const IMAGE_OPTIMIZATION_CONFIG = {
   sizes: {
-    thumbnail: { width: 300, height: 300, quality: 85, fit: 'cover' as const },
-    medium: { width: 600, height: 600, quality: 90, fit: 'cover' as const },
-    large: { width: 1200, height: 1200, quality: 95, fit: 'inside' as const },
-    original: { maxWidth: 2000, maxHeight: 2000, quality: 95, fit: 'inside' as const }
+    thumbnail: { width: 300, height: 300, quality: 75, fit: 'cover' as const },
+    medium: { width: 600, height: 600, quality: 80, fit: 'cover' as const },
+    large: { width: 1200, height: 1200, quality: 85, fit: 'inside' as const },
+    original: { maxWidth: 1600, maxHeight: 1600, quality: 85, fit: 'inside' as const } // Reduced from 2000px
   } as Record<string, SizeConfig>,
   supportedFormats: ['jpeg', 'jpg', 'png', 'webp', 'avif', 'tiff', 'gif'],
   outputFormat: 'webp' as const,
-  maxFileSize: 10 * 1024 * 1024, // 10MB
+  maxFileSize: 5 * 1024 * 1024, // Reduced to 5MB per file
+  maxTotalSize: 25 * 1024 * 1024, // 25MB total per request
+  maxImages: 6, // Reduced from unlimited to 6 images per request
   compression: {
     webp: {
-      quality: 85,
-      effort: 6,
+      quality: 75, // Reduced quality for better compression
+      effort: 4,   // Reduced effort for faster processing
       progressive: true,
       nearLossless: false,
     },
     jpeg: {
-      quality: 90,
+      quality: 80, // Reduced quality
       progressive: true,
       mozjpeg: true,
     }
@@ -71,112 +71,144 @@ interface OptimizedImageResult {
   height: number;
 }
 
-// Enhanced image optimization function
+// Enhanced validation function
+function validateImageUpload(files: { file: File }[]): string | null {
+  if (files.length > IMAGE_OPTIMIZATION_CONFIG.maxImages) {
+    return `Too many images. Maximum ${IMAGE_OPTIMIZATION_CONFIG.maxImages} images allowed per request.`;
+  }
+
+  const totalSize = files.reduce((sum, { file }) => sum + file.size, 0);
+  if (totalSize > IMAGE_OPTIMIZATION_CONFIG.maxTotalSize) {
+    const maxMB = Math.round(IMAGE_OPTIMIZATION_CONFIG.maxTotalSize / (1024 * 1024));
+    return `Total file size too large. Maximum ${maxMB}MB allowed per request.`;
+  }
+
+  for (const { file } of files) {
+    if (file.size > IMAGE_OPTIMIZATION_CONFIG.maxFileSize) {
+      const maxMB = Math.round(IMAGE_OPTIMIZATION_CONFIG.maxFileSize / (1024 * 1024));
+      return `File ${file.name} is too large. Maximum ${maxMB}MB per file.`;
+    }
+
+    const fileExtension = file.name.split('.').pop()?.toLowerCase();
+    if (!fileExtension || !IMAGE_OPTIMIZATION_CONFIG.supportedFormats.includes(fileExtension)) {
+      return `Unsupported image format: ${fileExtension}. Supported formats: ${IMAGE_OPTIMIZATION_CONFIG.supportedFormats.join(', ')}`;
+    }
+  }
+
+  return null;
+}
+
+// Enhanced image optimization function with better error handling
 async function optimizeImage(
   file: File,
   size: keyof typeof IMAGE_OPTIMIZATION_CONFIG.sizes,
   productId: string,
   index: number = 0
 ): Promise<OptimizedImageResult> {
-  console.log(`🖼️ Optimizing ${file.name} for size: ${size}`);
+  console.log(`Optimizing ${file.name} for size: ${size}`);
 
   const config = IMAGE_OPTIMIZATION_CONFIG.sizes[size];
   const arrayBuffer = await file.arrayBuffer();
   const inputBuffer = Buffer.from(arrayBuffer);
 
-  // Validate file size
-  if (inputBuffer.length > IMAGE_OPTIMIZATION_CONFIG.maxFileSize) {
-    throw new Error(
-      `Image ${file.name} is too large. Maximum size is ${IMAGE_OPTIMIZATION_CONFIG.maxFileSize / (1024 * 1024)
-      }MB`
-    );
-  }
-
-  // Validate file format
-  const fileExtension = file.name.split('.').pop()?.toLowerCase();
-  if (!fileExtension || !IMAGE_OPTIMIZATION_CONFIG.supportedFormats.includes(fileExtension)) {
-    throw new Error(`Unsupported image format: ${fileExtension}`);
+  // Additional validation
+  if (inputBuffer.length === 0) {
+    throw new Error(`File ${file.name} appears to be empty`);
   }
 
   let sharpInstance = sharp(inputBuffer);
 
-  // Get and validate metadata
-  const metadata = await sharpInstance.metadata();
-  console.log(`📐 Original: ${metadata.width}x${metadata.height}, format: ${metadata.format}`);
+  try {
+    // Get and validate metadata
+    const metadata = await sharpInstance.metadata();
+    console.log(`Original: ${metadata.width}x${metadata.height}, format: ${metadata.format}, size: ${Math.round(inputBuffer.length / 1024)}KB`);
 
-  if (!metadata.width || !metadata.height) {
-    throw new Error(`Invalid image dimensions for ${file.name}`);
-  }
-
-  // Apply transformations based on size
-  if (size === 'original') {
-    // For original, only resize if larger than max dimensions
-    const needsResize =
-      metadata.width > (config.maxWidth || 2000) ||
-      metadata.height > (config.maxHeight || 2000);
-
-    if (needsResize) {
-      sharpInstance = sharpInstance.resize(config.maxWidth, config.maxHeight, {
-        fit: config.fit,
-        withoutEnlargement: true,
-        background: { r: 255, g: 255, b: 255, alpha: 1 }
-      });
+    if (!metadata.width || !metadata.height) {
+      throw new Error(`Invalid image dimensions for ${file.name}`);
     }
-  } else {
-    // For specific sizes, resize with the configured fit strategy
-    sharpInstance = sharpInstance.resize(config.width, config.height, {
-      fit: config.fit,
-      position: 'center',
-      background: { r: 255, g: 255, b: 255, alpha: 1 }
-    });
+
+    // Skip processing if image is already smaller than target
+    const needsProcessing = size === 'original' 
+      ? (metadata.width > (config.maxWidth || 1600) || metadata.height > (config.maxHeight || 1600))
+      : (metadata.width > (config.width || 600) || metadata.height > (config.height || 600));
+
+    if (!needsProcessing && size !== 'thumbnail' && size !== 'medium') {
+      // For small images, just convert format without resizing
+      sharpInstance = sharp(inputBuffer);
+    } else {
+      // Apply transformations based on size
+      if (size === 'original') {
+        const needsResize = metadata.width > (config.maxWidth || 1600) || metadata.height > (config.maxHeight || 1600);
+        if (needsResize) {
+          sharpInstance = sharpInstance.resize(config.maxWidth, config.maxHeight, {
+            fit: config.fit,
+            withoutEnlargement: true,
+            background: { r: 255, g: 255, b: 255, alpha: 1 }
+          });
+        }
+      } else {
+        // For specific sizes, resize with the configured fit strategy
+        sharpInstance = sharpInstance.resize(config.width, config.height, {
+          fit: config.fit,
+          position: 'center',
+          background: { r: 255, g: 255, b: 255, alpha: 1 }
+        });
+      }
+    }
+
+    // Apply light sharpening only for resized images
+    if (needsProcessing) {
+      sharpInstance = sharpInstance.sharpen({ sigma: 0.5, m1: 0.8, m2: 3 });
+    }
+
+    // Convert to optimized format
+    let optimizedBuffer: Buffer;
+    let contentType: string;
+
+    if (IMAGE_OPTIMIZATION_CONFIG.outputFormat === 'webp') {
+      optimizedBuffer = await sharpInstance
+        .webp(IMAGE_OPTIMIZATION_CONFIG.compression.webp)
+        .toBuffer();
+      contentType = 'image/webp';
+    } else {
+      optimizedBuffer = await sharpInstance
+        .jpeg(IMAGE_OPTIMIZATION_CONFIG.compression.jpeg)
+        .toBuffer();
+      contentType = 'image/jpeg';
+    }
+
+    // Get final dimensions
+    const finalMetadata = await sharp(optimizedBuffer).metadata();
+    const sizeReduction = Math.round((inputBuffer.length - optimizedBuffer.length) / inputBuffer.length * 100);
+    
+    console.log(
+      `Optimized ${file.name}: ${Math.round(inputBuffer.length/1024)}KB → ${Math.round(optimizedBuffer.length/1024)}KB ` +
+      `(${sizeReduction}% reduction), dimensions: ${finalMetadata.width}x${finalMetadata.height}`
+    );
+
+    // Generate unique key with timestamp for cache busting
+    const timestamp = Date.now();
+    const extension = IMAGE_OPTIMIZATION_CONFIG.outputFormat;
+    const key = `products/${productId}/${size}/${timestamp}-${index}-${crypto.randomUUID().slice(0, 8)}.${extension}`;
+    const url = `https://${minioEndpoint}/${bucket}/${key}`;
+
+    return {
+      buffer: optimizedBuffer,
+      contentType,
+      key,
+      url,
+      size: optimizedBuffer.length,
+      width: finalMetadata.width || 0,
+      height: finalMetadata.height || 0,
+    };
+
+  } catch (sharpError) {
+    console.error(`Sharp processing error for ${file.name}:`, sharpError);
+    throw new Error(`Failed to process image ${file.name}: ${sharpError instanceof Error ? sharpError.message : 'Image processing failed'}`);
   }
-
-  // Apply sharpening for better quality
-  sharpInstance = sharpInstance.sharpen();
-
-  // Convert to optimized format
-  let optimizedBuffer: Buffer;
-  let contentType: string;
-
-  if (IMAGE_OPTIMIZATION_CONFIG.outputFormat === 'webp') {
-    optimizedBuffer = await sharpInstance
-      .webp(IMAGE_OPTIMIZATION_CONFIG.compression.webp)
-      .toBuffer();
-    contentType = 'image/webp';
-  } else {
-    optimizedBuffer = await sharpInstance
-      .jpeg(IMAGE_OPTIMIZATION_CONFIG.compression.jpeg)
-      .toBuffer();
-    contentType = 'image/jpeg';
-  }
-
-  // Get final dimensions
-  const finalMetadata = await sharp(optimizedBuffer).metadata();
-
-  const sizeReduction = ((inputBuffer.length - optimizedBuffer.length) / inputBuffer.length * 100);
-  console.log(
-    `✅ Optimized: ${inputBuffer.length} → ${optimizedBuffer.length} bytes ` +
-    `(${sizeReduction.toFixed(1)}% reduction), dimensions: ${finalMetadata.width}x${finalMetadata.height}`
-  );
-
-  // Generate unique key with timestamp for cache busting
-  const timestamp = Date.now();
-  const extension = IMAGE_OPTIMIZATION_CONFIG.outputFormat;
-  const key = `products/${productId}/${size}/${timestamp}-${index}-${crypto.randomUUID().slice(0, 8)}.${extension}`;
-  const url = `https://${minioEndpoint}/${bucket}/${key}`;
-
-  return {
-    buffer: optimizedBuffer,
-    contentType,
-    key,
-    url,
-    size: optimizedBuffer.length,
-    width: finalMetadata.width || 0,
-    height: finalMetadata.height || 0,
-  };
 }
 
-// Batch process images with improved error handling
+// Optimized batch processing with sequential uploads to reduce memory pressure
 async function processAndUploadImages(
   files: { file: File }[],
   productId: string
@@ -186,35 +218,50 @@ async function processAndUploadImages(
   large: string;
   original: string;
 }>> {
-  console.log(`🚀 Processing ${files.length} images for product ${productId}`);
+  console.log(`Processing ${files.length} images for product ${productId}`);
 
   if (files.length === 0) {
     return [];
   }
 
+  // Validate total upload size
+  const validationError = validateImageUpload(files);
+  if (validationError) {
+    throw new Error(validationError);
+  }
+
   const results = [];
 
+  // Process images sequentially to reduce memory pressure and avoid timeouts
   for (let index = 0; index < files.length; index++) {
     const { file } = files[index];
-    console.log(`📸 Processing image ${index + 1}/${files.length}: ${file.name}`);
+    console.log(`Processing image ${index + 1}/${files.length}: ${file.name} (${Math.round(file.size / 1024)}KB)`);
 
     try {
-      // Process all sizes concurrently
-      const [thumbnail, medium, large, original] = await Promise.all([
-        optimizeImage(file, 'thumbnail', productId, index),
-        optimizeImage(file, 'medium', productId, index),
-        optimizeImage(file, 'large', productId, index),
-        optimizeImage(file, 'original', productId, index),
-      ]);
+      // Process all sizes sequentially instead of concurrently to reduce memory usage
+      console.log(`  Creating thumbnail...`);
+      const thumbnail = await optimizeImage(file, 'thumbnail', productId, index);
+      
+      console.log(`  Creating medium size...`);
+      const medium = await optimizeImage(file, 'medium', productId, index);
+      
+      console.log(`  Creating large size...`);
+      const large = await optimizeImage(file, 'large', productId, index);
+      
+      console.log(`  Creating original size...`);
+      const original = await optimizeImage(file, 'original', productId, index);
 
-      // Upload all sizes concurrently with proper headers
-      console.log(`☁️ Uploading 4 sizes for image ${index + 1}`);
-      const uploadPromises = [
+      // Upload all sizes with proper headers
+      console.log(`  Uploading all sizes...`);
+      const sizesToUpload = [
         { data: thumbnail, size: 'thumbnail' },
         { data: medium, size: 'medium' },
         { data: large, size: 'large' },
         { data: original, size: 'original' },
-      ].map(async ({ data, size }) => {
+      ];
+
+      // Upload sequentially to avoid overwhelming the server
+      for (const { data, size } of sizesToUpload) {
         const metadata = {
           'Content-Type': data.contentType,
           'Cache-Control': 'public, max-age=31536000, immutable',
@@ -223,18 +270,16 @@ async function processAndUploadImages(
           'X-Original-Name': file.name,
         };
 
-        return minioClient.putObject(
+        await minioClient.putObject(
           bucket,
           data.key,
           data.buffer,
           data.buffer.length,
           metadata
         );
-      });
+      }
 
-      await Promise.all(uploadPromises);
-
-      console.log(`✅ Image ${index + 1} uploaded in all sizes`);
+      console.log(`  Image ${index + 1} uploaded successfully in all sizes`);
 
       results.push({
         thumbnail: thumbnail.url,
@@ -244,12 +289,12 @@ async function processAndUploadImages(
       });
 
     } catch (error) {
-      console.error(`❌ Error processing image ${index + 1} (${file.name}):`, error);
+      console.error(`Error processing image ${index + 1} (${file.name}):`, error);
       throw new Error(`Failed to process image ${file.name}: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
-  console.log(`🎉 All ${results.length} images processed and uploaded successfully`);
+  console.log(`All ${results.length} images processed and uploaded successfully`);
   return results;
 }
 
@@ -307,7 +352,7 @@ export async function createNewCategoryAction(category: string): Promise<ActionR
 }
 
 export async function addNewProductAction(data: ProcessedProductData): Promise<ActionResult> {
-  console.log('🚀 Starting addNewProductAction with data:', {
+  console.log('Starting addNewProductAction with data:', {
     name: data.name,
     price: data.price,
     category: data.category,
@@ -330,6 +375,14 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
     return { errorMessage: "Only admins can add products", message: null };
   }
 
+  // Validate images before processing
+  if (Array.isArray(data.images) && data.images.length > 0) {
+    const validationError = validateImageUpload(data.images);
+    if (validationError) {
+      return { errorMessage: validationError, message: null };
+    }
+  }
+
   let createdProductId: string | null = null;
 
   try {
@@ -343,7 +396,7 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
     }
 
     // Create product
-    console.log('📦 Creating product in database...');
+    console.log('Creating product in database...');
     const [product] = await db.insert(tables.product).values({
       name: data.name,
       price: price.toFixed(2),
@@ -354,11 +407,11 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
     }).returning();
 
     createdProductId = product.id;
-    console.log('✅ Product created with ID:', createdProductId);
+    console.log('Product created with ID:', createdProductId);
 
     // Handle variants
     if (data.hasVariants && Array.isArray(data.variants) && data.variants.length > 0) {
-      console.log('🔄 Processing variants...');
+      console.log('Processing variants...');
 
       const variantsData = data.variants.map((variant) => ({
         product_id: product.id,
@@ -388,9 +441,9 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
       }
     }
 
-    // Handle optimized image uploads with new schema
+    // Handle optimized image uploads
     if (Array.isArray(data.images) && data.images.length > 0) {
-      console.log('🖼️ Processing and optimizing images...');
+      console.log('Processing and optimizing images...');
 
       try {
         const optimizedImages = await processAndUploadImages(data.images, product.id);
@@ -409,29 +462,30 @@ export async function addNewProductAction(data: ProcessedProductData): Promise<A
         }));
 
         await db.insert(tables.images).values(imageData);
-        console.log('✅ Optimized image records inserted');
+        console.log('Optimized image records inserted');
 
       } catch (imageError) {
-        console.error('❌ Error processing images:', imageError);
+        console.error('Error processing images:', imageError);
         throw imageError;
       }
     }
 
+    const imageCount = data.images?.length || 0;
     return {
-      message: `Product added successfully with ${data.images?.length || 0} optimized images`,
+      message: `Product "${data.name}" added successfully${imageCount > 0 ? ` with ${imageCount} optimized images` : ''}`,
       errorMessage: null,
     };
 
   } catch (error) {
-    console.error('❌ Error in addNewProductAction:', error);
+    console.error('Error in addNewProductAction:', error);
 
     // Cleanup on error
     if (createdProductId !== null) {
       try {
         await db.delete(tables.product).where(eq(tables.product.id, createdProductId));
-        console.log('🧹 Product cleanup completed');
+        console.log('Product cleanup completed');
       } catch (cleanupError) {
-        console.error("❌ Error during cleanup:", cleanupError);
+        console.error("Error during cleanup:", cleanupError);
       }
     }
 
@@ -456,6 +510,20 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
   const { user } = await getCurrentSession();
   if (user?.role !== UserRole.ADMIN) {
     return { errorMessage: "Only admins can edit products", message: null };
+  }
+
+  // Validate new images if any
+  if (Array.isArray(data.images)) {
+    const newFiles = data.images
+      .filter((i): i is { file: File; id: string; preview: string } => i.file instanceof File)
+      .map(item => ({ file: item.file }));
+    
+    if (newFiles.length > 0) {
+      const validationError = validateImageUpload(newFiles);
+      if (validationError) {
+        return { errorMessage: validationError, message: null };
+      }
+    }
   }
 
   try {
@@ -573,7 +641,7 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
           await Promise.allSettled(deletePromises);
         }
 
-        // Process new files - filter to only include items with valid File objects
+        // Process new files
         const newFiles = data.images
           .filter((i): i is { file: File; id: string; preview: string } =>
             i.file instanceof File
@@ -581,7 +649,7 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
           .map(item => ({ file: item.file }));
 
         if (newFiles.length > 0) {
-          console.log('🖼️ Processing new images for edit...');
+          console.log('Processing new images for edit...');
           const optimizedImages = await processAndUploadImages(newFiles, data.id);
 
           const rows = optimizedImages.map((urls, index) => ({
@@ -604,7 +672,7 @@ export async function editProductAction(data: EditedProcessedProductData): Promi
     });
 
     return {
-      message: "Product updated successfully with optimized images",
+      message: "Product updated successfully",
       errorMessage: null
     };
   } catch (error) {
@@ -649,7 +717,7 @@ export async function deleteProductAction(productIds: string[]): Promise<ActionR
 
     // Delete images from MinIO
     if (imagesToDelete.length > 0) {
-      console.log(`🗑️ Deleting ${imagesToDelete.length} images from MinIO...`);
+      console.log(`Deleting ${imagesToDelete.length} images from MinIO...`);
 
       const deletePromises = imagesToDelete.flatMap((img) => {
         const urls = img.urls as any;
@@ -666,9 +734,9 @@ export async function deleteProductAction(productIds: string[]): Promise<ActionR
           if (key) {
             try {
               await minioClient.removeObject(bucket, key);
-              console.log(`✅ Deleted: ${key}`);
+              console.log(`Deleted: ${key}`);
             } catch (error) {
-              console.warn(`⚠️ Could not delete: ${key}`, error);
+              console.warn(`Could not delete: ${key}`, error);
             }
           }
         });
@@ -684,6 +752,60 @@ export async function deleteProductAction(productIds: string[]): Promise<ActionR
   } catch (error) {
     return {
       errorMessage: error instanceof Error ? error.message : "Failed to delete products",
+      message: null,
+    };
+  }
+}
+
+// Batch upload action for handling large image sets
+export async function uploadImageBatchAction(data: {
+  productId: string;
+  images: { file: File }[];
+  batchIndex: number;
+}): Promise<ActionResult> {
+  if (!(await globalPOSTRateLimit())) {
+    return { errorMessage: "Too many requests!", message: null };
+  }
+
+  const { user } = await getCurrentSession();
+  if (user?.role !== UserRole.ADMIN) {
+    return { errorMessage: "Only admins can upload images", message: null };
+  }
+
+  try {
+    // Validate batch
+    const validationError = validateImageUpload(data.images);
+    if (validationError) {
+      return { errorMessage: validationError, message: null };
+    }
+
+    console.log(`Processing image batch ${data.batchIndex + 1} with ${data.images.length} images`);
+    
+    const optimizedImages = await processAndUploadImages(data.images, data.productId);
+
+    // Store image URLs
+    const imageData = optimizedImages.map((urls, index) => ({
+      product_id: data.productId,
+      url: urls.original,
+      urls: {
+        thumbnail: urls.thumbnail,
+        medium: urls.medium,
+        large: urls.large,
+        original: urls.original,
+      },
+      alt_text: `Product Image - Batch ${data.batchIndex + 1}, Image ${index + 1}`,
+    }));
+
+    await db.insert(tables.images).values(imageData);
+
+    return {
+      message: `Batch ${data.batchIndex + 1} uploaded successfully (${data.images.length} images)`,
+      errorMessage: null,
+    };
+
+  } catch (error) {
+    return {
+      errorMessage: error instanceof Error ? error.message : "Failed to upload image batch",
       message: null,
     };
   }

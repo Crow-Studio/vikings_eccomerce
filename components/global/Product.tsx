@@ -79,7 +79,7 @@ function ProductCard({ product }: { product: DBProduct }) {
             alt={product.name}
             loading="lazy"
             decoding="async"
-            className="object-contain transition-transform duration-300 group-hover:scale-110"
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
           />
 
           {/* Hover actions */}
