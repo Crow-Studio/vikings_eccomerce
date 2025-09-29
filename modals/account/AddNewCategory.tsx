@@ -37,14 +37,15 @@ export default function AddNewCategory() {
       }),
     });
 
+    const response = await res.json()
+
     if (!res.ok) {
       setIsAddingCategory(false);
-      return toast.error(res.statusText, {
+      return toast.error(response.error, {
         position: "top-center",
       });
     }
 
-    const response = await res.json()
     router.refresh();
     setCategory("");
     setIsAddingCategory(false);

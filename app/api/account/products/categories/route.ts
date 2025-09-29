@@ -4,40 +4,41 @@ import { RefillingTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { headers } from "next/headers";
+import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
     const ipBucket = new RefillingTokenBucket<string>(3, 10);
 
     try {
         if (!(await globalPOSTRateLimit())) {
-            return Response.json(
-                null,
-                { status: 429, statusText: 'Too many requests!' }
+            return NextResponse.json(
+                { error: 'Too many requests!' },
+                { status: 429 }
             );
         }
 
         const clientIP = (await headers()).get("X-Forwarded-For");
         if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
-            return Response.json(
-                null,
-                { status: 429, statusText: 'Too many requests!' }
+            return NextResponse.json(
+                { error: 'Too many requests!' },
+                { status: 429 }
             );
         }
 
         const { category } = await request.json();
 
         if (!category || category.trim() === "") {
-            return Response.json(
-                null,
-                { status: 400, statusText: 'Category name cannot be empty' }
+            return NextResponse.json(
+                { error: 'Category name cannot be empty' },
+                { status: 400 }
             );
         }
 
         const { user } = await getCurrentSession();
         if (user?.role !== UserRole.ADMIN) {
-            return Response.json(
-                null,
-                { status: 403, statusText: 'Only admins can create categories' }
+            return NextResponse.json(
+                { error: 'Only admins can create categories' },
+                { status: 403 }
             );
         }
 
@@ -49,17 +50,23 @@ export async function POST(request: Request) {
             ipBucket.consume(clientIP, 1);
         }
 
-        return Response.json(
-            {
-                message: 'Category added successfully'
-            },
+        return NextResponse.json(
+            { message: 'Category added successfully' },
             { status: 201 }
         );
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error creating category:", error);
-        return Response.json(
-            null,
-            { status: 500, statusText: 'Failed to create category' }
+
+        if (error.cause.code === '23505' && error.cause.constraint_name === 'category_name_unique') {
+            return NextResponse.json(
+                { error: 'A category with this name already exists' },
+                { status: 409 }
+            );
+        }
+
+        return NextResponse.json(
+            { error: error instanceof Error ? error.message : 'Failed to create category' },
+            { status: 500 }
         );
     }
 }

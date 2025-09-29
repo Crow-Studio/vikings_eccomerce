@@ -61,7 +61,7 @@ export const user = pgTable(
 
 export const category = pgTable('category', {
   id: varchar('id', { length: 12 }).primaryKey().$defaultFn(() => generateNanoId()),
-  name: varchar('name', { length: 50 }).notNull(),
+  name: varchar('name', { length: 50 }).notNull().unique(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
 })
 
@@ -71,7 +71,7 @@ export const product = pgTable('products', {
   price: decimal('price', { precision: 10, scale: 2 }).notNull(),
   description: text('description').notNull(),
   visibility: visibilityEnum('visibility').default(Visibility.ACTIVE).notNull(),
-  category_id: text("category_id").notNull().references(() => category.id),
+  category_id: text("category_id").notNull().references(() => category.id, { onDelete: 'restrict' }),
   has_variants: boolean('has_variants').default(false).notNull(),
   created_at: timestamp('created_at', { mode: 'date', precision: 3 }).notNull().defaultNow(),
   updated_at: timestamp('updated_at', { mode: 'date', precision: 3 })

@@ -5,54 +5,70 @@ import { globalPOSTRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { headers } from "next/headers";
 import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ categoryId: string }> }) {
     const ipBucket = new RefillingTokenBucket<string>(3, 10);
-    const { name } = await request.json() as { name: string };
-    const { categoryId } = await params
 
     try {
         if (!(await globalPOSTRateLimit())) {
-            return Response.json(
-                null,
-                { status: 429, statusText: 'Too many requests!' }
+            return NextResponse.json(
+                { error: 'Too many requests!' },
+                { status: 429 }
             );
         }
 
         const clientIP = (await headers()).get("X-Forwarded-For");
         if (clientIP !== null && !ipBucket.check(clientIP, 1)) {
-            return Response.json(
-                null,
-                { status: 429, statusText: 'Too many requests!' }
+            return NextResponse.json(
+                { error: 'Too many requests!' },
+                { status: 429 }
             );
         }
 
+        const { name } = await request.json() as { name: string };
+        const { categoryId } = await params;
+
         if (!categoryId || typeof categoryId !== 'string') {
-            return Response.json(
-                null,
-                { status: 400, statusText: 'Category id cannot be empty' }
+            return NextResponse.json(
+                { error: 'Category id cannot be empty' },
+                { status: 400 }
             );
         }
 
         if (!name || name.trim() === "") {
-            return Response.json(
-                null,
-                { status: 400, statusText: 'Category name cannot be empty' }
+            return NextResponse.json(
+                { error: 'Category name cannot be empty' },
+                { status: 400 }
             );
         }
 
         const { user } = await getCurrentSession();
         if (user?.role !== UserRole.ADMIN) {
-            return Response.json(
-                null,
-                { status: 403, statusText: 'Only admins can delete categories' }
+            return NextResponse.json(
+                { error: 'Only admins can edit categories' },
+                { status: 403 }
+            );
+        }
+
+        // Check if category exists
+        const existingCategory = await db
+            .select()
+            .from(tables.category)
+            .where(eq(tables.category.id, categoryId))
+            .limit(1);
+
+        if (existingCategory.length === 0) {
+            return NextResponse.json(
+                { error: 'Category not found' },
+                { status: 404 }
             );
         }
 
         await db
             .update(tables.category)
             .set({
-                name,
+                name: name.trim(),
             })
             .where(
                 eq(tables.category.id, categoryId)
@@ -62,15 +78,23 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ ca
             ipBucket.consume(clientIP, 1);
         }
 
-        return Response.json(
-            { message: `Category updated successfully` },
+        return NextResponse.json(
+            { message: 'Category updated successfully' },
             { status: 200 }
         );
-    } catch (error) {
-        console.error("Error updating categories:", error);
-        return Response.json(
-            null,
-            { status: 500, statusText: error instanceof Error ? error.message : "Failed to update category" }
+    } catch (error: any) {
+        console.error("Error updating category:", error);
+
+        if (error.cause?.code === '23505' && error.cause.constraint_name === 'category_name_unique') {
+            return NextResponse.json(
+                { error: 'A category with this name already exists' },
+                { status: 409 }
+            );
+        }
+
+        return NextResponse.json(
+            { error: error instanceof Error ? error.message : "Failed to update category" },
+            { status: 500 }
         );
     }
 }

@@ -46,10 +46,10 @@ export default function DataTableActions({ category }: Props) {
         return response.message;
       })(),
       {
-        loading: "Deleting product...",
-        success: "Product deleted successfully!",
+        loading: "Deleting category..",
+        success: "Category deleted successfully!",
         error: (error) =>
-          error instanceof Error ? error.message : "Failed to delete product",
+          error instanceof Error ? error.message : "Failed to delete category",
         finally() {
           setIsDeletingProduct(false);
           router.refresh()

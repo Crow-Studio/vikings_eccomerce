@@ -53,15 +53,15 @@ export default function EditCategory() {
         }
       );
 
+      const response = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json().catch(() => ({}));
         setIsEditingCategory(false);
-        return toast.error(errorData.message || res.statusText, {
+        return toast.error(response.error, {
           position: "top-center",
         });
       }
 
-      const response = await res.json();
       router.refresh();
       setIsEditingCategory(false);
       onClose();
