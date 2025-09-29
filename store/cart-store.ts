@@ -19,6 +19,7 @@ interface CartStore {
   getTotalItems: () => number
   getTotalPrice: () => number
 }
+
 export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({

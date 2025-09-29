@@ -8,6 +8,7 @@ import { Visibility } from "@/database/schema";
 import { IconCircleCheckFilled, IconLoader } from "@tabler/icons-react";
 import ProductDataTableCellViewer from "./product-data-table-cell-viewer";
 import DataTableActions from "./data-table-actions";
+
 export const columns: ColumnDef<DBProduct>[] = [
   {
     id: "select",

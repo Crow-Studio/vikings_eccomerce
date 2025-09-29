@@ -28,7 +28,7 @@ import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { DBProduct } from "@/types";
 import { useRouter } from "next/navigation";
-import { deleteProductAction } from "@/app/account/products/add/action";
+
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -64,11 +64,12 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
   });
-  const onDeleteProduct = async () => {
+
+  const onDeleteCategories = async () => {
     const rows = table.getFilteredSelectedRowModel().rows;
-    let selectedProductsIds: string[] = [];
+    let selectedCategoriesIds: string[] = [];
     if (rows.length > 0) {
-      selectedProductsIds = rows.map(({ original }) => {
+      selectedCategoriesIds = rows.map(({ original }) => {
         const product = original as DBProduct;
         return product.id;
       });
@@ -76,17 +77,26 @@ export function DataTable<TData, TValue>({
     toast.promise(
       (async () => {
         setIsDeletingProduct(true);
-        const { message, errorMessage } = await deleteProductAction(
-          selectedProductsIds
-        );
-        if (errorMessage) throw new Error(errorMessage);
-        return message;
+
+        const res = await fetch("/api/account/products/categories/delete", {
+          method: "DELETE",
+          body: JSON.stringify({
+            categoriesIds: selectedCategoriesIds,
+          }),
+        });
+
+        const response = await res.json()
+
+        if (!res.ok) {
+          throw new Error(response.error);
+        }
+        return response.message;
       })(),
       {
-        loading: "Deleting products...",
-        success: "Products deleted successfully!",
+        loading: "Deleting categories...",
+        success: "Categories deleted successfully!",
         error: (error) =>
-          error instanceof Error ? error.message : "Failed to delete products",
+          error instanceof Error ? error.message : "Failed to delete categories",
         finally() {
           setIsDeletingProduct(false);
           router.refresh();
@@ -100,7 +110,7 @@ export function DataTable<TData, TValue>({
       <div className="space-y-4">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between">
           <Input
-            placeholder="Filter product name..."
+            placeholder="Filter category name..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
@@ -113,7 +123,7 @@ export function DataTable<TData, TValue>({
                 aria-label="Delete Products"
                 variant={"destructive"}
                 className="h-8 lg:flex"
-                onClick={() => onDeleteProduct()}
+                onClick={() => onDeleteCategories()}
                 disabled={isDeletingProduct}
               >
                 {isDeletingProduct ? (

@@ -4,9 +4,12 @@ import { RefillingTokenBucket } from "@/lib/server/rate-limit";
 import { globalPOSTRateLimit } from "@/lib/server/request";
 import { getCurrentSession } from "@/lib/server/session";
 import { headers } from "next/headers";
+import { eq } from "drizzle-orm";
 
-export async function POST(request: Request) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ categoryId: string }> }) {
     const ipBucket = new RefillingTokenBucket<string>(3, 10);
+    const { name } = await request.json() as { name: string };
+    const { categoryId } = await params
 
     try {
         if (!(await globalPOSTRateLimit())) {
@@ -24,9 +27,14 @@ export async function POST(request: Request) {
             );
         }
 
-        const { category } = await request.json();
+        if (!categoryId || typeof categoryId !== 'string') {
+            return Response.json(
+                null,
+                { status: 400, statusText: 'Category id cannot be empty' }
+            );
+        }
 
-        if (!category || category.trim() === "") {
+        if (!name || name.trim() === "") {
             return Response.json(
                 null,
                 { status: 400, statusText: 'Category name cannot be empty' }
@@ -37,29 +45,32 @@ export async function POST(request: Request) {
         if (user?.role !== UserRole.ADMIN) {
             return Response.json(
                 null,
-                { status: 403, statusText: 'Only admins can create categories' }
+                { status: 403, statusText: 'Only admins can delete categories' }
             );
         }
 
-        await db.insert(tables.category).values({
-            name: category.trim(),
-        });
+        await db
+            .update(tables.category)
+            .set({
+                name,
+            })
+            .where(
+                eq(tables.category.id, categoryId)
+            );
 
         if (clientIP !== null) {
             ipBucket.consume(clientIP, 1);
         }
 
         return Response.json(
-            {
-                message: 'Category added successfully'
-            },
-            { status: 201 }
+            { message: `Category updated successfully` },
+            { status: 200 }
         );
     } catch (error) {
-        console.error("Error creating category:", error);
+        console.error("Error updating categories:", error);
         return Response.json(
             null,
-            { status: 500, statusText: 'Failed to create category' }
+            { status: 500, statusText: error instanceof Error ? error.message : "Failed to update category" }
         );
     }
 }

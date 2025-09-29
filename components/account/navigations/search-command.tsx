@@ -65,6 +65,10 @@ export function SearchCommand({ user }: SearchCommandProps) {
         isShowInterface: user.role === UserRole.ADMIN,
         items: [
           {
+            title: "Categories",
+            url: "/account/products/categories",
+          },
+          {
             title: "All Products",
             url: "/account/products/all",
           },

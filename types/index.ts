@@ -4,8 +4,9 @@ import { addProductFormSchema, editProductFormSchema } from "./products/form";
 import { Category, Customer as DBCustomer, GeneratedVariants, ProductImage, User, Visibility } from "@/database/schema";
 import { Customer } from "./customers";
 import { Order } from "./orders";
+import { CategoryWithProducts } from "@/lib/server/utils";
 
-export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder" | "editOrder" | "addNewUser" | "editUser" | "deleteUser"
+export type ModalType = "signoutUser" | "newCategory" | "newCustomer" | "editCustomer" | "createOrder" | "editOrder" | "addNewUser" | "editUser" | "deleteUser" | "editCategory"
 
 export interface ModalData {
   customer?: Customer
@@ -13,6 +14,7 @@ export interface ModalData {
   products?: IProduct[]
   order?: Order
   user?: User
+  category?: CategoryWithProducts
 }
 export interface ActionResult {
   message: string | null;

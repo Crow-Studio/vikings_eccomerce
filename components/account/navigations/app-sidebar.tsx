@@ -55,6 +55,11 @@ export function AppSidebar({ user, ...props }: AppSidebarProps) {
         isShowInterface: true,
         items: [
           {
+            title: "Categories",
+            url: "/account/products/categories",
+            isShowInterface: true,
+          },
+          {
             title: "All Products",
             url: "/account/products/all",
             isShowInterface: true,

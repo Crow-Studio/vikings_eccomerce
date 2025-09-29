@@ -3,6 +3,7 @@
 import AddNewCategory from "@/modals/account/AddNewCategory";
 import EditCustomer from "@/modals/account/customers/EditCustomer";
 import NewCustomer from "@/modals/account/customers/NewCustomer";
+import EditCategory from "@/modals/account/EditCategory";
 import CreateOrder from "@/modals/account/orders/CreateOrder";
 import EditOrder from "@/modals/account/orders/EditOrder";
 import CreateUser from "@/modals/account/settings/users/CreateUser";
@@ -33,6 +34,7 @@ export default function ModalProvider() {
       <DeleteUser />
       <CreateUser />
       <EditUser />
+      <EditCategory />
     </div>
   );
 }

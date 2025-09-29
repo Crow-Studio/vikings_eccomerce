@@ -13,7 +13,7 @@ export const useModal = create<ModalStore>()(
         onPopulateData: (data = {}) => set({ data })
       }),
       {
-        name: "delirium-storage",
+        name: "vikings-storage",
         storage: createJSONStorage(() => sessionStorage),
       }
     )

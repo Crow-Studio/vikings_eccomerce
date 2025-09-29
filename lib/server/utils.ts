@@ -1,6 +1,7 @@
 import { encodeBase32UpperCaseNoPadding } from "@oslojs/encoding";
 import sharp from "sharp";
 import * as Minio from "minio";
+import { db, tables } from "@/database";
 
 // MinIO Configuration
 export const minioEndpoint = process.env.MINIO_ENDPOINT as string;
@@ -316,4 +317,64 @@ export interface OptimizedImageResult {
   size: number;
   width: number;
   height: number;
+}
+export interface ProductRow {
+  id: string
+  name: string
+  price: string
+  description: string
+  visibility: string
+  has_variants: boolean
+  created_at: Date
+  updated_at: Date
+}
+
+export interface CategoryWithProducts {
+  id: string
+  name: string
+  createdAt: Date
+  products: ProductRow[]
+  totalProducts: number
+}
+
+export async function getCategoriesWithProducts(): Promise<CategoryWithProducts[]> {
+  // Get all categories
+  const categories = await db
+    .select({
+      id: tables.category.id,
+      name: tables.category.name,
+      createdAt: tables.category.created_at,
+    })
+    .from(tables.category)
+    .orderBy(tables.category.created_at)
+
+  // Get all products
+  const products = await db
+    .select({
+      id: tables.product.id,
+      name: tables.product.name,
+      price: tables.product.price,
+      description: tables.product.description,
+      visibility: tables.product.visibility,
+      has_variants: tables.product.has_variants,
+      created_at: tables.product.created_at,
+      updated_at: tables.product.updated_at,
+      category_id: tables.product.category_id,
+    })
+    .from(tables.product)
+
+  // Map categories with their products
+  const categoriesWithProducts: CategoryWithProducts[] = categories.map(category => {
+    const categoryProducts = products.filter(product => product.category_id === category.id)
+    
+    return {
+      id: category.id,
+      name: category.name,
+      createdAt: category.createdAt,
+      products: categoryProducts,
+      totalProducts: categoryProducts.length,
+    }
+  })
+
+  return categoriesWithProducts
 }
