@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+    process.env.NEXT_PUBLIC_APP_URL || "https://vikingstraders.co.ke"
   ),
   title: {
     default: "Vikings Kepower - Quality Tools & Equipment Supplier in Kenya",
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_KE",
-    url: "https://vikings.co.ke",
+    url: "https://vikingstraders.co.ke",
     siteName: "Vikings Kepower",
     title: "Vikings Kepower - Quality Tools & Equipment Supplier in Kenya",
     description:
@@ -94,10 +94,10 @@ export const metadata: Metadata = {
 
   // Alternate languages
   alternates: {
-    canonical: "https://vikings.co.ke",
+    canonical: "https://vikingstraders.co.ke",
     languages: {
-      "en-KE": "https://vikings.co.ke",
-      "sw-KE": "https://vikings.co.ke/sw",
+      "en-KE": "https://vikingstraders.co.ke",
+      "sw-KE": "https://vikingstraders.co.ke/sw",
     },
   },
 
@@ -154,7 +154,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Additional SEO meta tags */}
-        <link rel="canonical" href="https://vikings.co.ke" />
+        <link rel="canonical" href="https://vikingstraders.co.ke" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -185,14 +185,14 @@ export default function RootLayout({
               "@graph": [
                 {
                   "@type": "WebSite",
-                  "@id": "https://vikings.co.ke/#website",
-                  url: "https://vikings.co.ke",
+                  "@id": "https://vikingstraders.co.ke/#website",
+                  url: "https://vikingstraders.co.ke",
                   name: "Vikings Kepower",
                   alternateName: "Vikings",
                   description:
                     "Leading supplier of quality tools, equipment, and machinery in Kenya",
                   publisher: {
-                    "@id": "https://vikings.co.ke/#organization",
+                    "@id": "https://vikingstraders.co.ke/#organization",
                   },
                   potentialAction: [
                     {
@@ -200,7 +200,7 @@ export default function RootLayout({
                       target: {
                         "@type": "EntryPoint",
                         urlTemplate:
-                          "https://vikings.co.ke/search?q={search_term_string}",
+                          "https://vikingstraders.co.ke/search?q={search_term_string}",
                       },
                       "query-input": "required name=search_term_string",
                     },
@@ -208,13 +208,13 @@ export default function RootLayout({
                 },
                 {
                   "@type": "Organization",
-                  "@id": "https://vikings.co.ke/#organization",
+                  "@id": "https://vikingstraders.co.ke/#organization",
                   name: "Vikings Kepower",
                   alternateName: "Vikings",
-                  url: "https://vikings.co.ke",
+                  url: "https://vikingstraders.co.ke",
                   logo: {
                     "@type": "ImageObject",
-                    url: "https://vikings.co.ke/logo.png",
+                    url: "https://vikingstraders.co.ke/logo.png",
                     width: 512,
                     height: 512,
                   },

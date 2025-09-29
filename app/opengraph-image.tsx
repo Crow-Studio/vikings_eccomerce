@@ -48,7 +48,7 @@ export default async function Image() {
               textAlign: 'center',
             }}
           >
-            Vikings Kepower
+            Vikings Traders
           </div>
           
           {/* Subtitle */}
