@@ -13,8 +13,8 @@ import React, { useState } from "react";
 import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { createNewCategoryAction } from "@/app/account/products/add/action";
 import { useRouter } from "next/navigation";
+
 export default function AddNewCategory() {
   const { type, isOpen, onClose } = useModal();
   const [category, setCategory] = useState("");
@@ -29,18 +29,28 @@ export default function AddNewCategory() {
         position: "top-center",
       });
     }
-    const { message, errorMessage } = await createNewCategoryAction(category);
-    if (errorMessage) {
+
+    const res = await fetch("/api/account/products/categories", {
+      method: "POST",
+      body: JSON.stringify({
+        category,
+      }),
+    });
+
+    if (!res.ok) {
       setIsAddingCategory(false);
-      return toast.error(errorMessage, {
+      return toast.error(res.statusText, {
         position: "top-center",
       });
     }
+
+    const response = await res.json()
     router.refresh();
     setCategory("");
     setIsAddingCategory(false);
     onClose();
-    return toast.success(message, {
+
+    return toast.success(response.message, {
       position: "top-center",
     });
   };

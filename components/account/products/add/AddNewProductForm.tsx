@@ -12,13 +12,14 @@ import VariantsConfigurations from "./VariantsConfigurations";
 import ProductSettings from "./ProductSettings";
 import ProductImages from "./ProductImages";
 import { Category } from "@/database/schema";
-import { addNewProductAction } from "@/app/account/products/add/action";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+
 interface AddNewProductFormProps {
   categories: Category[];
 }
+
 export default function AddNewProductForm({
   categories,
 }: AddNewProductFormProps) {
@@ -37,14 +38,18 @@ export default function AddNewProductForm({
       generatedVariants: [],
     },
   });
+
   const [isAddingProduct, setIsAddingProduct] = useState(false);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "variants",
   });
+
   const hasVariants = form.watch("hasVariants");
   const variants = form.watch("variants") || [];
   const variantCombinations = generateVariantCombinations(variants);
+
   useEffect(() => {
     if (hasVariants) {
       const newGeneratedVariants = variantCombinations.map((combo) => ({
@@ -57,55 +62,97 @@ export default function AddNewProductForm({
       form.setValue("generatedVariants", newGeneratedVariants);
     }
   }, [variantCombinations.length, hasVariants, form, variantCombinations]);
-  
+
   async function onSubmit(values: z.infer<typeof addProductFormSchema>) {
     setIsAddingProduct(true);
-    const processedData = {
-      ...values,
-      price: values.price ? parseFloat(values.price.toString()) : 0,
-      variants: hasVariants
-        ? (() => {
-            const grouped: Record<
-              string,
-              { name: string; price: string; sku: string; inventory: number }[]
-            > = {};
-            values.generatedVariants?.forEach((variant) => {
-              Object.entries(variant.attributes).forEach(
-                ([attrName, attrValue]) => {
-                  if (!grouped[attrName]) grouped[attrName] = [];
-                  grouped[attrName].push({
-                    name: attrValue,
-                    price: variant.price ? variant.price : values.price,
-                    sku: variant.sku!,
-                    inventory: variant.inventory
-                      ? parseInt(variant.inventory)
-                      : 0,
-                  });
-                }
-              );
-            });
-            return Object.entries(grouped).map(([title, values]) => ({
-              title,
-              values,
-            }));
-          })()
-        : null,
-    };
-    const { message, errorMessage } = await addNewProductAction(processedData);
-    if (errorMessage) {
+
+    try {
+      // Create FormData object
+      const formData = new FormData();
+
+      // Add basic fields
+      formData.append("name", values.name);
+      formData.append("price", values.price ? values.price.toString() : "0");
+      formData.append("category", values.category);
+      formData.append("description", values.description || "");
+      formData.append("visibility", values.visibility);
+      formData.append("hasVariants", hasVariants.toString());
+
+      // Process and add variants
+      if (hasVariants && values.generatedVariants) {
+        const grouped: Record<
+          string,
+          { name: string; price: string; sku: string; inventory: number }[]
+        > = {};
+
+        values.generatedVariants.forEach((variant) => {
+          Object.entries(variant.attributes).forEach(
+            ([attrName, attrValue]) => {
+              if (!grouped[attrName]) grouped[attrName] = [];
+              grouped[attrName].push({
+                name: attrValue,
+                price: variant.price ? variant.price : values.price,
+                sku: variant.sku!,
+                inventory: variant.inventory ? parseInt(variant.inventory) : 0,
+              });
+            }
+          );
+        });
+
+        const variantsData = Object.entries(grouped).map(([title, values]) => ({
+          title,
+          values,
+        }));
+
+        formData.append("variants", JSON.stringify(variantsData));
+      } else {
+        formData.append("variants", JSON.stringify([]));
+      }
+
+      // Add image files
+      if (values.images && values.images.length > 0) {
+        values.images.forEach((image, index) => {
+          if (image.file) {
+            formData.append(`image_${index}`, image.file);
+          }
+        });
+      }
+
+      const res = await fetch("/api/account/products/add", {
+        method: "POST",
+        body: formData,
+        // Don't set Content-Type header - browser will set it automatically with boundary
+      });
+
+      if (!res.ok) {
+        const errorData = await res
+          .json()
+          .catch(() => ({ errorMessage: res.statusText }));
+        setIsAddingProduct(false);
+        return toast.error(errorData.errorMessage || res.statusText, {
+          position: "top-center",
+        });
+      }
+
+      const response = await res.json();
       setIsAddingProduct(false);
-      return toast.error(errorMessage, {
+      form.reset();
+      toast.success(response.message, {
         position: "top-center",
       });
+      router.refresh();
+      return router.push("/account/products/all");
+    } catch (error) {
+      setIsAddingProduct(false);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to add product",
+        {
+          position: "top-center",
+        }
+      );
     }
-    setIsAddingProduct(false);
-    form.reset();
-    toast.success(message, {
-      position: "top-center",
-    });
-    router.refresh();
-    return router.push("/account/products/all");
   }
+
   return (
     <Form {...form}>
       <div className="grid gap-5">
@@ -125,7 +172,11 @@ export default function AddNewProductForm({
         <div className="grid grid-cols-1 lg:grid-cols-2 2xl:grid-cols-5 gap-3 lg:gap-5">
           <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-2">
             <GeneralInformation form={form} isAddingProduct={isAddingProduct} />
-            <ProductSettings categories={categories} form={form} isAddingProduct={isAddingProduct} />
+            <ProductSettings
+              categories={categories}
+              form={form}
+              isAddingProduct={isAddingProduct}
+            />
           </div>
           <div className="grid gap-y-3 self-start lg:col-span-2 2xl:col-span-3">
             <VariantsConfigurations
