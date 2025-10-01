@@ -10,6 +10,9 @@ interface PageProps {
     productId: string;
   }>;
 }
+
+export const dynamic = 'force-dynamic';
+
 export async function generateStaticParams() {
   const products = await db.query.product.findMany({
     columns: { id: true },
