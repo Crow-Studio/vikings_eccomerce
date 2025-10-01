@@ -10,7 +10,7 @@ import { DBProduct } from "@/types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useState } from "react";
-import { deleteProductAction } from "@/app/account/products/add/action";
+import { deleteProductAction } from "@/app/account/products/[productId]/edit/action";
 interface Props {
   product: DBProduct;
 }

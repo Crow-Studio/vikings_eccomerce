@@ -6,7 +6,8 @@ import {
     validateImageUpload,
     processAndUploadImages,
     minioClient,
-    bucket
+    bucket,
+    extractMinIOKey
 } from "@/lib/server/utils"
 import { db, tables } from "@/database"
 import { eq, inArray } from "drizzle-orm"
@@ -14,20 +15,6 @@ import { headers } from "next/headers"
 import { NextResponse } from "next/server"
 
 const ipBucket = new RefillingTokenBucket<string>(3, 10)
-
-function extractMinIOKey(url: string): string | null {
-    try {
-        const urlObj = new URL(url)
-        const path = urlObj.pathname
-        const bucketPrefix = `/${bucket}/`
-        if (path.startsWith(bucketPrefix)) {
-            return path.slice(bucketPrefix.length)
-        }
-        return path.startsWith('/') ? path.slice(1) : path
-    } catch {
-        return null
-    }
-}
 
 export async function POST(
     request: Request,

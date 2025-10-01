@@ -366,7 +366,7 @@ export async function getCategoriesWithProducts(): Promise<CategoryWithProducts[
   // Map categories with their products
   const categoriesWithProducts: CategoryWithProducts[] = categories.map(category => {
     const categoryProducts = products.filter(product => product.category_id === category.id)
-    
+
     return {
       id: category.id,
       name: category.name,
@@ -377,4 +377,18 @@ export async function getCategoriesWithProducts(): Promise<CategoryWithProducts[
   })
 
   return categoriesWithProducts
+}
+
+export function extractMinIOKey(url: string): string | null {
+  try {
+    const urlObj = new URL(url)
+    const path = urlObj.pathname
+    const bucketPrefix = `/${bucket}/`
+    if (path.startsWith(bucketPrefix)) {
+      return path.slice(bucketPrefix.length)
+    }
+    return path.startsWith('/') ? path.slice(1) : path
+  } catch {
+    return null
+  }
 }

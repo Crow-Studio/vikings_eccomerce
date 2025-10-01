@@ -28,7 +28,7 @@ import { Loader2, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { DBProduct } from "@/types";
 import { useRouter } from "next/navigation";
-import { deleteProductAction } from "@/app/account/products/add/action";
+import { deleteProductAction } from "@/app/account/products/[productId]/edit/action";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
@@ -76,6 +76,7 @@ export function DataTable<TData, TValue>({
     toast.promise(
       (async () => {
         setIsDeletingProduct(true);
+        
         const { message, errorMessage } = await deleteProductAction(
           selectedProductsIds
         );
