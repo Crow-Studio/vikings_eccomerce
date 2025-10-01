@@ -166,7 +166,7 @@ export async function POST(request: Request) {
         }, { status: 201 });
 
     } catch (error) {
-        console.error('Error in addNewProductAction:', error);
+        console.error('Error in adding new product:', error);
 
         // Cleanup on error
         if (createdProductId !== null) {

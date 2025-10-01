@@ -16,14 +16,13 @@ import EditGeneralInformation from "./edit-general-information";
 import EditProductSettings from "./edit-product-settings";
 import EditVariantsConfigurations from "./edit-variants-configurations";
 import EditProductImages from "./edit-product-images";
-import {
-  editProductAction,
-} from "@/app/account/products/add/action";
 import { toast } from "sonner";
+
 interface EditProductFormProps {
   categories: Category[];
   product: Product;
 }
+
 export default function EditProductForm({
   categories,
   product,
@@ -48,7 +47,9 @@ export default function EditProductForm({
       generatedVariants: [],
     },
   });
-  const [isUpdatingProduct, setIsAddingProduct] = useState(false);
+
+  const [isUpdatingProduct, setIsUpdatingProduct] = useState(false);
+
   useEffect(() => {
     if (
       product.has_variants &&
@@ -61,6 +62,7 @@ export default function EditProductForm({
       }));
       form.setValue("variants", existingVariants);
       form.setValue("hasVariants", true);
+
       const existingGeneratedVariants = product.variants.flatMap((variant) =>
         variant.generatedVariants.map((value) => ({
           name: value.name,
@@ -73,13 +75,16 @@ export default function EditProductForm({
       form.setValue("generatedVariants", existingGeneratedVariants);
     }
   }, [product, form]);
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "variants",
   });
+
   const hasVariants = form.watch("hasVariants");
   const variants = form.watch("variants") || [];
   const variantCombinations = generateVariantCombinations(variants);
+
   useEffect(() => {
     if (hasVariants) {
       const newGeneratedVariants = variantCombinations.map((combo) => {
@@ -101,55 +106,107 @@ export default function EditProductForm({
       form.setValue("generatedVariants", newGeneratedVariants);
     }
   }, [variantCombinations.length, hasVariants, form, variantCombinations]);
+
   async function onSubmit(values: z.infer<typeof editProductFormSchema>) {
-    setIsAddingProduct(true);
-    const processedData = {
-      ...values,
-      price: values.price ? parseFloat(values.price.toString()) : 0,
-      variants: hasVariants
-        ? (() => {
-            const grouped: Record<
-              string,
-              { name: string; price: string; sku: string; inventory: number }[]
-            > = {};
-            values.generatedVariants?.forEach((variant) => {
-              Object.entries(variant.attributes).forEach(
-                ([attrName, attrValue]) => {
-                  if (!grouped[attrName]) grouped[attrName] = [];
-                  grouped[attrName].push({
-                    name: attrValue,
-                    price: variant.price ? variant.price : values.price,
-                    sku: variant.sku!,
-                    inventory: variant.inventory
-                      ? parseInt(variant.inventory)
-                      : 0,
-                  });
-                }
-              );
-            });
-            return Object.entries(grouped).map(([title, values]) => ({
-              title,
-              values,
-            }));
-          })()
-        : null,
-      id: product.id,
-    };
-    const { message, errorMessage } = await editProductAction(processedData);
-    if (errorMessage) {
-      setIsAddingProduct(false);
-      return toast.error(errorMessage, {
+    setIsUpdatingProduct(true);
+
+    try {
+      const formData = new FormData();
+
+      formData.append("name", values.name);
+      formData.append("price", values.price.toString());
+      formData.append("category", values.category);
+      formData.append("description", values.description || "");
+      formData.append("visibility", values.visibility);
+      formData.append("hasVariants", values.hasVariants.toString());
+
+      if (
+        hasVariants &&
+        values.generatedVariants &&
+        values.generatedVariants.length > 0
+      ) {
+        const grouped: Record<
+          string,
+          { name: string; price: string; sku: string; inventory: number }[]
+        > = {};
+
+        values.generatedVariants.forEach((variant) => {
+          Object.entries(variant.attributes).forEach(
+            ([attrName, attrValue]) => {
+              if (!grouped[attrName]) grouped[attrName] = [];
+              grouped[attrName].push({
+                name: attrValue,
+                price: variant.price ? variant.price : values.price,
+                sku: variant.sku!,
+                inventory: variant.inventory ? parseInt(variant.inventory) : 0,
+              });
+            }
+          );
+        });
+
+        const processedVariants = Object.entries(grouped).map(
+          ([title, values]) => ({
+            title,
+            values,
+          })
+        );
+
+        formData.append("variants", JSON.stringify(processedVariants));
+      } else {
+        formData.append("variants", JSON.stringify([]));
+      }
+
+      const imagesForJson: any[] = [];
+      let fileIndex = 0;
+
+      for (const image of values.images) {
+        if (image.file instanceof File) {
+          formData.append(`image_file_${fileIndex}`, image.file);
+          imagesForJson.push({ isNew: true, fileIndex });
+          fileIndex++;
+        } else {
+          imagesForJson.push({
+            id: image.id,
+            preview: image.preview,
+            isNew: false,
+          });
+        }
+      }
+
+      formData.append("images", JSON.stringify(imagesForJson));
+
+      const response = await fetch(`/api/account/products/${product.id}/edit`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || data.errorMessage) {
+        setIsUpdatingProduct(false);
+        return toast.error(data.errorMessage || "Failed to update product", {
+          position: "top-center",
+        });
+      }
+
+      setIsUpdatingProduct(false);
+      form.reset();
+      toast.success(data.message || "Product updated successfully", {
         position: "top-center",
       });
+      router.refresh();
+      return router.push("/account/products/all");
+    } catch (error) {
+      setIsUpdatingProduct(false);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to update product",
+        {
+          position: "top-center",
+        }
+      );
     }
-    setIsAddingProduct(false);
-    form.reset();
-    toast.success(message, {
-      position: "top-center",
-    });
-    router.refresh();
-    return router.push("/account/products/all");
   }
+
   return (
     <Form {...form}>
       <div className="grid gap-5">
